@@ -1,6 +1,6 @@
 // FirebaseAuthContext.tsx
 import * as React from "react";
-import { auth } from "../config/firebaseConfig";
+import { auth } from "../config/firebase";
 import { useContext, createContext } from "react";
 import { 
   createUserWithEmailAndPassword, 
@@ -22,9 +22,20 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
 
   const [user, setUser] = React.useState<User | null>(null);
   const [loading, setLoading] = React.useState<boolean>(true);
+  const [error, setError] = React.useState<boolean>(false);
 
-  const login = (email: string, password: string) => signInWithEmailAndPassword(auth, email, password);
-  const signUp = (email: string, password: string) => createUserWithEmailAndPassword(auth, email, password);
+  const login = (email: string, password: string) => { 
+    signInWithEmailAndPassword(auth, email, password)
+      .then((val) => setError(false))
+      .catch((err) => setError(true))
+  }
+
+  const signUp = (email: string, password: string) => { 
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((val) => setError(false))
+      .catch((err) => setError(true))
+  }
+
   const logOut = async () => {
     setUser(null);
     await signOut(auth);
@@ -41,7 +52,7 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
 
 
   return (
-    <AuthContext.Provider value={{user, login, signUp, logOut}}>
+    <AuthContext.Provider value={{ user, login, signUp, logOut, error }}>
       {(loading) ? null : children}
     </AuthContext.Provider>
   );
