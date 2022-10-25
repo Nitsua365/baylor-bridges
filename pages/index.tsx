@@ -1,12 +1,12 @@
 import type { NextPage } from 'next'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
+import { NextRouter, useRouter } from 'next/router'
 import { withPublic } from '../utils/routeProtection';
 
 
 const Home: NextPage = ({ auth } : any) => {
 
-  const route = useRouter();
+  const router: NextRouter = useRouter();
 
   return (
     <>
