@@ -4,7 +4,7 @@ import { NextRouter, useRouter } from 'next/router'
 import { withPublic } from '../utils/routeProtection';
 
 
-const Home: NextPage = ({ auth } : any) => {
+const Home: NextPage = () => {
 
   const router: NextRouter = useRouter();
 
@@ -20,4 +20,4 @@ const Home: NextPage = ({ auth } : any) => {
   )
 }
 
-export default withPublic(Home);
+export default Home;

@@ -4,7 +4,7 @@ import { firebaseConfig } from "./firebase.config";
 import firebase, { FirebaseApp, initializeApp } from "firebase/app";
 import { Firestore, getFirestore } from "firebase/firestore"
 import { Auth, getAuth } from "firebase/auth"
-// TODO: Add SDKs for Firebase products that you want to use
+
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration

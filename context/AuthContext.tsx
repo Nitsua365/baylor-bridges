@@ -10,10 +10,9 @@ import {
   Unsubscribe
 } from "firebase/auth"
 
-import { collection, addDoc, setDoc, doc, DocumentReference, DocumentData } from "firebase/firestore"
+import { collection, addDoc, DocumentReference, DocumentData } from "firebase/firestore"
 
 import { UserFormData } from "../pages/sign-up";
-
 
 // interface user data
 interface User {
@@ -50,23 +49,34 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
 
   // signUp with email and password
   const signUp = async (data: UserFormData) : Promise<void> => { 
-    createUserWithEmailAndPassword(auth, data.email, data.password)
-      .then(async (val) => {
+    createUserWithEmailAndPassword(auth, data.personalEmail, data.password)
+      .then(async (user) => {
 
         // get all data except for password
-        const { email, phoneNumber } = data;
+        const { 
+              personalEmail,
+              baylorEmail,
+              phoneNumber, 
+              firstName, 
+              lastName,
+              city,
+              state
+            } = data;
+
+        // add Document to the database
+        await addDoc(collection(db, "users"), {
+          personalEmail,
+          baylorEmail,
+          phoneNumber,
+          firstName,
+          lastName,
+          city,
+          state,
+          uid: user.user.uid
+        })
 
         // set the error state
         setError({ isError: false, message: null })
-
-        // add Document to the database
-        const add: DocumentReference<DocumentData> = 
-        await addDoc(collection(db, "users"), {
-          email,
-          phoneNumber,
-        })
-
-        console.log(add)
 
       })
       .catch((err) => setError({ isError: true, message: err.message }))
