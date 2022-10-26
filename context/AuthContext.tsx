@@ -10,7 +10,7 @@ import {
   Unsubscribe
 } from "firebase/auth"
 
-import { collection, addDoc, DocumentReference, DocumentData } from "firebase/firestore"
+import { collection, addDoc } from "firebase/firestore"
 
 import { UserFormData } from "../pages/sign-up";
 
@@ -60,7 +60,8 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
               firstName, 
               lastName,
               city,
-              state
+              state,
+              role
             } = data;
 
         // add Document to the database
@@ -72,6 +73,7 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
           lastName,
           city,
           state,
+          role,
           uid: user.user.uid
         })
 
