@@ -10,7 +10,7 @@ import {
   Unsubscribe
 } from "firebase/auth"
 
-import { collection, addDoc, setDoc, doc } from "firebase/firestore"
+import { collection, addDoc, setDoc, doc, DocumentReference, DocumentData } from "firebase/firestore"
 
 import { UserFormData } from "../pages/sign-up";
 
@@ -59,10 +59,15 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
         // set the error state
         setError({ isError: false, message: null })
 
-        const added = await addDoc(collection(db, "users"), {
+        // add Document to the database
+        const add: DocumentReference<DocumentData> = 
+        await addDoc(collection(db, "users"), {
           email,
-          phoneNumber
-        });
+          phoneNumber,
+        })
+
+        console.log(add)
+
       })
       .catch((err) => setError({ isError: true, message: err.message }))
   }
