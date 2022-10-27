@@ -113,11 +113,11 @@ const SignUp: NextPage = () => {
             </div>
             <div className="grid grid-flow-row">
               <div className="mt-1 mb-2 w-56">
-                <input { ...validation.personalEmail } placeholder="Personal Email" type="text" id="email" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                <input { ...validation.personalEmail } placeholder="Personal Email" type="text" id="personalEmail" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                 {formErrors.personalEmail && <p className="text-red-500 pb-0 mb-0 text-xs">Invalid Email</p>}
               </div>
               <div className="mt-1 mb-2 w-56">
-                <input { ...validation.baylorEmail } placeholder="Baylor Email" type="text" id="email" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                <input { ...validation.baylorEmail } placeholder="Baylor Email" type="text" id="baylorEmail" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                 {formErrors.baylorEmail && <p className="text-red-500 pb-0 mb-0 text-xs">Invalid Email</p>}
               </div>
               <div className="mt-1 mb-2 w-56">
@@ -125,7 +125,7 @@ const SignUp: NextPage = () => {
                 {formErrors.firstName && <p className="text-red-500 pb-0 mb-0 text-xs">Invalid First Name</p>}
               </div>
               <div className="mt-1 mb-2 w-56">
-                <input { ...validation.lastName } placeholder="Last Name" type="text" id="firstName" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                <input { ...validation.lastName } placeholder="Last Name" type="text" id="lastName" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                 {formErrors.lastName && <p className="text-red-500 pb-0 mb-0 text-xs">Invalid Last Name</p>}
               </div>
               <div className="mt-1 mb-2 w-56">
@@ -137,7 +137,7 @@ const SignUp: NextPage = () => {
                 {formErrors.phoneNumber && <p className="text-red-500 pb-0 mb-0 text-xs">Invalid City</p>}
               </div>
               <div className="mt-1 mb-2 w-56">
-                <input { ...validation.state } placeholder="State" id="State" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:blue-500" />
+                <input { ...validation.state } placeholder="State" id="state" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:blue-500" />
                 {formErrors.phoneNumber && <p className="text-red-500 pb-0 mb-0 text-xs">Invalid State</p>}
               </div>
               <div className="mt-1 mb-2 w-56">

@@ -7,7 +7,8 @@ import {
   onAuthStateChanged, 
   signInWithEmailAndPassword,
   signOut, 
-  Unsubscribe
+  Unsubscribe,
+  UserCredential
 } from "firebase/auth"
 
 import { collection, addDoc } from "firebase/firestore"
@@ -48,15 +49,18 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
   }
 
   // signUp with email and password
-  const signUp = async (data: UserFormData) : Promise<void> => { 
-    createUserWithEmailAndPassword(auth, data.personalEmail, data.password)
-      .then(async (user) => {
+  const signUp = async (data: UserFormData) : Promise<void> => {
+
+    const email: string = (data.role === "student") ? data.baylorEmail : data.personalEmail;
+
+    createUserWithEmailAndPassword(auth, email, data.password)
+      .then(async (user : UserCredential) => {
 
         // get all data except for password
         const { 
               personalEmail,
               baylorEmail,
-              phoneNumber, 
+              phoneNumber,
               firstName, 
               lastName,
               city,
@@ -66,14 +70,14 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
 
         // add Document to the database
         await addDoc(collection(db, "users"), {
-          personalEmail,
-          baylorEmail,
-          phoneNumber,
-          firstName,
-          lastName,
-          city,
-          state,
-          role,
+          personalEmail: personalEmail || "",
+          baylorEmail : baylorEmail || "",
+          phoneNumber: phoneNumber || "",
+          firstName: firstName || "",
+          lastName: lastName || "",
+          city: city || "",
+          state: state || "",
+          role: role || "",
           uid: user.user.uid
         })
 
