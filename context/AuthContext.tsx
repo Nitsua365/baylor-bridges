@@ -11,7 +11,7 @@ import {
   UserCredential
 } from "firebase/auth"
 
-import { collection, addDoc, DocumentReference } from "firebase/firestore"
+import { collection, addDoc } from "firebase/firestore"
 
 import { UserFormData } from "../pages/sign-up";
 
@@ -53,6 +53,7 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
   // error with login or sign up
   const [error, setError] = React.useState<Error | null>(null);
 
+  // stores user data
   const [userData, setUserData] = React.useState<UserDTO | null>(null);
 
   // login with email and password
@@ -66,8 +67,6 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
   const signUp = async (data: UserFormData) : Promise<void> => {
 
     const email: string = (data.role === "student") ? data.baylorEmail : data.personalEmail;
-
-    console.log(email)
 
     createUserWithEmailAndPassword(auth, email, data.password)
       .then(async (user : UserCredential) => {
@@ -97,13 +96,13 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
         }
 
         // add Document to the database
-        await addDoc(collection(db, "users"), insert)
-
-        // set the error state
-        setError({ isError: false, message: null })
-
-        // set the current user
-        setUserData(insert);
+        addDoc(collection(db, "users"), insert)
+          .then((val) => {
+            setError({ isError: false, message: null })
+            // set the current user
+            setUserData(insert);
+          })
+          .catch((err) => setError({ isError: true, message: err.message }) )
 
       })
       .catch((err) => setError({ isError: true, message: err.message }))
