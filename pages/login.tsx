@@ -1,17 +1,20 @@
+import { useAuth } from "context/AuthContext";
 import type { NextPage } from "next";
 import { NextRouter, useRouter } from "next/router";
 
-import { useState } from "react";
+import { withPublic } from "utils/routeProtection";
 
-import { withPublic } from "../utils/routeProtection";
+import { useEffect, useState } from "react";
 
-const Login: NextPage = ({ auth } : any) => {
+const Login: NextPage = () => {
 
-  const { login, error } = auth;
+  const { login, error, clearError } = useAuth();
   const router: NextRouter = useRouter();
 
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+
+  useEffect(() => clearError(), [])
   
   const handleLogin = async (): Promise<void> => {
 

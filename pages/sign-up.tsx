@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import { NextRouter, useRouter } from "next/router";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useForm, UseFormRegisterReturn } from "react-hook-form";
 
@@ -41,7 +41,7 @@ type UserRoles = "student" | "alumni";
 const SignUp: NextPage = () => {
 
   // auth hook resources
-  const { signUp, error : authError } = useAuth();
+  const { signUp, error : authError, clearError } = useAuth();
 
   // page router
   const router: NextRouter = useRouter();
@@ -49,12 +49,15 @@ const SignUp: NextPage = () => {
   // state variables
   const [roleToggle, setRoleToggle] = useState<UserRoles>("student");
 
+  useEffect(() => clearError(), [])
+
   // user form hook
   const {
     register,
     handleSubmit,
     formState: { errors: formErrors },
-    getValues
+    getValues,
+    clearErrors
   } = useForm<UserFormData>({ reValidateMode: 'onBlur' });
 
   // on submit handler to create a new user

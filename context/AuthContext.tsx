@@ -11,7 +11,7 @@ import {
   UserCredential
 } from "firebase/auth"
 
-import { collection, addDoc } from "firebase/firestore"
+import { collection, addDoc, query, where, DocumentData, getDocs } from "firebase/firestore"
 
 import { UserFormData } from "../pages/sign-up";
 
@@ -114,12 +114,22 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
     await signOut(auth);
   }
 
+  const clearError = () => setError({ isError: false, message: null })
 
   // Hook for onAuthStateChange to set or remove the user
   React.useEffect(() => {
     const unSub: Unsubscribe = onAuthStateChanged(auth, user => { 
-      if (user) setUser({ uid: user.uid, email: user.email, displayName: user.displayName }) 
-      else setUser(null)
+      if (user) {
+        setUser({ uid: user.uid, email: user.email, displayName: user.displayName }) 
+
+        // const coll = collection(db, "users");
+        // getDocs(query(coll, where('uid', '==', user.uid)))
+        //   .then(({ docs }) => console.log(docs))
+
+      }
+      else {
+        setUser(null)
+      }
       setLoading(false);
     })
     return () => unSub();
@@ -127,7 +137,7 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
 
 
   return (
-    <AuthContext.Provider value={{ user, login, signUp, logOut, error, userData }}>
+    <AuthContext.Provider value={{ user, login, signUp, logOut, error, userData, clearError }}>
       {(loading) ? null : children}
     </AuthContext.Provider>
   );

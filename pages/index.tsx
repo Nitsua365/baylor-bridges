@@ -1,7 +1,6 @@
 import type { NextPage } from 'next'
 import Link from 'next/link'
 import { NextRouter, useRouter } from 'next/router'
-import { withPublic } from '../utils/routeProtection';
 
 
 const Home: NextPage = () => {
