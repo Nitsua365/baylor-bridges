@@ -25,7 +25,6 @@ export type UserFormData = {
 }
 
 type UserValidationType = {
-  role: UserRoles;
   personalEmail: UseFormRegisterReturn;
   baylorEmail: UseFormRegisterReturn;
   firstName: UseFormRegisterReturn;
@@ -60,14 +59,13 @@ const SignUp: NextPage = () => {
 
   // on submit handler to create a new user
   const onSubmit = (data: UserFormData) : void => { 
-    signUp(data);
+    signUp({ ...data, role: roleToggle });
     if (!authError?.isError)
       router.replace('/login');
   }
 
   // validation and registration for react hook forms
   const validation: UserValidationType = {
-    role: roleToggle,
     baylorEmail: { ...register('baylorEmail', { required: true, disabled: roleToggle === "alumni" }) },
     personalEmail: { ...register('personalEmail', { required: true }) },
     firstName: { ...register('firstName', { required: true }) },

@@ -1,8 +1,8 @@
 import type { NextPage } from "next";
-import { withProtected } from "../utils/routeProtection";
+import { withProtected } from "utils/routeProtection";
 
 const Home: NextPage = ({ auth } : any) => {
-  const { user, logOut } = auth;
+  const { user, userData, logOut } = auth;
 
   const handleLogout = async () => await logOut();
 
@@ -10,7 +10,7 @@ const Home: NextPage = ({ auth } : any) => {
     user && (
       <>
         <div>
-          { Object.entries(user).map(([k, v]) => `${k} : ${v}\n`) }
+          { Object.entries(userData).map(([k, v]) => <div>{`${k} : ${v}\n`}</div>) }
         </div>
         <button onClick={handleLogout}>
           Logout

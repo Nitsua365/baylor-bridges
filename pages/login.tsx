@@ -19,7 +19,7 @@ const Login: NextPage = ({ auth } : any) => {
     await login(email, password);
 
     // check if auth is valid before switching pages
-    if (!error?.isError) router.replace('/home', { auth : user })
+    if (!error?.isError) router.replace('/home')
   }
 
   return (

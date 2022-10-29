@@ -6,8 +6,6 @@ import { Firestore, getFirestore, connectFirestoreEmulator } from "firebase/fire
 import { Auth, connectAuthEmulator, getAuth } from "firebase/auth"
 import { getStorage, FirebaseStorage, connectStorageEmulator } from "firebase/storage";
 
-import { loadEnvConfig } from "@next/env"
-
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
@@ -29,6 +27,7 @@ if (!env) {
 export {
   app,
   db,
-  auth,
-  firebase
+  auth
 }
+
+export default firebase;
