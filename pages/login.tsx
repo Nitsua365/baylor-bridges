@@ -7,7 +7,7 @@ import { withPublic } from "../utils/routeProtection";
 
 const Login: NextPage = ({ auth } : any) => {
 
-  const { login, user, error } = auth;
+  const { login, error } = auth;
   const router: NextRouter = useRouter();
 
   const [email, setEmail] = useState<string>('');
