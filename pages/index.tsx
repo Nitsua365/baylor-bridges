@@ -1,11 +1,9 @@
+
 import type { NextPage } from 'next'
 import Link from 'next/link'
-import { NextRouter, useRouter } from 'next/router'
 
 
 const Home: NextPage = () => {
-
-  const router: NextRouter = useRouter();
 
   return (
     <>

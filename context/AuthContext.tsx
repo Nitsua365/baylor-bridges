@@ -11,9 +11,10 @@ import {
   UserCredential
 } from "firebase/auth"
 
-import { collection, addDoc, query, where, DocumentData, getDocs } from "firebase/firestore"
+import { collection, addDoc, query, where, DocumentData, getDocs, setDoc, doc } from "firebase/firestore"
 
 import { UserFormData } from "../pages/sign-up";
+import { UserDTO } from "pages/home";
 
 // interface user data
 interface User {
@@ -28,17 +29,6 @@ interface Error {
   message: string | null
 }
 
-interface UserDTO {
-  uid: string;
-  role: string;
-  personalEmail: string;
-  baylorEmail: string;
-  firstName: string;
-  lastName: string;
-  phoneNumber: string;
-  city: string;
-  state: string;
-}
 
 const AuthContext = createContext<any>({});
 
@@ -53,14 +43,14 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
   // error with login or sign up
   const [error, setError] = React.useState<Error | null>(null);
 
-  // stores user data
-  const [userData, setUserData] = React.useState<UserDTO | null>(null);
-
   // login with email and password
   const login = async (email: string, password: string) : Promise<void> => { 
-    signInWithEmailAndPassword(auth, email, password)
-      .then((val) => setError({ isError: false, message: null }))
-      .catch((err) => setError({ isError: true, message: err.message }))
+    await signInWithEmailAndPassword(auth, email, password)
+      .then(({ user } : UserCredential) => { 
+        setError({ isError: false, message: null }) 
+        setUser({ email: user.email, uid: user.uid, displayName: user.displayName })
+      })
+      .catch((err : any) => setError({ isError: true, message: err.message }))
   }
 
   // signUp with email and password
@@ -68,8 +58,8 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
 
     const email: string = (data.role === "student") ? data.baylorEmail : data.personalEmail;
 
-    createUserWithEmailAndPassword(auth, email, data.password)
-      .then(async (user : UserCredential) => {
+    await createUserWithEmailAndPassword(auth, email, data.password)
+      .then(( { user } : UserCredential) => {
 
         // get all data except for password
         const { 
@@ -91,16 +81,15 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
           lastName: lastName || "",
           city: city || "",
           state: state || "",
-          role: role || "",
-          uid: user.user.uid
+          role: role || ""
         }
 
-        // add Document to the database
-        addDoc(collection(db, "users"), insert)
+        // add document to db
+        setDoc(doc(db, "users", user.uid), insert)
           .then((val) => {
             setError({ isError: false, message: null })
-            // set the current user
-            setUserData(insert);
+            // set the current user credential
+            setUser({ uid: user.uid, email: user.email, displayName: user.displayName });
           })
           .catch((err) => setError({ isError: true, message: err.message }) )
 
@@ -110,26 +99,18 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
 
   // logout with current auth
   const logOut = async () => {
-    setUser(null);
     await signOut(auth);
+    setUser(null);
   }
 
   const clearError = () => setError({ isError: false, message: null })
 
   // Hook for onAuthStateChange to set or remove the user
   React.useEffect(() => {
-    const unSub: Unsubscribe = onAuthStateChanged(auth, user => { 
-      if (user) {
-        setUser({ uid: user.uid, email: user.email, displayName: user.displayName }) 
+    const unSub: Unsubscribe = onAuthStateChanged(auth, userCred => { 
+      if (userCred) setUser({ uid: userCred.uid, email: userCred.email, displayName: userCred.displayName })
+      else setUser(null)
 
-        // const coll = collection(db, "users");
-        // getDocs(query(coll, where('uid', '==', user.uid)))
-        //   .then(({ docs }) => console.log(docs))
-
-      }
-      else {
-        setUser(null)
-      }
       setLoading(false);
     })
     return () => unSub();
@@ -137,7 +118,7 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
 
 
   return (
-    <AuthContext.Provider value={{ user, login, signUp, logOut, error, userData, clearError }}>
+    <AuthContext.Provider value={{ user, login, signUp, logOut, error, clearError }}>
       {(loading) ? null : children}
     </AuthContext.Provider>
   );

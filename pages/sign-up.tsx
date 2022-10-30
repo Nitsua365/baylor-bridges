@@ -56,15 +56,13 @@ const SignUp: NextPage = () => {
     register,
     handleSubmit,
     formState: { errors: formErrors },
-    getValues,
-    clearErrors
+    getValues
   } = useForm<UserFormData>({ reValidateMode: 'onBlur' });
 
   // on submit handler to create a new user
-  const onSubmit = (data: UserFormData) : void => { 
-    signUp({ ...data, role: roleToggle });
-    if (!authError?.isError)
-      router.replace('/login');
+  const onSubmit = async (data: UserFormData) : Promise<void> => { 
+    await signUp({ ...data, role: roleToggle });
+    if (!authError?.isError) router.replace('/home')
   }
 
   // validation and registration for react hook forms
