@@ -11,7 +11,7 @@ import {
   UserCredential
 } from "firebase/auth"
 
-import { collection, addDoc, query, where, DocumentData, getDocs, setDoc, doc } from "firebase/firestore"
+import { setDoc, doc } from "firebase/firestore"
 
 import { UserFormData } from "../pages/sign-up";
 import { UserDTO } from "pages/home";
