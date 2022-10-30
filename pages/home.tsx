@@ -1,16 +1,48 @@
+import { db } from "config/firebase";
+import { useAuth } from "context/AuthContext";
+import { doc, getDoc } from "firebase/firestore";
 import type { NextPage } from "next";
-import { withProtected } from "../utils/routeProtection";
+import { NextRouter, useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
-const Home: NextPage = ({ auth } : any) => {
-  const { user, logOut } = auth;
+import useProtection from "utils/useProtection";
 
-  const handleLogout = async () => await logOut();
+export interface UserDTO {
+  role: string;
+  personalEmail: string;
+  baylorEmail: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  city: string;
+  state: string;
+}
+
+const Home: NextPage = () => {
+  const { logOut, user } = useAuth();
+  const { isAuthenticated : isAuthed } = useProtection();
+
+  const router: NextRouter = useRouter();
+
+  const [userData, setUserData] = useState<UserDTO | undefined>(undefined)
+
+  const handleLogout = async () => {
+    await logOut();
+    router.replace('/')
+  }
+
+  useEffect(() => {
+    if (user && isAuthed) {
+      getDoc(doc(db, "users", user.uid))
+        .then((getUser) => setUserData(getUser.data()))
+    }
+  }, [user, isAuthed])
 
   return (
-    user && (
+    isAuthed && userData && (
       <>
         <div>
-          { Object.entries(user).map(([k, v]) => `${k} : ${v}\n`) }
+          { Object.entries(userData).map(([k, v]) => <div key={`${k} : ${v}`}>{`${k} : ${v}\n`}</div>) }
         </div>
         <button onClick={handleLogout}>
           Logout
@@ -21,4 +53,4 @@ const Home: NextPage = ({ auth } : any) => {
 
 }
 
-export default withProtected(Home);
+export default Home;

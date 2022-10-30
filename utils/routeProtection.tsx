@@ -1,14 +1,14 @@
 import { useRouter } from "next/router";
 import React from "react";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "context/AuthContext";
 
-export function withPublic(Component: React.FC) {
+export function withPublic(Component: React.FC, pageRedirect: string) {
   return function WithPub(props: any) {
     const auth = useAuth();
     const router = useRouter();
 
-    if (auth.user) {
-      router.replace('/home')
+    if (!auth.isError && auth.user) {
+      router.replace(pageRedirect)
       return <></>
     }
 
@@ -21,7 +21,7 @@ export function withProtected(Component: React.FC) {
     const auth = useAuth();
     const router = useRouter();
 
-    if (!auth.user) {
+    if (auth.isError || !auth.user || !auth.userData) {
       router.replace('/login')
       return <></>
     }

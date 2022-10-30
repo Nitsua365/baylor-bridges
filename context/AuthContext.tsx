@@ -7,13 +7,14 @@ import {
   onAuthStateChanged, 
   signInWithEmailAndPassword,
   signOut, 
-  Unsubscribe
+  Unsubscribe,
+  UserCredential
 } from "firebase/auth"
 
-import { collection, addDoc, setDoc, doc } from "firebase/firestore"
+import { setDoc, doc } from "firebase/firestore"
 
 import { UserFormData } from "../pages/sign-up";
-
+import { UserDTO } from "pages/home";
 
 // interface user data
 interface User {
@@ -27,6 +28,7 @@ interface Error {
   isError: boolean,
   message: string | null
 }
+
 
 const AuthContext = createContext<any>({});
 
@@ -43,42 +45,72 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
 
   // login with email and password
   const login = async (email: string, password: string) : Promise<void> => { 
-    signInWithEmailAndPassword(auth, email, password)
-      .then((val) => setError({ isError: false, message: null }))
-      .catch((err) => setError({ isError: true, message: err.message }))
+    await signInWithEmailAndPassword(auth, email, password)
+      .then(({ user } : UserCredential) => { 
+        setError({ isError: false, message: null }) 
+        setUser({ email: user.email, uid: user.uid, displayName: user.displayName })
+      })
+      .catch((err : any) => setError({ isError: true, message: err.message }))
   }
 
   // signUp with email and password
-  const signUp = async (data: UserFormData) : Promise<void> => { 
-    createUserWithEmailAndPassword(auth, data.email, data.password)
-      .then(async (val) => {
+  const signUp = async (data: UserFormData) : Promise<void> => {
+
+    const email: string = (data.role === "student") ? data.baylorEmail : data.personalEmail;
+
+    await createUserWithEmailAndPassword(auth, email, data.password)
+      .then(( { user } : UserCredential) => {
 
         // get all data except for password
-        const { email, phoneNumber } = data;
+        const { 
+              personalEmail,
+              baylorEmail,
+              phoneNumber,
+              firstName, 
+              lastName,
+              city,
+              state,
+              role
+            } = data;
 
-        // set the error state
-        setError({ isError: false, message: null })
+        const insert: UserDTO = {
+          personalEmail: personalEmail || "",
+          baylorEmail : baylorEmail || "",
+          phoneNumber: phoneNumber || "",
+          firstName: firstName || "",
+          lastName: lastName || "",
+          city: city || "",
+          state: state || "",
+          role: role || ""
+        }
 
-        const added = await addDoc(collection(db, "users"), {
-          email,
-          phoneNumber
-        });
+        // add document to db
+        setDoc(doc(db, "users", user.uid), insert)
+          .then((val) => {
+            setError({ isError: false, message: null })
+            // set the current user credential
+            setUser({ uid: user.uid, email: user.email, displayName: user.displayName });
+          })
+          .catch((err) => setError({ isError: true, message: err.message }) )
+
       })
       .catch((err) => setError({ isError: true, message: err.message }))
   }
 
   // logout with current auth
   const logOut = async () => {
-    setUser(null);
     await signOut(auth);
+    setUser(null);
   }
 
+  const clearError = () => setError({ isError: false, message: null })
 
   // Hook for onAuthStateChange to set or remove the user
   React.useEffect(() => {
-    const unSub: Unsubscribe = onAuthStateChanged(auth, user => { 
-      if (user) setUser({ uid: user.uid, email: user.email, displayName: user.displayName }) 
+    const unSub: Unsubscribe = onAuthStateChanged(auth, userCred => { 
+      if (userCred) setUser({ uid: userCred.uid, email: userCred.email, displayName: userCred.displayName })
       else setUser(null)
+
       setLoading(false);
     })
     return () => unSub();
@@ -86,7 +118,7 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
 
 
   return (
-    <AuthContext.Provider value={{ user, login, signUp, logOut, error }}>
+    <AuthContext.Provider value={{ user, login, signUp, logOut, error, clearError }}>
       {(loading) ? null : children}
     </AuthContext.Provider>
   );
