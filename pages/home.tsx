@@ -1,9 +1,10 @@
 import { db } from "config/firebase";
 import { useAuth } from "context/AuthContext";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, DocumentData, DocumentSnapshot, getDoc } from "firebase/firestore";
 import type { NextPage } from "next";
 import { NextRouter, useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import useSWR from "swr";
 
 import useProtection from "utils/useProtection";
 
@@ -24,19 +25,16 @@ const Home: NextPage = () => {
 
   const router: NextRouter = useRouter();
 
-  const [userData, setUserData] = useState<UserDTO | undefined>(undefined)
+  // fetch the user by their user id in firestore
+  const { data: userData } = useSWR(`/users/${user?.uid}`, async (): Promise<DocumentData | undefined> => { 
+    const document: DocumentSnapshot<DocumentData> = await getDoc(doc(db, "users", user.uid));
+    return document.data();
+  })
 
   const handleLogout = async () => {
     await logOut();
     router.replace('/')
   }
-
-  useEffect(() => {
-    if (user && isAuthed) {
-      getDoc(doc(db, "users", user.uid))
-        .then((getUser) => setUserData(getUser.data()))
-    }
-  }, [user, isAuthed])
 
   return (
     isAuthed && userData && (

@@ -13,7 +13,7 @@ interface LoginForm {
 
 const Login: NextPage = () => {
 
-  const { login, error, clearError } = useAuth();
+  const { login, error: loginError, clearError } = useAuth();
   const router: NextRouter = useRouter();
   
   const {
@@ -26,12 +26,18 @@ const Login: NextPage = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
-  useEffect(() => clearError(), [])
+  // useEffect(() => clearError(), [])
   
   const handleLogin = async (): Promise<void> => {
     // login with email and password
+
     await login(email, password);
-    if (!error?.isError) router.replace('/home');
+
+    console.log(loginError);
+
+    if (loginError && !loginError.isError)
+      router.replace('/home');
+
   }
 
   return (
@@ -41,15 +47,15 @@ const Login: NextPage = () => {
           <h5 className="text-gray-900 text-xl leading-tight font-medium mb-3">Sign in</h5>
           <form onSubmit={handleSubmit(handleLogin)}>
             <div className="mt-2 mb-2 w-56">
-              <input { ...register('email') } type="text" id="email" onChange={(e) => setEmail(e.target.value)} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Email" />
+              <input { ...register('email') } type="text" id="login_email" onChange={(e) => setEmail(e.target.value)} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Email" />
             </div>
             <div className="mt-2 mb-2 w-56">
-              <input { ...register('password') } type="password" id="password" onChange={(e) => setPassword(e.target.value)} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Password" />
+              <input { ...register('password') } type="password" id="login_password" onChange={(e) => setPassword(e.target.value)} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Password" />
             </div>
             <div>
-            {error?.isError && (
+            {loginError?.isError && (
               <div className="text-red-500 text-xs">
-                {error.message}
+                {loginError.message}
               </div>
             )}
             </div>

@@ -7,12 +7,12 @@ const useProtection = () => {
   const router: NextRouter = useRouter();
   const { user } = useAuth();
 
-  const [isAuthenticated, setIsAuthenticated] = useState<Boolean>(false)
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
 
   useEffect(() => {
     if (!user) {
       router.replace('/login')
-      setIsAuthenticated(false);
+      setIsAuthenticated(false)
     }
     else setIsAuthenticated(true)    
   }, [user])
