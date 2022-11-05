@@ -3,10 +3,9 @@ import { useAuth } from "context/AuthContext";
 import { doc, DocumentData, DocumentSnapshot, getDoc } from "firebase/firestore";
 import type { NextPage } from "next";
 import { NextRouter, useRouter } from "next/router";
-import { useEffect, useState } from "react";
 import useSWR from "swr";
 
-import useProtection from "utils/useProtection";
+import { useProtection } from "utils/useProtection";
 
 export interface UserDTO {
   role: string;
@@ -19,9 +18,9 @@ export interface UserDTO {
   state: string;
 }
 
-const Home: NextPage = () => {
+const Home: NextPage | any = () => {
   const { logOut, user } = useAuth();
-  const { isAuthenticated : isAuthed } = useProtection();
+  const [ isAuthed ] = useProtection();
   const router: NextRouter = useRouter();
 
   // fetch the user by their user id in firestore
@@ -35,8 +34,9 @@ const Home: NextPage = () => {
     router.replace('/')
   }
 
-  if (!isAuthed)
+  if (!isAuthed) {
     return <></>
+  }
 
   return (
     isAuthed && userData && (

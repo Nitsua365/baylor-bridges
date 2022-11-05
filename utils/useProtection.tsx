@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { NextRouter, useRouter } from "next/router";
 import { useAuth } from "context/AuthContext";
 
-const useProtection = () => {
+export const useProtection = () => {
 
   const router: NextRouter = useRouter();
   const { user } = useAuth();
@@ -14,11 +14,8 @@ const useProtection = () => {
       router.replace('/login')
       setIsAuthenticated(false)
     }
-    else setIsAuthenticated(true)    
+    else setIsAuthenticated(true)
   }, [user])
   
-  return { isAuthenticated }
-
+  return [ isAuthenticated ] as const;
 }
-
-export default useProtection;
