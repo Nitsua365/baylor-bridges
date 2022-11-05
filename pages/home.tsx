@@ -22,7 +22,6 @@ export interface UserDTO {
 const Home: NextPage = () => {
   const { logOut, user } = useAuth();
   const { isAuthenticated : isAuthed } = useProtection();
-
   const router: NextRouter = useRouter();
 
   // fetch the user by their user id in firestore
@@ -35,6 +34,9 @@ const Home: NextPage = () => {
     await logOut();
     router.replace('/')
   }
+
+  if (!isAuthed)
+    return <></>
 
   return (
     isAuthed && userData && (

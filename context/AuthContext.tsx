@@ -47,10 +47,10 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
   const login = async (email: string, password: string) : Promise<void> => { 
     try {
       const { user: userCred }: UserCredential = await signInWithEmailAndPassword(auth, email, password)
-      setError({ isError: false, message: null }) 
+      setError({ isError: false, message: null })
       setUser({ email: userCred.email, uid: userCred.uid, displayName: userCred.displayName })
     }
-    catch (error: any) { setError({ isError: true, message: error.message }) }
+    catch (error: any) { setError({ isError: true, message: error.toString() }) }
   }
 
   // signUp with email and password
@@ -61,8 +61,6 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
     try {
 
       const { user } : UserCredential = await createUserWithEmailAndPassword(auth, email, data.password)
-
-      setError({ isError: false, message: null })
       
       // get all data except for password
       const { 
@@ -93,16 +91,21 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
         // add document to db
         await setDoc(doc(db, "users", user.uid), insert)
 
+        // set the error
         setError({ isError: false, message: null })
 
         // set the current user credential
         setUser({ uid: user.uid, email: user.email, displayName: user.displayName })
       
       }
-      catch(error: any) { setError({ isError: true, message: error.toString() }) }
+      catch(error: any) { 
+        setError({ isError: true, message: error.toString() }) 
+      }
 
     }
-    catch (error: any) { setError({ isError: true, message: error.toString() }) }
+    catch (error: any) { 
+      setError({ isError: true, message: error.toString() })  
+    }
 
   }
 
@@ -112,7 +115,7 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
     setUser(null);
   }
 
-  const clearError = () => setError({ isError: false, message: null })
+  const clearError = async () => setError({ isError: false, message: null })
 
   // Hook for onAuthStateChange to set or remove the user
   React.useEffect(() => {

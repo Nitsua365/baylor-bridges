@@ -41,7 +41,7 @@ type UserRoles = "student" | "alumni";
 const SignUp: NextPage = () => {
 
   // auth hook resources
-  const { signUp, error : authError, clearError } = useAuth();
+  const { signUp, error : authError, clearError : clearAuthErrors } = useAuth();
 
   // page router
   const router: NextRouter = useRouter();
@@ -49,29 +49,30 @@ const SignUp: NextPage = () => {
   // state variables
   const [roleToggle, setRoleToggle] = useState<UserRoles>("student");
 
-  useEffect(clearError, [])
-
   // user form hook
   const {
     register,
     handleSubmit,
     formState: { errors: formErrors },
+    clearErrors : clearFormErrors,
     getValues,
     setValue
   } = useForm<UserFormData>({ reValidateMode: 'onBlur' });
 
   // on submit handler to create a new user
-  const onSubmit = async (data: UserFormData) : Promise<void> => { 
+  const handleSignUp = async (data: UserFormData) : Promise<void> => { 
+
     await signUp({ ...data, role: roleToggle });
-    if (!authError?.isError)
-      router.replace('/home')
+
+    if (!authError?.isError) router.replace('/home')
   }
 
   // validation and registration for react hook forms
   const validation: UserValidationType = {
     baylorEmail: { ...register('baylorEmail', { 
         required: roleToggle !== "alumni" && roleToggle === "student", 
-        disabled: roleToggle === "alumni"
+        disabled: roleToggle === "alumni",
+        validate: (email) => /^.+@baylor.edu$/.test(email)
       }) 
     },
     personalEmail: { ...register('personalEmail', { required: true }) },
@@ -101,7 +102,7 @@ const SignUp: NextPage = () => {
             Sign up
           </h5>
 
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit(handleSignUp)}>
             <div className="mb-2 grid grid-flow-col" role="group">
               <div>
                 <h1 className="mr-4 pt-2">Are you:</h1>
@@ -161,7 +162,6 @@ const SignUp: NextPage = () => {
             <button type="submit" className="mt-2 inline-block px-6 py-2.5 bg-emerald-500 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-emerald-500 hover:shadow-lg focus:bg-emerald-600 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-teal-600 active:shadow-lg transition duration-100 ease-in-out">Sign Up</button>
           </form>
           <div>
-            {/* {JSON.stringify(authError)} */}
             {authError?.isError && <p className="text-red-500 pb-0 mb-0 text-xs">{authError.message}</p>}
           </div>
         </div>
