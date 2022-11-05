@@ -41,7 +41,7 @@ type UserRoles = "student" | "alumni";
 const SignUp: NextPage = () => {
 
   // auth hook resources
-  const { signUp, error : authError, clearError } = useAuth();
+  const { signUp, error : authError, clearError : clearAuthErrors } = useAuth();
 
   // page router
   const router: NextRouter = useRouter();
@@ -49,39 +49,57 @@ const SignUp: NextPage = () => {
   // state variables
   const [roleToggle, setRoleToggle] = useState<UserRoles>("student");
 
-  useEffect(() => clearError(), [])
-
   // user form hook
   const {
     register,
     handleSubmit,
     formState: { errors: formErrors },
-    getValues
+    clearErrors : clearFormErrors,
+    getValues,
+    setValue,
+    watch
   } = useForm<UserFormData>({ reValidateMode: 'onBlur' });
 
   // on submit handler to create a new user
-  const onSubmit = async (data: UserFormData) : Promise<void> => { 
-    await signUp({ ...data, role: roleToggle });
-    if (!authError?.isError) router.replace('/home')
+  const handleSignUp = async (data: UserFormData) : Promise<void> => { 
+
+    try {
+      await signUp({ ...data, role: roleToggle });
+
+      if (!authError?.isError) 
+        router.replace('/home')
+    }
+    catch (error) {}
   }
 
   // validation and registration for react hook forms
   const validation: UserValidationType = {
-    baylorEmail: { ...register('baylorEmail', { required: true, disabled: roleToggle === "alumni" }) },
-    personalEmail: { ...register('personalEmail', { required: true }) },
-    firstName: { ...register('firstName', { required: true }) },
-    lastName: { ...register('lastName', { required: true }) },
-    password: { ...register('password', { required: true }) },
+    baylorEmail: { ...register('baylorEmail', { 
+        required: roleToggle !== "alumni" && roleToggle === "student", 
+        disabled: roleToggle === "alumni",
+        validate: (email) => /^.+@baylor.edu$/.test(email),
+        onBlur: () => clearAuthErrors()
+      }) 
+    },
+    personalEmail: { ...register('personalEmail', { required: true, onBlur: () => clearAuthErrors() }) },
+    firstName: { ...register('firstName', { required: true, onBlur: () => clearAuthErrors() }) },
+    lastName: { ...register('lastName', { required: true, onBlur: () => clearAuthErrors() }) },
+    password: { ...register('password', { required: true, onBlur: () => clearAuthErrors() }) },
     confirmPassword: {
       ...register('confirmPassword', { 
         required: true, 
-        validate: () => getValues().password === getValues().confirmPassword 
+        validate: () => getValues().password === getValues().confirmPassword,
+        onBlur: () => clearAuthErrors()
       })
     },
-    phoneNumber: { ...register('phoneNumber', { required: true }) },
-    city: { ...register('city', { required: true }) },
-    state: { ...register('state', { required: true }) }
+    phoneNumber: { ...register('phoneNumber', { required: true, onBlur: () => clearAuthErrors() }) },
+    city: { ...register('city', { required: true, onBlur: () => clearAuthErrors() }) },
+    state: { ...register('state', { required: true, onBlur: () => clearAuthErrors() }) }
   }
+
+  useEffect(() => {
+    if (roleToggle === "alumni") setValue('baylorEmail', "")
+  }, [roleToggle])
 
   return (
     <>
@@ -91,7 +109,7 @@ const SignUp: NextPage = () => {
             Sign up
           </h5>
 
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit(handleSignUp)}>
             <div className="mb-2 grid grid-flow-col" role="group">
               <div>
                 <h1 className="mr-4 pt-2">Are you:</h1>
@@ -116,7 +134,7 @@ const SignUp: NextPage = () => {
                 {formErrors.personalEmail && <p className="text-red-500 pb-0 mb-0 text-xs">Invalid Email</p>}
               </div>
               <div className="mt-1 mb-2 w-56">
-                <input { ...validation.baylorEmail } placeholder="Baylor Email" type="text" id="baylorEmail" disabled={roleToggle === "alumni"} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 disabled:bg-slate-300 transition-colors disabled:text-slate-500 disabled:border-slate-200" />
+                <input { ...validation.baylorEmail } placeholder="Baylor Email" type="text" id="baylorEmail" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 disabled:bg-slate-300 transition-colors disabled:text-slate-500 disabled:border-slate-200" />
                 {formErrors.baylorEmail && <p className="text-red-500 pb-0 mb-0 text-xs">Invalid Email</p>}
               </div>
               <div className="mt-1 mb-2 w-56">
@@ -149,10 +167,10 @@ const SignUp: NextPage = () => {
               </div>
             </div>
             <button type="submit" className="mt-2 inline-block px-6 py-2.5 bg-emerald-500 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-emerald-500 hover:shadow-lg focus:bg-emerald-600 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-teal-600 active:shadow-lg transition duration-100 ease-in-out">Sign Up</button>
-            <div>
-              {authError?.isError && <p className="text-red-500 pb-0 mb-0 text-xs">{authError.message}</p>}
-            </div>
           </form>
+          <div>
+            {authError?.isError && <p className="text-red-500 pb-0 mb-0 text-xs">{authError.message}</p>}
+          </div>
         </div>
       </div>
     </>

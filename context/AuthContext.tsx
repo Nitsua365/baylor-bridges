@@ -45,12 +45,12 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
 
   // login with email and password
   const login = async (email: string, password: string) : Promise<void> => { 
-    await signInWithEmailAndPassword(auth, email, password)
-      .then(({ user } : UserCredential) => { 
-        setError({ isError: false, message: null }) 
-        setUser({ email: user.email, uid: user.uid, displayName: user.displayName })
-      })
-      .catch((err : any) => setError({ isError: true, message: err.message }))
+    try {
+      const { user: userCred }: UserCredential = await signInWithEmailAndPassword(auth, email, password)
+      setError({ isError: false, message: null })
+      setUser({ email: userCred.email, uid: userCred.uid, displayName: userCred.displayName })
+    }
+    catch (error: any) { setError({ isError: true, message: error.toString() }) }
   }
 
   // signUp with email and password
@@ -58,43 +58,56 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
 
     const email: string = (data.role === "student") ? data.baylorEmail : data.personalEmail;
 
-    await createUserWithEmailAndPassword(auth, email, data.password)
-      .then(( { user } : UserCredential) => {
+    try {
 
-        // get all data except for password
-        const { 
-              personalEmail,
-              baylorEmail,
-              phoneNumber,
-              firstName, 
-              lastName,
-              city,
-              state,
-              role
-            } = data;
+      const { user } : UserCredential = await createUserWithEmailAndPassword(auth, email, data.password)
+      
+      // get all data except for password
+      const { 
+            personalEmail,
+            baylorEmail,
+            phoneNumber,
+            firstName, 
+            lastName,
+            city,
+            state,
+            role
+          } = data;
 
-        const insert: UserDTO = {
-          personalEmail: personalEmail || "",
-          baylorEmail : baylorEmail || "",
-          phoneNumber: phoneNumber || "",
-          firstName: firstName || "",
-          lastName: lastName || "",
-          city: city || "",
-          state: state || "",
-          role: role || ""
-        }
+      const insert: UserDTO = {
+        personalEmail: personalEmail || "",
+        baylorEmail : baylorEmail || "",
+        phoneNumber: phoneNumber || "",
+        firstName: firstName || "",
+        lastName: lastName || "",
+        city: city || "",
+        state: state || "",
+        role: role || ""
+      }
+
+
+      try {
 
         // add document to db
-        setDoc(doc(db, "users", user.uid), insert)
-          .then((val) => {
-            setError({ isError: false, message: null })
-            // set the current user credential
-            setUser({ uid: user.uid, email: user.email, displayName: user.displayName });
-          })
-          .catch((err) => setError({ isError: true, message: err.message }) )
+        await setDoc(doc(db, "users", user.uid), insert)
 
-      })
-      .catch((err) => setError({ isError: true, message: err.message }))
+        // set the error
+        setError({ isError: false, message: null })
+
+        // set the current user credential
+        setUser({ uid: user.uid, email: user.email, displayName: user.displayName })
+      
+      }
+      catch(error: any) { 
+        setError({ isError: true, message: error.toString() }) 
+      }
+
+    }
+    catch (error: any) { 
+      setError({ isError: true, message: error.toString() })  
+      throw error;
+    }
+
   }
 
   // logout with current auth
@@ -103,7 +116,7 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
     setUser(null);
   }
 
-  const clearError = () => setError({ isError: false, message: null })
+  const clearError = async () => setError({ isError: false, message: null })
 
   // Hook for onAuthStateChange to set or remove the user
   React.useEffect(() => {
