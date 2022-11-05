@@ -105,6 +105,7 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
     }
     catch (error: any) { 
       setError({ isError: true, message: error.toString() })  
+      throw error;
     }
 
   }

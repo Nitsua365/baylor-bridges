@@ -56,15 +56,20 @@ const SignUp: NextPage = () => {
     formState: { errors: formErrors },
     clearErrors : clearFormErrors,
     getValues,
-    setValue
+    setValue,
+    watch
   } = useForm<UserFormData>({ reValidateMode: 'onBlur' });
 
   // on submit handler to create a new user
   const handleSignUp = async (data: UserFormData) : Promise<void> => { 
 
-    await signUp({ ...data, role: roleToggle });
+    try {
+      await signUp({ ...data, role: roleToggle });
 
-    if (!authError?.isError) router.replace('/home')
+      if (!authError?.isError) 
+        router.replace('/home')
+    }
+    catch (error) {}
   }
 
   // validation and registration for react hook forms
@@ -72,22 +77,24 @@ const SignUp: NextPage = () => {
     baylorEmail: { ...register('baylorEmail', { 
         required: roleToggle !== "alumni" && roleToggle === "student", 
         disabled: roleToggle === "alumni",
-        validate: (email) => /^.+@baylor.edu$/.test(email)
+        validate: (email) => /^.+@baylor.edu$/.test(email),
+        onBlur: () => clearAuthErrors()
       }) 
     },
-    personalEmail: { ...register('personalEmail', { required: true }) },
-    firstName: { ...register('firstName', { required: true }) },
-    lastName: { ...register('lastName', { required: true }) },
-    password: { ...register('password', { required: true }) },
+    personalEmail: { ...register('personalEmail', { required: true, onBlur: () => clearAuthErrors() }) },
+    firstName: { ...register('firstName', { required: true, onBlur: () => clearAuthErrors() }) },
+    lastName: { ...register('lastName', { required: true, onBlur: () => clearAuthErrors() }) },
+    password: { ...register('password', { required: true, onBlur: () => clearAuthErrors() }) },
     confirmPassword: {
       ...register('confirmPassword', { 
         required: true, 
-        validate: () => getValues().password === getValues().confirmPassword 
+        validate: () => getValues().password === getValues().confirmPassword,
+        onBlur: () => clearAuthErrors()
       })
     },
-    phoneNumber: { ...register('phoneNumber', { required: true }) },
-    city: { ...register('city', { required: true }) },
-    state: { ...register('state', { required: true }) }
+    phoneNumber: { ...register('phoneNumber', { required: true, onBlur: () => clearAuthErrors() }) },
+    city: { ...register('city', { required: true, onBlur: () => clearAuthErrors() }) },
+    state: { ...register('state', { required: true, onBlur: () => clearAuthErrors() }) }
   }
 
   useEffect(() => {
