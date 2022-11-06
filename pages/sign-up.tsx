@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 
 import { useForm, UseFormRegisterReturn } from "react-hook-form";
 
-import { useAuth } from "../context/AuthContext"
+import { useAuth } from "context/AuthContext"
 
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
