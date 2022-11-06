@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 
 import { useForm, UseFormRegisterReturn } from "react-hook-form";
 
-import { useAuth } from "../context/AuthContext"
+import { useAuth } from "context/AuthContext"
 
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
@@ -56,8 +56,7 @@ const SignUp: NextPage = () => {
     formState: { errors: formErrors },
     clearErrors : clearFormErrors,
     getValues,
-    setValue,
-    watch
+    setValue
   } = useForm<UserFormData>({ reValidateMode: 'onBlur' });
 
   // on submit handler to create a new user
