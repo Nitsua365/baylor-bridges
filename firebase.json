@@ -14,6 +14,10 @@
       "**/node_modules/**"
     ]
   },
+  "functions": {
+    "source": ".",
+    "runtime": "nodejs18"
+  },
   "storage": {
     "rules": "storage.rules"
   },
