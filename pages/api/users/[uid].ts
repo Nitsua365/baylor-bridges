@@ -2,17 +2,6 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 import { firestore } from "config/firebaseAdmin";
 
-type UserDoc = {
-  baylorEmail: string,
-  firstName: string,
-  lastName: string,
-  city: string,
-  personalEmail: string,
-  phoneNumber: string,
-  role: string,
-  state: string
-}
-
 export async function getUserById(uid: string) { 
   const doc: FirebaseFirestore.DocumentSnapshot<FirebaseFirestore.DocumentData> = await firestore.collection('users').doc(uid).get();
   return doc.data();
