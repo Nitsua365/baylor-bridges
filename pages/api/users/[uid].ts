@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-import firestore from "config/firebaseAdmin";
-import { DocumentData, DocumentSnapshot } from "firebase/firestore";
+import { firestore } from "config/firebaseAdmin";
 
 export async function getUserById(uid: string) { 
   const doc = await firestore.collection('users').doc(uid).get();

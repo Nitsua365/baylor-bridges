@@ -18,4 +18,4 @@ if (!admin.apps.length) {
 
 const firestore = admin.firestore()
 
-export default firestore
+export { firestore }
