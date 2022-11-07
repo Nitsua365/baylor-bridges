@@ -30,4 +30,4 @@ export {
   auth
 }
 
-export default firebase;
+// export default firebase;

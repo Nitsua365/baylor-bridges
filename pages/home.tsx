@@ -5,7 +5,7 @@ import type { NextPage } from "next";
 import { NextRouter, useRouter } from "next/router";
 import useSWR from "swr";
 
-import { useProtection } from "utils/useProtection";
+import { useProtection } from "utils/hooks/useProtection";
 
 export interface UserDTO {
   role: string;
