@@ -23,11 +23,13 @@ const Home: NextPage | any = () => {
   const [ isAuthed ] = useProtection();
   const router: NextRouter = useRouter();
 
-  // fetch the user by their user id in firestore
-  const { data: userData } = useSWR(`/users/${user?.uid}`, async (): Promise<DocumentData | undefined> => { 
-    const document: DocumentSnapshot<DocumentData> = await getDoc(doc(db, "users", user.uid));
-    return document.data();
-  })
+  const { data: userData } = useSWR(
+    `/api/users/${user?.uid}`,
+    async () => { 
+      const res = await fetch(`/api/users/${user?.uid}`, { method: "GET" }) 
+      return res.json()
+    }
+  );
 
   const handleLogout = async () => {
     await logOut();
