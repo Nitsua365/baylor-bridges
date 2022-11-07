@@ -1,13 +1,21 @@
-// import * as admin from 'firebase-admin'
+import * as admin from 'firebase-admin'
 
-// import { firebaseConfig } from './firebase.config';
+import { firebaseConfig, firebaseDevConfig } from './firebase.config';
 
-// if (!admin.apps.length) {
-//   admin.initializeApp({
-//     credential: admin.credential.cert({
-//       projectId: firebaseConfig.projectId,
-//       privateKey: firebaseConfig.apiKey,
-//     }),
-//     databaseURL: firebaseConfig.databaseURL,
-//   });
-// }
+const env = process.env.NODE_ENV === "production"
+
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert({
+      clientEmail: process.env.NEXT_PUBLIC_FIREBASE_CLIENT_EMAIL,
+      projectId: firebaseConfig.projectId,
+      privateKey: process.env.NEXT_PUBLIC_FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n') || ""
+    }),
+    projectId: firebaseConfig.projectId,
+    // databaseURL: (env) ? firebaseConfig.databaseURL : firebaseDevConfig.databaseURL,
+  });
+}
+
+const firestore = admin.firestore()
+
+export default firestore
