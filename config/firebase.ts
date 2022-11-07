@@ -13,8 +13,6 @@ import { getStorage, FirebaseStorage, connectStorageEmulator } from "firebase/st
 
 const env = process.env.NODE_ENV === "production"
 
-console.log(firebaseDevConfig)
-
 const app: FirebaseApp = (env) ? initializeApp(firebaseConfig) : initializeApp({ appId: firebaseDevConfig.appId, projectId: firebaseDevConfig.projectId, apiKey: firebaseDevConfig.apiKey });
 const db: Firestore = (env) ? getFirestore(app) : getFirestore()
 const auth: Auth = (env) ? getAuth(app) : getAuth();
