@@ -1,6 +1,4 @@
-import { db } from "config/firebase";
 import { useAuth } from "context/AuthContext";
-import { doc, DocumentData, DocumentSnapshot, getDoc } from "firebase/firestore";
 import type { NextPage } from "next";
 import { NextRouter, useRouter } from "next/router";
 import useSWR from "swr";

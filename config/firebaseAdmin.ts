@@ -1,6 +1,6 @@
 import * as admin from 'firebase-admin'
 
-import { firebaseConfig, firebaseDevConfig } from './firebase.config';
+import { firebaseConfig } from './firebase.config';
 
 const env = process.env.NODE_ENV === "production"
 

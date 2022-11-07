@@ -2,7 +2,6 @@ import { useAuth } from "context/AuthContext";
 import type { NextPage } from "next";
 import { NextRouter, useRouter } from "next/router";
 
-import { useEffect, useState } from "react";
 import { useForm, UseFormRegisterReturn } from "react-hook-form";
 
 interface LoginForm {
