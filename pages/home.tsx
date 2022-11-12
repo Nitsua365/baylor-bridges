@@ -1,10 +1,12 @@
-import { Menu } from "@headlessui/react";
-import { useAuth } from "context/AuthContext";
 import type { NextPage } from "next";
 import { NextRouter, useRouter } from "next/router";
+import Link from "next/link";
 import useSWR from "swr";
 
+import { useAuth } from "context/AuthContext";
 import { useProtection } from "utils/hooks/useProtection";
+
+import { Menu } from "@headlessui/react";
 
 import { ChevronDownIcon } from "@heroicons/react/20/solid"
 
@@ -44,18 +46,21 @@ const Home: NextPage | any = () => {
             <div className="grid grid-flow-col px-1 py-1">
               <Menu.Item>
                 {({ active }) => (
-                  <a className={`${(active) ? 'bg-teal-900' : 'bg-teal-50' } text-black`} href="/profile">Profile</a>
+                  <div className={`${(active) ? 'bg-teal-900' : 'bg-teal-50' } text-black`}>
+                    <Link  href="/profile">Profile</Link>
+                  </div>
                 )}
               </Menu.Item>
               <Menu.Item>
                 {({ active }) => (
-                  <a
-                    className={`${(active) ? 'bg-teal-900' : 'bg-teal-50' } text-black`}
-                    href="/"
-                    onClick={handleLogout}
-                  >
-                    Log Out
-                  </a>
+                  <div className={`${(active) ? 'bg-teal-900' : 'bg-teal-50' } text-black`}>
+                    <Link
+                      href="/"
+                      onClick={handleLogout}
+                    >
+                      Log Out
+                    </Link>
+                  </div>
                 )}
               </Menu.Item>
             </div>

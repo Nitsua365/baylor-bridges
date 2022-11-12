@@ -13,7 +13,7 @@ import {
 
 import { setDoc, doc } from "firebase/firestore"
 
-import { UserFormData } from "../pages/sign-up";
+import { UserFormData } from "pages/sign-up";
 
 // interface user data
 interface User {
