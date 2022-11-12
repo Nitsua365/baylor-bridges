@@ -8,17 +8,6 @@ import { useProtection } from "utils/hooks/useProtection";
 
 import { ChevronDownIcon } from "@heroicons/react/20/solid"
 
-export interface UserDTO {
-  role: string;
-  personalEmail: string;
-  baylorEmail: string;
-  firstName: string;
-  lastName: string;
-  phoneNumber: string;
-  city: string;
-  state: string;
-}
-
 const Home: NextPage | any = () => {
   const { logOut, user } = useAuth();
   const [isAuthed] = useProtection();
@@ -51,22 +40,25 @@ const Home: NextPage | any = () => {
               <ChevronDownIcon className="w-4 h-4 inline" />
             </div>
           </Menu.Button>
-          <Menu.Items>
-            <Menu.Item>
-              {({ active }) => (
-                <a href="/profile">Profile</a>
-              )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <a
-                  href="/"
-                  onClick={handleLogout}
-                >
-                  Log Out
-                </a>
-              )}
-            </Menu.Item>
+          <Menu.Items className="absolute top-14 mt-2 w-30 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+            <div className="grid grid-flow-col px-1 py-1">
+              <Menu.Item>
+                {({ active }) => (
+                  <a className={`${(active) ? 'bg-teal-900' : 'bg-teal-50' } text-black`} href="/profile">Profile</a>
+                )}
+              </Menu.Item>
+              <Menu.Item>
+                {({ active }) => (
+                  <a
+                    className={`${(active) ? 'bg-teal-900' : 'bg-teal-50' } text-black`}
+                    href="/"
+                    onClick={handleLogout}
+                  >
+                    Log Out
+                  </a>
+                )}
+              </Menu.Item>
+            </div>
           </Menu.Items>
         </Menu>
       </nav>

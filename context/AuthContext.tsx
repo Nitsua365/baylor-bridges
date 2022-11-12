@@ -14,7 +14,6 @@ import {
 import { setDoc, doc } from "firebase/firestore"
 
 import { UserFormData } from "../pages/sign-up";
-import { UserDTO } from "pages/home";
 
 // interface user data
 interface User {
@@ -29,6 +28,17 @@ interface Error {
   message: string | null
 }
 
+// User Data Transfer Object
+export interface UserDTO {
+  role: string;
+  personalEmail: string;
+  baylorEmail: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  city: string;
+  state: string;
+}
 
 const AuthContext = createContext<any>({});
 
