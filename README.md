@@ -23,7 +23,9 @@ npm run dev
 2. ```bash npm start```
 3. When running ```bash npm start``` it will run the cloud firebase emulator and WILL use the production firebase
 
-## VERCEL Deployment
+## Vercel Deployment
 - Branch will already deploy in a staging environment on Vercel
 - If the branch passes the build. It must be tested manually then deployed by tech lead
 - Branch will be merged into producction
+
+## Branch Naming: {DevName}-{Issue/Task}-{TicketNumber}
