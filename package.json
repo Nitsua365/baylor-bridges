@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "firebase emulators:start & next dev && fg",
+    "dev": "concurrently --kill-others \"firebase emulators:start\" \"next dev\"",
     "build": "next build",
     "start": "next build && next start",
     "lint": "next lint",
