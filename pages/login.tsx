@@ -1,6 +1,7 @@
 import { useAuth } from "context/AuthContext";
 import type { NextPage } from "next";
 import { NextRouter, useRouter } from "next/router";
+import { useEffect } from "react";
 
 import { useForm, UseFormRegisterReturn } from "react-hook-form";
 
@@ -22,15 +23,34 @@ const Login: NextPage = () => {
   const {
     formState: { errors: formErrors },
     register,
+    clearErrors : clearFormErrors,
     handleSubmit
   } = useForm<LoginForm>({ reValidateMode: 'onBlur' })
+
+
+  // clears UI errors for Authentication or Form when leaving page
+  useEffect(() => {
+    const handleRouteChange = () => {
+      clearAuthErrors()
+      clearFormErrors()
+    }
+
+    router.events.on('routeChangeComplete', handleRouteChange)
+
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange)
+    }
+  }, [])
   
   const handleLogin = async (data: LoginForm): Promise<void> => {
 
-    // login with email and password
-    await login(data.email, data.password);
+    try {
+      // login with email and password
+      await login(data.email, data.password);
 
-    if (!loginError?.isError) router.replace('/home')
+      if (!loginError?.isError) router.replace('/home')
+    }
+    catch (error) {}
   }
 
   const validation: LoginValidation = {

@@ -10,9 +10,11 @@
     "export": "next export"
   },
   "dependencies": {
-    "@emotion/react": "^11.10.4",
-    "@emotion/styled": "^11.10.4",
-    "@mui/material": "^5.10.11",
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@headlessui/react": "^1.7.4",
+    "@heroicons/react": "^2.0.13",
+    "@mui/material": "^5.10.13",
     "dotenv": "^16.0.3",
     "firebase": "^9.12.1",
     "firebase-admin": "^11.2.0",

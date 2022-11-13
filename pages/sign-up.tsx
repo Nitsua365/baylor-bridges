@@ -71,6 +71,20 @@ const SignUp: NextPage = () => {
     catch (error) {}
   }
 
+  // clears UI errors for Authentication and Form when leaving page
+  useEffect(() => {
+    const handleRouteChange = () => {
+      clearAuthErrors()
+      clearFormErrors()
+    }
+
+    router.events.on('routeChangeComplete', handleRouteChange)
+
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange)
+    }
+  }, [])
+
   // validation and registration for react hook forms
   const validation: UserValidationType = {
     baylorEmail: { ...register('baylorEmail', { 
@@ -120,7 +134,6 @@ const SignUp: NextPage = () => {
                   value={roleToggle}
                   exclusive
                   onChange={(e, newAlignment: UserRoles) => setRoleToggle(newAlignment) }
-                  aria-label="Platform"
                 >
                   <ToggleButton value="student">Student</ToggleButton>
                   <ToggleButton value="alumni">Alumni</ToggleButton>

@@ -13,8 +13,7 @@ import {
 
 import { setDoc, doc } from "firebase/firestore"
 
-import { UserFormData } from "../pages/sign-up";
-import { UserDTO } from "pages/home";
+import { UserFormData } from "pages/sign-up";
 
 // interface user data
 interface User {
@@ -29,6 +28,17 @@ interface Error {
   message: string | null
 }
 
+// User Data Transfer Object
+export interface UserDTO {
+  role: string;
+  personalEmail: string;
+  baylorEmail: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  city: string;
+  state: string;
+}
 
 const AuthContext = createContext<any>({});
 
@@ -50,7 +60,10 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
       setError({ isError: false, message: null })
       setUser({ email: userCred.email, uid: userCred.uid, displayName: userCred.displayName })
     }
-    catch (error: any) { setError({ isError: true, message: error.toString() }) }
+    catch (error: any) { 
+      setError({ isError: true, message: error.toString() }) 
+      throw error
+    }
   }
 
   // signUp with email and password
