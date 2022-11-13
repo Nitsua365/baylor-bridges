@@ -1,9 +1,9 @@
 import type { NextPage } from "next";
 import { NextRouter, useRouter } from "next/router";
 import Link from "next/link";
-import useSWR from "swr";
+import useSWR, { SWRResponse } from "swr";
 
-import { useAuth } from "context/AuthContext";
+import { useAuth, UserDTO } from "context/AuthContext";
 import { useProtection } from "utils/hooks/useProtection";
 
 import { Menu } from "@headlessui/react";
@@ -15,7 +15,7 @@ const Home: NextPage | any = () => {
   const [isAuthed] = useProtection();
   const router: NextRouter = useRouter();
 
-  const { data: userData } = useSWR(
+  const { data: userData } : SWRResponse = useSWR(
     `/api/users/${user?.uid}`,
     async () => {
       const res = await fetch(`/api/users/${user?.uid}`, { method: "GET" })
@@ -47,7 +47,7 @@ const Home: NextPage | any = () => {
               <Menu.Item>
                 {({ active }) => (
                   <div className={`${(active) ? 'bg-teal-900' : 'bg-teal-50' } text-black`}>
-                    <Link  href="/profile">Profile</Link>
+                    <Link href="/profile">Profile</Link>
                   </div>
                 )}
               </Menu.Item>
