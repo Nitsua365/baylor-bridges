@@ -134,7 +134,6 @@ const SignUp: NextPage = () => {
                   value={roleToggle}
                   exclusive
                   onChange={(e, newAlignment: UserRoles) => setRoleToggle(newAlignment) }
-                  aria-label="Platform"
                 >
                   <ToggleButton value="student">Student</ToggleButton>
                   <ToggleButton value="alumni">Alumni</ToggleButton>
