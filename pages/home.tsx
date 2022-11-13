@@ -3,7 +3,7 @@ import { NextRouter, useRouter } from "next/router";
 import Link from "next/link";
 import useSWR, { SWRResponse } from "swr";
 
-import { useAuth, UserDTO } from "context/AuthContext";
+import { useAuth } from "context/AuthContext";
 import { useProtection } from "utils/hooks/useProtection";
 
 import { Menu } from "@headlessui/react";
