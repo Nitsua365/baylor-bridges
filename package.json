@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "concurrently --kill-others \"firebase emulators:start\" \"next dev\"",
     "build": "next build",
-    "start": "next build && next start",
+    "start": "next start",
     "lint": "next lint",
     "export": "next export"
   },
