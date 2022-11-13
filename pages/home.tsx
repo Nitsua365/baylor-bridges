@@ -36,6 +36,8 @@ const Home: NextPage | any = () => {
       </Link>
     )
   })
+  MyLink.displayName = "MyLink";
+
 
   if (!isAuthed) {
     return <></>
