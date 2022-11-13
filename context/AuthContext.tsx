@@ -60,7 +60,10 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
       setError({ isError: false, message: null })
       setUser({ email: userCred.email, uid: userCred.uid, displayName: userCred.displayName })
     }
-    catch (error: any) { setError({ isError: true, message: error.toString() }) }
+    catch (error: any) { 
+      setError({ isError: true, message: error.toString() }) 
+      throw error
+    }
   }
 
   // signUp with email and password

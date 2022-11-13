@@ -12,18 +12,18 @@ import { ChevronDownIcon } from "@heroicons/react/20/solid"
 
 const Home: NextPage | any = () => {
   const { logOut, user } = useAuth();
-  const [isAuthed] = useProtection();
+  const [isAuthed] : readonly[boolean] = useProtection();
   const router: NextRouter = useRouter();
 
-  const { data: userData } : SWRResponse = useSWR(
+  const { data: userData, error } : SWRResponse = useSWR(
     `/api/users/${user?.uid}`,
     async () => {
       const res = await fetch(`/api/users/${user?.uid}`, { method: "GET" })
       return res.json()
-    }
+    },
   );
 
-  const handleLogout = async () => {
+  const handleLogout = async () : Promise<void> => {
     await logOut();
     router.replace('/')
   }
@@ -54,12 +54,11 @@ const Home: NextPage | any = () => {
               <Menu.Item>
                 {({ active }) => (
                   <div className={`${(active) ? 'bg-teal-900' : 'bg-teal-50' } text-black`}>
-                    <Link
-                      href="/"
+                    <button
                       onClick={handleLogout}
                     >
                       Log Out
-                    </Link>
+                    </button>
                   </div>
                 )}
               </Menu.Item>
