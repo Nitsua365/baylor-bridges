@@ -7,7 +7,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <AuthProvider>
-      <NextNProgress />
+      <NextNProgress color='teal' />
       <Component {...pageProps} />
     </AuthProvider>
   )
