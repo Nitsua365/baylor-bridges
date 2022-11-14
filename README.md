@@ -29,3 +29,7 @@ npm run dev
 - Branch will be merged into producction
 
 ## Branch Naming: {DevName}-{Issue/Task}-{TicketNumber}
+
+## DATA FETCHING CONVENTION:
+- Server side fetching is handled in getServerSideProps() and getStaticProps()
+- Client side fetching. Create an API Route, and use SWR.
