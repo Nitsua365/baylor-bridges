@@ -35,7 +35,7 @@ npm run dev
 - Client side fetching. Create an API Route, and use SWR.
 
 ## TAILWIND THEME:
-# Colors:
+### Colors:
   - use the "primary" color for the main emerald green color
   - use "primaryTwo" color for the teal green color
   - use "secondary" for the yellow/gold color
