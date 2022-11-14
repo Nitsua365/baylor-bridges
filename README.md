@@ -33,3 +33,10 @@ npm run dev
 ## DATA FETCHING CONVENTION:
 - Server side fetching is handled in getServerSideProps() and getStaticProps()
 - Client side fetching. Create an API Route, and use SWR.
+
+## TAILWIND THEME:
+# Colors:
+  - use the "primary" color for the main emerald green color
+  - use "primaryTwo" color for the teal green color
+  - use "secondary" for the yellow/gold color
+  - use "neutral" for the grey color
