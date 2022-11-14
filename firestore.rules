@@ -6,8 +6,13 @@ service cloud.firestore {
     }
 
     match /users/{user} {
-      allow read, write: 
+      allow write, read: 
         if isSignedIn() && isUser(user);
+    }
+
+    match /users {
+      allow read:
+        if isSignedIn();
     }
 
     function isSignedIn() {
