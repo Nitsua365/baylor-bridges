@@ -54,11 +54,12 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
   const [error, setError] = React.useState<Error | null>(null);
 
   // login with email and password
-  const login = async (email: string, password: string) : Promise<void> => { 
+  const login = async (email: string, password: string) : Promise<string | undefined> => { 
     try {
       const { user: userCred }: UserCredential = await signInWithEmailAndPassword(auth, email, password)
       setError({ isError: false, message: null })
       setUser({ email: userCred.email, uid: userCred.uid, displayName: userCred.displayName })
+      return userCred?.uid;
     }
     catch (error: any) { 
       setError({ isError: true, message: error.toString() }) 
@@ -67,7 +68,7 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
   }
 
   // signUp with email and password
-  const signUp = async (data: UserFormData) : Promise<void> => {
+  const signUp = async (data: UserFormData) : Promise<void | string> => {
 
     const email: string = (data.role === "student") ? data.baylorEmail : data.personalEmail;
 
@@ -104,14 +105,16 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
         // add document to db
         await setDoc(doc(db, "users", user.uid), insert)
 
+        // set the current user credential
+        setUser({ uid: user.uid, email: user.email, displayName: user.displayName })
+
         // set the error
         setError({ isError: false, message: null })
 
-        // set the current user credential
-        setUser({ uid: user.uid, email: user.email, displayName: user.displayName })
+        return user.uid
       
       }
-      catch(error: any) { 
+      catch(error: any) {
         setError({ isError: true, message: error.toString() }) 
       }
 
