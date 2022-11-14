@@ -46,9 +46,11 @@ const Login: NextPage = () => {
 
     try {
       // login with email and password
-      await login(data.email, data.password);
+      const uid: string | undefined = await login(data.email, data.password);
 
-      if (!loginError?.isError) router.replace('/home')
+      console.log(uid, loginError?.isError)
+
+      if (uid && !loginError?.isError) router.replace(`/home/${uid}`)
     }
     catch (error) {}
   }

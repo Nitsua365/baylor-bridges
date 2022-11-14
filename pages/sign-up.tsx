@@ -63,10 +63,10 @@ const SignUp: NextPage = () => {
   const handleSignUp = async (data: UserFormData) : Promise<void> => { 
 
     try {
-      await signUp({ ...data, role: roleToggle });
+      const uid: string | void = await signUp({ ...data, role: roleToggle });
 
-      if (!authError?.isError) 
-        router.replace('/home')
+      if (uid && !authError?.isError)
+        router.replace(`/home/${uid}`)
     }
     catch (error) {}
   }

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { NextRouter, useRouter } from "next/router";
 import { useAuth } from "context/AuthContext";
 
-export const useProtection = () => {
+export const useProtection = (uid: string) => {
 
   const router: NextRouter = useRouter();
   const { user } = useAuth();
@@ -10,7 +10,7 @@ export const useProtection = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
 
   useEffect(() => {
-    if (!user) {
+    if (!user || uid !== user.uid) {
       router.replace('/login')
       setIsAuthenticated(false)
     }
