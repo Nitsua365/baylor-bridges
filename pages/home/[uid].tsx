@@ -37,7 +37,7 @@ const Home: NextPage | any = ({ user, uid } : any) => {
 
   return (
     <>
-      <nav className="flex justify-end text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed relative bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 shadow-sm p-4">
+      <nav className="flex justify-end text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed relative bg-gradient-to-r from-primary-500 via-primary-600 to-primaryTwo-600 shadow-sm p-4">
         <Menu as={Fragment}>
           <Menu.Button className="p-2 border-2 border-white rounded-md hover:bg-white hover:text-black transition-colors duration-75">
             {user?.firstName}
@@ -46,7 +46,7 @@ const Home: NextPage | any = ({ user, uid } : any) => {
           <Menu.Items as="div" className="grid grid-flow-row absolute top-14 mt-2 w-30 origin-top-left divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
             <Menu.Item as="div" className="grid grid-flow-row shadow-2xl">
               {({ active }) => (
-                <MyLink href="/profile" className={`${(active) ? 'bg-teal-600 text-white' : 'bg-teal-50 text-black' } rounded-md pt-2 pb-2 pl-4 pr-4 transition-colors duration-150`}>
+                <MyLink href="/profile" className={`${(active) ? 'bg-primaryTwo-600 text-white' : 'bg-primaryTwo-50 text-black' } rounded-md pt-2 pb-2 pl-4 pr-4 transition-colors duration-150`}>
                   Profile
                 </MyLink>
               )}
@@ -54,7 +54,7 @@ const Home: NextPage | any = ({ user, uid } : any) => {
             <Menu.Item as={Fragment}>
               {({ active }) => (
                 <MyLink
-                  className={`${(active) ? 'bg-teal-600 text-white' : 'bg-teal-50 text-black' } rounded-md pt-2 pb-2 pl-4 pr-4 transition-colors duration-150`}
+                  className={`${(active) ? 'bg-primaryTwo-600 text-white' : 'bg-primaryTwo-50 text-black' } rounded-md pt-2 pb-2 pl-4 pr-4 transition-colors duration-150`}
                   onClick={handleLogout}
                   href="/login"
                 >

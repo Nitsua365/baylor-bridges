@@ -91,7 +91,7 @@ const Login: NextPage = () => {
               </div>
             )}
             </div>
-            <button type="submit" className="mt-2 inline-block px-6 py-2.5 bg-emerald-500 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-emerald-500 hover:shadow-lg focus:bg-emerald-600 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-teal-600 active:shadow-lg transition duration-100 ease-in-out">Login</button>
+            <button type="submit" className="mt-2 inline-block px-6 py-2.5 bg-primary-500 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-primary-500 hover:shadow-lg focus:bg-primary-600 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-primaryTwo-600 active:shadow-lg transition duration-100 ease-in-out">Login</button>
           </form>
         </div>
       </div>
