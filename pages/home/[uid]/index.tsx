@@ -1,7 +1,5 @@
 import type { NextPage } from "next";
-import { NextRouter, useRouter } from "next/router";
 import Link from "next/link";
-// import useSWR, { SWRResponse } from "swr";
 
 import { useAuth } from "context/AuthContext";
 import { useProtection } from "utils/hooks/useProtection";
@@ -46,7 +44,7 @@ const Home: NextPage | any = ({ user, uid } : any) => {
           <Menu.Items as="div" className="grid grid-flow-row absolute top-14 mt-2 w-30 origin-top-left divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
             <Menu.Item as="div" className="grid grid-flow-row shadow-2xl">
               {({ active }) => (
-                <MyLink href="/profile" className={`${(active) ? 'bg-primaryTwo-600 text-white' : 'bg-primaryTwo-50 text-black' } rounded-md pt-2 pb-2 pl-4 pr-4 transition-colors duration-150`}>
+                <MyLink href={`home/${uid}/profile`} className={`${(active) ? 'bg-primaryTwo-600 text-white' : 'bg-primaryTwo-50 text-black' } rounded-md pt-2 pb-2 pl-4 pr-4 transition-colors duration-150`}>
                   Profile
                 </MyLink>
               )}
