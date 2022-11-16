@@ -1,4 +1,4 @@
-import type { GetServerSideProps, NextPage } from "next";
+import type { NextPage } from "next";
 
 import { useAuth } from "context/AuthContext";
 import { useProtection } from "utils/hooks/useProtection";
