@@ -38,6 +38,7 @@ export interface UserDTO {
   phoneNumber: string;
   city: string;
   state: string;
+  biography: string;
 }
 
 const AuthContext = createContext<any>({});
@@ -58,7 +59,7 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
     try {
       const { user: userCred }: UserCredential = await signInWithEmailAndPassword(auth, email, password)
       setError({ isError: false, message: null })
-      setUser({ email: userCred.email, uid: userCred.uid, displayName: userCred.displayName })
+      // setUser({ email: userCred.email, uid: userCred.uid, displayName: userCred.displayName })
       return userCred?.uid;
     }
     catch (error: any) { 
@@ -89,6 +90,7 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
           } = data;
 
       const insert: UserDTO = {
+        biography: "",
         personalEmail: personalEmail || "",
         baylorEmail : baylorEmail || "",
         phoneNumber: phoneNumber || "",
@@ -106,7 +108,7 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
         await setDoc(doc(db, "users", user.uid), insert)
 
         // set the current user credential
-        setUser({ uid: user.uid, email: user.email, displayName: user.displayName })
+        // setUser({ uid: user.uid, email: user.email, displayName: user.displayName })
 
         // set the error
         setError({ isError: false, message: null })
@@ -129,7 +131,7 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
   // logout with current auth
   const logOut = async () => {
     await signOut(auth);
-    setUser(null);
+    // setUser(null);
   }
 
   const clearError = async () => setError({ isError: false, message: null })

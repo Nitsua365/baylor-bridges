@@ -1,9 +1,14 @@
+import NavBar from "components/home/NavBar";
+import { useAuth } from "context/AuthContext";
 import { NextPage } from "next"
 import { getUserById } from "pages/api/users/[uid]";
 import { useProtection } from "utils/hooks/useProtection";
 
 const Profile: NextPage = ({ user, uid } : any) => {
   const [isAuthed]: readonly[boolean] = useProtection(uid);
+  const { logOut } = useAuth();
+
+  const handleLogout = async () : Promise<void> => await logOut();
 
   if (!isAuthed) {
     return <></>
@@ -11,11 +16,17 @@ const Profile: NextPage = ({ user, uid } : any) => {
 
   return (
     <>
-      
+      <NavBar 
+        user={user} 
+        uid={uid} 
+        handleLogout={handleLogout} 
+      />
+      <div>
+        {Object.entries(user).map(([k, v]) => <div>{`${k} : ${v}`}</div>)}
+      </div>
     </>
   )
 }
-
 
 export async function getServerSideProps(context : any) {
 
@@ -30,3 +41,5 @@ export async function getServerSideProps(context : any) {
     }
   }
 }
+
+export default Profile;
