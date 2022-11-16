@@ -3,7 +3,6 @@ import type { NextPage } from "next";
 import { useAuth } from "context/AuthContext";
 import { useProtection } from "utils/hooks/useProtection";
 
-import { forwardRef, Fragment } from "react";
 import { getUserById } from "pages/api/users/[uid]";
 import NavBar from "components/home/NavBar";
 
@@ -20,7 +19,7 @@ const Home: NextPage | any = ({ user, uid } : any) => {
   return (
     <>
       <NavBar 
-        user={user} 
+        user={user}
         uid={uid} 
         handleLogout={handleLogout} 
       />

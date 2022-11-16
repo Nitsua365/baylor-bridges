@@ -22,7 +22,7 @@ const Profile: NextPage = ({ user, uid } : any) => {
         handleLogout={handleLogout} 
       />
       <div>
-        {Object.entries(user).map(([k, v]) => <div>{`${k} : ${v}`}</div>)}
+        {Object.entries(user).map(([k, v]) => <div key={`${k} : ${v}`}>{`${k} : ${v}`}</div>)}
       </div>
     </>
   )
