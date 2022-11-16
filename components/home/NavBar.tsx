@@ -6,7 +6,7 @@ import { ChevronDownIcon } from "@heroicons/react/20/solid"
 
 import { Menu } from "@headlessui/react";
 
-const NavBar: React.FC = ({ user, uid, handleLogout } : any) => {
+const NavBar: React.FC<{user: any, uid: string, handleLogout: () => Promise<void>}> = ({ user, uid, handleLogout } : any) => {
 
   const MyLink = forwardRef((props: any, ref) => {
     let { href, children, ...rest } = props
