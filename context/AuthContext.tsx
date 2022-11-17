@@ -1,5 +1,5 @@
 import * as React from "react";
-import { auth, db } from "../config/firebase";
+import { auth, db } from "config/firebase";
 import { useContext, createContext } from "react";
 
 import { 
@@ -131,7 +131,7 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
   // logout with current auth
   const logOut = async () => {
     await signOut(auth);
-    // setUser(null);
+    setUser(null);
   }
 
   const clearError = async () => setError({ isError: false, message: null })

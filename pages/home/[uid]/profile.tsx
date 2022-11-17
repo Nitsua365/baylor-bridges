@@ -22,10 +22,11 @@ const Profile: NextPage = ({ user, uid } : any) => {
 
   const validation = {
     personalEmail: { ...register("personalEmail", { value: user.personalEmail }) },
-    baylorEmail: { ...register("baylorEmail", { value: user.baylorEmail }) },
+    baylorEmail: { ...register("baylorEmail", { value: user.baylorEmail, disabled: user.role === "alumni" }) },
     phoneNumber: { ...register("phoneNumber", { value: user.phoneNumber }) },
     city: { ...register("city", { value: user.city }) },
-    state: { ...register("state", { value: user.state }) }
+    state: { ...register("state", { value: user.state }) },
+    biography: { ...register("biography", { value: user.biography }) }
   }
 
   if (!isAuthed) {
@@ -59,15 +60,19 @@ const Profile: NextPage = ({ user, uid } : any) => {
           <div className="grid grid-cols-2 mt-4 gap-4">
             <div>
               <p>Email</p>
-              <input { ...validation.personalEmail } type="text" />
+              <input 
+                { ...validation.personalEmail } 
+                className="text-lg pl-1 bg-neutral-100 outline-primary-500 rounded-md w-3/4" 
+                type="text" 
+              />
             </div>
             <div>
               <p>Baylor Email</p>
-              <input { ...validation.baylorEmail } type="text" />
+              <input { ...validation.baylorEmail } className="text-lg pl-1 bg-neutral-100 outline-primary-500 rounded-md w-3/4" type="text" />
             </div>
             <div>
               <p>Phone Number</p>
-              <input { ...validation.phoneNumber } type="text" />
+              <input { ...validation.phoneNumber } className="text-lg pl-1 bg-neutral-100 outline-primary-500 rounded-md w-3/4" type="text" />
             </div>
             <div>
               <p>Role</p>
@@ -75,11 +80,11 @@ const Profile: NextPage = ({ user, uid } : any) => {
             </div>
             <div>
               <p>City</p>
-              <input { ...validation.city } type="text" />
+              <input { ...validation.city } className="text-lg pl-1 bg-neutral-100 outline-primary-500 rounded-md w-3/4" type="text" />
             </div>
             <div>
               <p>State</p>
-              <input { ...validation.state } type="text" />
+              <input { ...validation.state } className="text-lg pl-1 bg-neutral-100 outline-primary-500 rounded-md w-3/4" type="text" />
             </div>
           </div>
         </div>
@@ -89,6 +94,9 @@ const Profile: NextPage = ({ user, uid } : any) => {
               Bio
             </h3>
           </div>
+          <textarea placeholder="Enter Bio" className="pl-1 text-md bg-neutral-100 mt-3 max-w-5xl w-5/6 outline-primary-400 rounded-lg">
+            {user.biography}
+          </textarea>
         </div>
       </div>
       

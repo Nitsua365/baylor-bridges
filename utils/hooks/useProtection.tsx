@@ -11,7 +11,7 @@ export const useProtection = (uid: string) => {
 
   useEffect(() => {
     if (!user || uid !== user.uid) {
-      router.replace('/login')
+      router.replace('/')
       setIsAuthenticated(false)
     }
     else setIsAuthenticated(true)

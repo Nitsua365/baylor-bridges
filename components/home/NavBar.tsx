@@ -49,7 +49,7 @@ const NavBar: React.FC<NavBarProps> = ({ user, uid, handleLogout } : any) => {
                 <MyLink
                   className={`${(active) ? 'bg-primaryTwo-600 text-white' : 'bg-primaryTwo-50 text-black'} rounded-md pt-2 pb-2 pl-4 pr-4 transition-colors duration-150`}
                   onClick={handleLogout}
-                  href="/login"
+                  href="/"
                 >
                   Log Out
                 </MyLink>
