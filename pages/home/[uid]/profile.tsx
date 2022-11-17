@@ -68,7 +68,7 @@ const Profile: NextPage = ({ user, uid } : any) => {
             </div>
             <div>
               <p>Baylor Email</p>
-              <input { ...validation.baylorEmail } className="text-lg pl-1 bg-neutral-100 outline-primary-500 rounded-md w-3/4" type="text" />
+              <input { ...validation.baylorEmail } className="text-lg pl-1 disabled:bg-slate-300 bg-neutral-100 outline-primary-500 rounded-md w-3/4" type="text" />
             </div>
             <div>
               <p>Phone Number</p>
