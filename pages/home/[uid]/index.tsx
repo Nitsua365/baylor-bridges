@@ -18,11 +18,13 @@ const Home: NextPage | any = ({ user, uid } : any) => {
 
   return (
     <>
-      <NavBar 
-        user={user}
-        uid={uid} 
-        handleLogout={handleLogout} 
-      />
+      <div className="min-h-screen bg-neutral-200">
+        <NavBar 
+          user={user}
+          uid={uid} 
+          handleLogout={handleLogout} 
+        />
+      </div>
     </>
   )
 
