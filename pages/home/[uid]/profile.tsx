@@ -4,6 +4,7 @@ import { NextPage } from "next"
 import { getUserById } from "pages/api/users/[uid]";
 import { useProtection } from "utils/hooks/useProtection";
 import Avatar from "@mui/material/Avatar";
+import { useForm } from "react-hook-form";
 
 
 const Profile: NextPage = ({ user, uid } : any) => {
@@ -11,6 +12,21 @@ const Profile: NextPage = ({ user, uid } : any) => {
   const { logOut } = useAuth();
 
   const handleLogout = async () : Promise<void> => await logOut();
+
+  const {
+    formState: { errors: formErrors },
+    register,
+    clearErrors : clearFormErrors,
+    handleSubmit
+  } = useForm({ reValidateMode: "onBlur" });
+
+  const validation = {
+    personalEmail: { ...register("personalEmail", { value: user.personalEmail }) },
+    baylorEmail: { ...register("baylorEmail", { value: user.baylorEmail }) },
+    phoneNumber: { ...register("phoneNumber", { value: user.phoneNumber }) },
+    city: { ...register("city", { value: user.city }) },
+    state: { ...register("state", { value: user.state }) }
+  }
 
   if (!isAuthed) {
     return <></>
@@ -24,7 +40,7 @@ const Profile: NextPage = ({ user, uid } : any) => {
         handleLogout={handleLogout} 
       />
       <div className="items-center justify-center flex flex-col">
-        <div className="rounded-lg shadow-xl bg-white max-w-7xl min-w-fit w-5/6 mt-12 mb-8">
+        <div className="rounded-md shadow-xl bg-white max-w-7xl min-w-fit w-5/6 mt-12 mb-8">
           <div className="flex flex-row pl-4 pr-16 pt-4 pb-4">
             <Avatar alt={`${user.firstName} ${user.lastName}`} sx={{ width: 64, height: 64 }} className="mr-4">
               {`${user.firstName.substring(0,1)}${user.lastName.substring(0,1)}`}
@@ -34,9 +50,44 @@ const Profile: NextPage = ({ user, uid } : any) => {
             </h1>
           </div>
         </div>
-        <div className="block p-6 rounded-lg shadow-xl bg-white max-w-7xl min-w-fit w-5/6">
-          <div>
-            Profile
+        <div className="block pl-6 pr-6 pb-6 pt-2 rounded-md shadow-xl bg-white max-w-7xl min-w-fit w-5/6 mb-8">
+          <div className="border-solid border-neutral-300 border-b-2 bottom-1 pb-1">
+            <h3 className="text-xl mt-4">
+              Profile
+            </h3>
+          </div>
+          <div className="grid grid-cols-2 mt-4 gap-4">
+            <div>
+              <p>Email</p>
+              <input { ...validation.personalEmail } type="text" />
+            </div>
+            <div>
+              <p>Baylor Email</p>
+              <input { ...validation.baylorEmail } type="text" />
+            </div>
+            <div>
+              <p>Phone Number</p>
+              <input { ...validation.phoneNumber } type="text" />
+            </div>
+            <div>
+              <p>Role</p>
+              <p>{user.role}</p>
+            </div>
+            <div>
+              <p>City</p>
+              <input { ...validation.city } type="text" />
+            </div>
+            <div>
+              <p>State</p>
+              <input { ...validation.state } type="text" />
+            </div>
+          </div>
+        </div>
+        <div className="block pl-6 pr-6 pb-6 pt-2 rounded-lg shadow-xl bg-white max-w-7xl min-w-fit w-5/6">
+          <div className="border-solid border-neutral-300 border-b-2 bottom-1 pb-1"> 
+            <h3 className="text-xl mt-4">
+              Bio
+            </h3>
           </div>
         </div>
       </div>
