@@ -1,4 +1,4 @@
-import type { NextPage } from "next"
+import type { GetServerSideProps, NextPage } from "next"
 
 import { useAuth } from "context/AuthContext"
 import { useProtection } from "utils/hooks/useProtection"
@@ -6,42 +6,44 @@ import { useProtection } from "utils/hooks/useProtection"
 import { getUserById } from "pages/api/users/[uid]"
 import NavBar from "components/home/NavBar"
 
-const Home: NextPage | any = ({ user, uid } : any) => {
-    const [isAuthed] : readonly[boolean] = useProtection(uid)
-    const { logOut } = useAuth()
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const Home: NextPage<{ user: FirebaseFirestore.DocumentData | undefined, uid: string }> = ({ user, uid }) => {
+  const [isAuthed] : readonly[boolean] = useProtection(uid)
+  const { logOut } = useAuth()
 
-    const handleLogout = async () : Promise<void> => await logOut()
+  const handleLogout = async () : Promise<void> => await logOut()
 
-    if (!isAuthed) {
-        return <></>
-    }
+  if (!isAuthed) {
+    return <></>
+  }
 
-    return (
-        <>
-            <div className="min-h-screen bg-neutral-200">
-                <NavBar 
-                    user={user}
-                    uid={uid} 
-                    handleLogout={handleLogout} 
-                />
-            </div>
-        </>
-    )
+  return (
+    <>
+      <div className="min-h-screen bg-neutral-200">
+        <NavBar 
+          user={user}
+          uid={uid} 
+          handleLogout={handleLogout} 
+        />
+      </div>
+    </>
+  )
 
 }
 
-export async function getServerSideProps(context : any) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const getServerSideProps : GetServerSideProps = async (context : any) => {
 
-    const { uid } = context.params
+  const { uid } = context.params
 
-    const user: FirebaseFirestore.DocumentData | undefined = await getUserById(uid)
+  const user: FirebaseFirestore.DocumentData | undefined = await getUserById(uid)
 
-    return {
-        props: {
-            user,
-            uid
-        }
+  return {
+    props: {
+      user,
+      uid
     }
+  }
 }
 
 export default Home

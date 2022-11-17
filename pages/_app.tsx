@@ -5,12 +5,12 @@ import NextNProgress from "nextjs-progressbar"
 
 function MyApp({ Component, pageProps }: AppProps) {
 
-    return (
-        <AuthProvider>
-            <NextNProgress color='teal' />
-            <Component {...pageProps} />
-        </AuthProvider>
-    )
+  return (
+    <AuthProvider>
+      <NextNProgress color='teal' />
+      <Component {...pageProps} />
+    </AuthProvider>
+  )
 }
 
 export default MyApp
