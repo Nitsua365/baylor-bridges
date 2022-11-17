@@ -24,17 +24,17 @@ const Profile: NextPage = ({ user, uid } : any) => {
         handleLogout={handleLogout} 
       />
       <div className="items-center justify-center flex flex-col">
-        <div className="rounded-lg shadow-xl bg-white max-w-7xl min-w-fit w-5/6 mt-8 mb-2">
+        <div className="rounded-lg shadow-xl bg-white max-w-7xl min-w-fit w-5/6 mt-12 mb-8">
           <div className="flex flex-row pl-4 pr-16 pt-4 pb-4">
-            <Avatar alt={`${user.firstName} ${user.lastName}`} className="mr-4">
+            <Avatar alt={`${user.firstName} ${user.lastName}`} sx={{ width: 64, height: 64 }} className="mr-4">
               {`${user.firstName.substring(0,1)}${user.lastName.substring(0,1)}`}
             </Avatar>
-            <h1 className="text-2xl font-semibold mt-1">
+            <h1 className="text-2xl font-semibold mt-4">
               {`${user.firstName} ${user.lastName}`}
             </h1>
           </div>
         </div>
-        <div className="block p-6 rounded-lg shadow-xl bg-white">
+        <div className="block p-6 rounded-lg shadow-xl bg-white max-w-7xl min-w-fit w-5/6">
           <div>
             Profile
           </div>
