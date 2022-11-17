@@ -1,23 +1,25 @@
-import React, { Fragment, forwardRef } from 'react'
+import React, { Fragment, forwardRef } from "react"
 
-import Link from 'next/link'
+import Link from "next/link"
 
 import { ChevronDownIcon } from "@heroicons/react/20/solid"
 
-import { Menu } from "@headlessui/react";
-import Image from 'next/image';
+import { Menu } from "@headlessui/react"
+import Image from "next/image"
 import BULogo from "assets/BU.png"
 
 type NavBarProps = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   user: any,
   uid: string,
   handleLogout: () => Promise<void>
 }
 
-const NavBar: React.FC<NavBarProps> = ({ user, uid, handleLogout }: any) => {
+const NavBar: React.FC<NavBarProps> = ({ user, uid, handleLogout }) => {
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const MyLink = forwardRef((props: any, ref) => {
-    let { href, children, ...rest } = props
+    const { href, children, ...rest } = props
     return (
       <Link href={href}>
         <a ref={ref} {...rest}>
@@ -26,7 +28,7 @@ const NavBar: React.FC<NavBarProps> = ({ user, uid, handleLogout }: any) => {
       </Link>
     )
   })
-  MyLink.displayName = "MyLink";
+  MyLink.displayName = "MyLink"
 
   return (
     <>
@@ -46,7 +48,7 @@ const NavBar: React.FC<NavBarProps> = ({ user, uid, handleLogout }: any) => {
                   {({ active }) => (
                     <MyLink
                       href={`/home/${uid}/profile`}
-                      className={`${(active) ? 'bg-primaryTwo-600 text-white' : 'bg-primaryTwo-50 text-black'} rounded-md pt-2 pb-2 pl-4 pr-4 transition-colors duration-150`}>
+                      className={`${(active) ? "bg-primaryTwo-600 text-white" : "bg-primaryTwo-50 text-black"} rounded-md pt-2 pb-2 pl-4 pr-4 transition-colors duration-150`}>
                       Profile
                     </MyLink>
                   )}
@@ -54,7 +56,7 @@ const NavBar: React.FC<NavBarProps> = ({ user, uid, handleLogout }: any) => {
                 <Menu.Item as={Fragment}>
                   {({ active }) => (
                     <MyLink
-                      className={`${(active) ? 'bg-primaryTwo-600 text-white' : 'bg-primaryTwo-50 text-black'} rounded-md pt-2 pb-2 pl-4 pr-4 transition-colors duration-150`}
+                      className={`${(active) ? "bg-primaryTwo-600 text-white" : "bg-primaryTwo-50 text-black"} rounded-md pt-2 pb-2 pl-4 pr-4 transition-colors duration-150`}
                       onClick={handleLogout}
                       href="/"
                     >
@@ -71,4 +73,4 @@ const NavBar: React.FC<NavBarProps> = ({ user, uid, handleLogout }: any) => {
   )
 }
 
-export default NavBar;
+export default NavBar
