@@ -94,7 +94,7 @@ const Profile: NextPage = ({ user, uid } : any) => {
               Bio
             </h3>
           </div>
-          <textarea placeholder="Enter Bio" className="pl-1 text-md bg-neutral-100 mt-3 max-w-5xl w-5/6 outline-primary-400 rounded-lg">
+          <textarea placeholder="Enter Bio" className="pl-1 text-md h-40 bg-neutral-100 mt-3 max-w-5xl w-5/6 outline-primary-400 rounded-lg">
             {user.biography}
           </textarea>
         </div>
