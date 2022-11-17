@@ -71,7 +71,7 @@ const Profile: NextPage = ({ user, uid } : any) => {
             </div>
             <div>
               <p>Role</p>
-              <p>{user.role}</p>
+              <p>{`${user.role.substring(0,1).toUpperCase()}${user.role.substring(1)}`}</p>
             </div>
             <div>
               <p>City</p>
