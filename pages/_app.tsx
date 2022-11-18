@@ -1,7 +1,7 @@
-import 'styles/globals.css'
-import type { AppProps } from 'next/app'
-import { AuthProvider } from 'context/AuthContext'
-import NextNProgress from 'nextjs-progressbar';
+import "styles/globals.css"
+import type { AppProps } from "next/app"
+import { AuthProvider } from "context/AuthContext"
+import NextNProgress from "nextjs-progressbar"
 
 function MyApp({ Component, pageProps }: AppProps) {
 

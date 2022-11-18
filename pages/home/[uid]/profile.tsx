@@ -1,24 +1,25 @@
-import NavBar from "components/home/NavBar";
-import { useAuth } from "context/AuthContext";
-import { NextPage } from "next"
-import { getUserById } from "pages/api/users/[uid]";
-import { useProtection } from "utils/hooks/useProtection";
-import Avatar from "@mui/material/Avatar";
-import { useForm } from "react-hook-form";
+import NavBar from "components/home/NavBar"
+import { useAuth } from "context/AuthContext"
+import { GetServerSideProps, NextPage } from "next"
+import { getUserById } from "pages/api/users/[uid]"
+import { useProtection } from "utils/hooks/useProtection"
+import Avatar from "@mui/material/Avatar"
+import { useForm } from "react-hook-form"
 
 
-const Profile: NextPage = ({ user, uid } : any) => {
-  const [isAuthed]: readonly[boolean] = useProtection(uid);
-  const { logOut } = useAuth();
+const Profile: NextPage<{ user: FirebaseFirestore.DocumentData | undefined, uid: string }> = ({ user, uid }) => {
+  const [isAuthed]: readonly[boolean] = useProtection(uid)
+  const { logOut } = useAuth()
 
-  const handleLogout = async () : Promise<void> => await logOut();
+  if (!isAuthed || !user) {
+    return <></>
+  }
+
+  const handleLogout = async () : Promise<void> => await logOut()
 
   const {
-    formState: { errors: formErrors },
-    register,
-    clearErrors : clearFormErrors,
-    handleSubmit
-  } = useForm({ reValidateMode: "onBlur" });
+    register
+  } = useForm({ reValidateMode: "onBlur" })
 
   const validation = {
     personalEmail: { ...register("personalEmail", { value: user.personalEmail }) },
@@ -27,10 +28,6 @@ const Profile: NextPage = ({ user, uid } : any) => {
     city: { ...register("city", { value: user.city }) },
     state: { ...register("state", { value: user.state }) },
     biography: { ...register("biography", { value: user.biography }) }
-  }
-
-  if (!isAuthed) {
-    return <></>
   }
 
   return (
@@ -44,7 +41,7 @@ const Profile: NextPage = ({ user, uid } : any) => {
         <div className="rounded-md shadow-xl bg-white max-w-7xl min-w-fit w-5/6 mt-12 mb-8">
           <div className="flex flex-row pl-4 pr-16 pt-4 pb-4">
             <Avatar alt={`${user.firstName} ${user.lastName}`} sx={{ width: 64, height: 64 }} className="mr-4">
-              {`${user.firstName.substring(0,1)}${user.lastName.substring(0,1)}`}
+              {`${user?.firstName.substring(0,1)}${user.lastName.substring(0,1)}`}
             </Avatar>
             <h1 className="text-2xl font-semibold mt-4">
               {`${user.firstName} ${user.lastName}`}
@@ -104,9 +101,10 @@ const Profile: NextPage = ({ user, uid } : any) => {
   )
 }
 
-export async function getServerSideProps(context : any) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const getServerSideProps : GetServerSideProps = async (context : any) => {
 
-  const { uid } = context.params;
+  const { uid } = context.params
 
   const user: FirebaseFirestore.DocumentData | undefined = await getUserById(uid)
 
@@ -118,4 +116,4 @@ export async function getServerSideProps(context : any) {
   }
 }
 
-export default Profile;
+export default Profile

@@ -1,17 +1,17 @@
-import type { NextPage } from 'next'
-import Link from 'next/link'
-import { NextRouter, useRouter } from 'next/router'
-import { useEffect } from 'react'
+import type { NextPage } from "next"
+import Link from "next/link"
+import { NextRouter, useRouter } from "next/router"
+import { useEffect } from "react"
 
 const Home: NextPage = () => {
 
-  const router: NextRouter = useRouter();
+  const router: NextRouter = useRouter()
 
   // protects from user data requests 
   useEffect(() => {
-    router.beforePopState(({ url, as, options }) => {
+    router.beforePopState(({ as }) => {
       // I only want to allow these two routes!
-      if (as !== '/' && as !== '/login' && as !== '/sign-up') {
+      if (as !== "/" && as !== "/login" && as !== "/sign-up") {
         // Have SSR render bad routes as a 404.
         window.location.href = as
         return false
@@ -33,4 +33,4 @@ const Home: NextPage = () => {
   )
 }
 
-export default Home;
+export default Home
