@@ -11,11 +11,11 @@ const Home: NextPage<{ user: FirebaseFirestore.DocumentData | undefined, uid: st
   const [isAuthed] : readonly[boolean] = useProtection(uid)
   const { logOut } = useAuth()
 
-  const handleLogout = async () : Promise<void> => await logOut()
-
-  if (!isAuthed) {
+  if (!isAuthed || !user) {
     return <></>
   }
+
+  const handleLogout = async () : Promise<void> => await logOut()
 
   return (
     <>
@@ -24,6 +24,7 @@ const Home: NextPage<{ user: FirebaseFirestore.DocumentData | undefined, uid: st
           user={user}
           uid={uid} 
           handleLogout={handleLogout} 
+          enableSearchBar={true}
         />
       </div>
     </>
@@ -40,7 +41,7 @@ export const getServerSideProps : GetServerSideProps = async (context : any) => 
 
   return {
     props: {
-      user,
+      user: user || null,
       uid
     }
   }

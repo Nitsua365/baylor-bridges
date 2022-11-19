@@ -4,24 +4,34 @@ import { GetServerSideProps, NextPage } from "next"
 import { getUserById } from "pages/api/users/[uid]"
 import { useProtection } from "utils/hooks/useProtection"
 import Avatar from "@mui/material/Avatar"
-import { useForm } from "react-hook-form"
+import { useForm, UseFormRegisterReturn } from "react-hook-form"
 
+interface EditUserValidation {
+  personalEmail: UseFormRegisterReturn;
+  baylorEmail: UseFormRegisterReturn;
+  phoneNumber: UseFormRegisterReturn;
+  city: UseFormRegisterReturn;
+  state: UseFormRegisterReturn;
+  biography: UseFormRegisterReturn;
+}
 
 const Profile: NextPage<{ user: FirebaseFirestore.DocumentData | undefined, uid: string }> = ({ user, uid }) => {
   const [isAuthed]: readonly[boolean] = useProtection(uid)
   const { logOut } = useAuth()
 
-  if (!isAuthed || !user) {
-    return <></>
-  }
-
   const handleLogout = async () : Promise<void> => await logOut()
 
   const {
     register
-  } = useForm({ reValidateMode: "onBlur" })
+  } = useForm<EditUserValidation>({ reValidateMode: "onBlur" })
 
-  const validation = {
+  // DON'T Move this code
+  // prevents a rendering error for the hook form above and validates user below
+  if (!isAuthed || !user) {
+    return <></>
+  }
+
+  const validation: EditUserValidation = {
     personalEmail: { ...register("personalEmail", { value: user.personalEmail }) },
     baylorEmail: { ...register("baylorEmail", { value: user.baylorEmail, disabled: user.role === "alumni" }) },
     phoneNumber: { ...register("phoneNumber", { value: user.phoneNumber }) },
@@ -35,7 +45,8 @@ const Profile: NextPage<{ user: FirebaseFirestore.DocumentData | undefined, uid:
       <NavBar 
         user={user} 
         uid={uid} 
-        handleLogout={handleLogout} 
+        handleLogout={handleLogout}
+        enableSearchBar={false}
       />
       <div className="items-center justify-center flex flex-col">
         <div className="rounded-md shadow-xl bg-white max-w-7xl min-w-fit w-5/6 mt-12 mb-8">
@@ -110,7 +121,7 @@ export const getServerSideProps : GetServerSideProps = async (context : any) => 
 
   return {
     props: {
-      user,
+      user: user || null,
       uid
     }
   }
