@@ -22,8 +22,7 @@ const Profile: NextPage<{ user: FirebaseFirestore.DocumentData | undefined, uid:
   const handleLogout = async () : Promise<void> => await logOut()
 
   const {
-    register,
-    formState
+    register
   } = useForm<EditUserValidation>({ reValidateMode: "onBlur" })
 
   // DON'T Move this code
