@@ -15,10 +15,7 @@ interface EditUserValidation {
   biography: UseFormRegisterReturn;
 }
 
-const Profile: NextPage<{
-  user: FirebaseFirestore.DocumentData | null, 
-  uid: string
-}> = ({ user, uid }) => {
+const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
   const [isAuthed]: readonly[boolean] = useProtection(uid)
   const { logOut } = useAuth()
 
