@@ -5,6 +5,7 @@ import { getUserById } from "pages/api/users/[uid]"
 import { useProtection } from "utils/hooks/useProtection"
 import Avatar from "@mui/material/Avatar"
 import { useForm, UseFormRegisterReturn } from "react-hook-form"
+import { HomeUserProps } from "./_propTypes"
 
 interface EditUserValidation {
   personalEmail: UseFormRegisterReturn;
@@ -15,7 +16,7 @@ interface EditUserValidation {
   biography: UseFormRegisterReturn;
 }
 
-const Profile: NextPage<{ user: FirebaseFirestore.DocumentData | undefined, uid: string }> = ({ user, uid }) => {
+const Profile: NextPage<HomeUserProps> = ({ user, uid }) => {
   const [isAuthed]: readonly[boolean] = useProtection(uid)
   const { logOut } = useAuth()
 
@@ -113,7 +114,7 @@ const Profile: NextPage<{ user: FirebaseFirestore.DocumentData | undefined, uid:
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const getServerSideProps : GetServerSideProps = async (context : any) => {
+export const getServerSideProps : GetServerSideProps<HomeUserProps> = async (context : any) => {
 
   const { uid } = context.params
 
