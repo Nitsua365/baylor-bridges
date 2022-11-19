@@ -42,8 +42,8 @@ const NavBar: React.FC<NavBarProps> = ({ user, uid, handleLogout, enableSearchBa
             </div>
             {enableSearchBar && (
               <div className="flex-1 inline-flex ml-16 mt-1 max-w-xl">
-                <input className="h-10 text-black text-2xl rounded-md outline-4 focus:outline-primary-400" placeholder="Search Alumni" />
-                <button className="border-2 rounded-md mb-2 ">
+                <input className="h-10 text-neutral-600 text-2xl rounded-md outline-4 focus:outline-primary-400 w-96" placeholder="Search Alumni" />
+                <button className="border-2 rounded-md mb-2">
                   <SearchIcon fontSize="large" />
                 </button>
               </div>

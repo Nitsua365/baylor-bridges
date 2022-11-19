@@ -19,16 +19,18 @@ const Profile: NextPage<{ user: FirebaseFirestore.DocumentData | undefined, uid:
   const [isAuthed]: readonly[boolean] = useProtection(uid)
   const { logOut } = useAuth()
 
-  if (!isAuthed || !user) {
-    return <></>
-  }
-
   const handleLogout = async () : Promise<void> => await logOut()
 
   const {
     register,
     formState
   } = useForm<EditUserValidation>({ reValidateMode: "onBlur" })
+
+  // DON'T Move this code
+  // prevents a rendering error for the hook form above and validates user below
+  if (!isAuthed || !user) {
+    return <></>
+  }
 
   const validation: EditUserValidation = {
     personalEmail: { ...register("personalEmail", { value: user.personalEmail }) },
@@ -44,7 +46,7 @@ const Profile: NextPage<{ user: FirebaseFirestore.DocumentData | undefined, uid:
       <NavBar 
         user={user} 
         uid={uid} 
-        handleLogout={handleLogout} 
+        handleLogout={handleLogout}
         enableSearchBar={false}
       />
       <div className="items-center justify-center flex flex-col">
