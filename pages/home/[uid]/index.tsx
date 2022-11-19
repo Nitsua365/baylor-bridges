@@ -7,7 +7,10 @@ import { getUserById } from "pages/api/users/[uid]"
 import NavBar from "components/home/NavBar"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Home: NextPage<{ user: FirebaseFirestore.DocumentData | undefined, uid: string }> = ({ user, uid }) => {
+const Home: NextPage<{
+  user: FirebaseFirestore.DocumentData | null, 
+  uid: string
+}> = ({ user, uid }) => {
   const [isAuthed] : readonly[boolean] = useProtection(uid)
   const { logOut } = useAuth()
 
