@@ -3,40 +3,12 @@ import { NextRouter, useRouter } from "next/router"
 
 import { useEffect, useState } from "react"
 
-import { useForm, UseFormRegisterReturn } from "react-hook-form"
+import { useForm } from "react-hook-form"
 
 import { useAuth } from "context/AuthContext"
 
 import ToggleButton from "@mui/material/ToggleButton"
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup"
-
-// user form data type
-export type UserFormData = {
-  role: UserRoles;
-  personalEmail: string;
-  baylorEmail: string;
-  firstName: string;
-  lastName: string;
-  password: string;
-  confirmPassword: string;
-  phoneNumber: string;
-  city: string;
-  state: string;
-}
-
-type UserValidationType = {
-  personalEmail: UseFormRegisterReturn;
-  baylorEmail: UseFormRegisterReturn;
-  firstName: UseFormRegisterReturn;
-  lastName: UseFormRegisterReturn;
-  password: UseFormRegisterReturn;
-  confirmPassword: UseFormRegisterReturn;
-  phoneNumber: UseFormRegisterReturn;
-  city: UseFormRegisterReturn;
-  state: UseFormRegisterReturn;
-}
-
-type UserRoles = "student" | "alumni";
 
 const SignUp: NextPage = () => {
 

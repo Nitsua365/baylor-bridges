@@ -4,16 +4,7 @@ import { GetServerSideProps, NextPage } from "next"
 import { getUserById } from "pages/api/users/[uid]"
 import { useProtection } from "utils/hooks/useProtection"
 import Avatar from "@mui/material/Avatar"
-import { useForm, UseFormRegisterReturn } from "react-hook-form"
-
-interface EditUserValidation {
-  personalEmail: UseFormRegisterReturn;
-  baylorEmail: UseFormRegisterReturn;
-  phoneNumber: UseFormRegisterReturn;
-  city: UseFormRegisterReturn;
-  state: UseFormRegisterReturn;
-  biography: UseFormRegisterReturn;
-}
+import { useForm } from "react-hook-form"
 
 const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
   const [isAuthed]: readonly[boolean] = useProtection(uid)
@@ -113,7 +104,7 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const getServerSideProps : GetServerSideProps = async (context : any) => {
+export const getServerSideProps : GetServerSideProps<HomePageProps> = async (context : any) => {
 
   const { uid } = context.params
 
