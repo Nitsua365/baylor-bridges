@@ -1,8 +1,9 @@
-import * as React from "react";
-import { auth, db } from "config/firebase";
-import { useContext, createContext } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import * as React from "react"
+import { auth, db } from "config/firebase"
+import { useContext, createContext } from "react"
 
-import { 
+import {
   createUserWithEmailAndPassword, 
   onAuthStateChanged, 
   signInWithEmailAndPassword,
@@ -13,54 +14,25 @@ import {
 
 import { setDoc, doc } from "firebase/firestore"
 
-import { UserFormData } from "pages/sign-up";
-
-// interface user data
-interface User {
-  uid: string,
-  email: string | null,
-  displayName: string | null
-}
-
-// interface for Error message
-interface Error {
-  isError: boolean,
-  message: string | null
-}
-
-// User Data Transfer Object
-export interface UserDTO {
-  role: string;
-  personalEmail: string;
-  baylorEmail: string;
-  firstName: string;
-  lastName: string;
-  phoneNumber: string;
-  city: string;
-  state: string;
-  biography: string;
-}
-
-const AuthContext = createContext<any>({});
+const AuthContext = createContext<any>({})
 
 export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
 
   // current user data state
-  const [user, setUser] = React.useState<User | null>(null);
+  const [user, setUser] = React.useState<MyUserCredential | null>(null)
 
   // is loading hook
-  const [loading, setLoading] = React.useState<boolean>(true);
+  const [loading, setLoading] = React.useState<boolean>(true)
 
   // error with login or sign up
-  const [error, setError] = React.useState<Error | null>(null);
+  const [error, setError] = React.useState<AuthError | null>(null)
 
   // login with email and password
   const login = async (email: string, password: string) : Promise<string | undefined> => { 
     try {
       const { user: userCred }: UserCredential = await signInWithEmailAndPassword(auth, email, password)
       setError({ isError: false, message: null })
-      // setUser({ email: userCred.email, uid: userCred.uid, displayName: userCred.displayName })
-      return userCred?.uid;
+      return userCred?.uid
     }
     catch (error: any) { 
       setError({ isError: true, message: error.toString() }) 
@@ -71,7 +43,7 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
   // signUp with email and password
   const signUp = async (data: UserFormData) : Promise<void | string> => {
 
-    const email: string = (data.role === "student") ? data.baylorEmail : data.personalEmail;
+    const email: string = (data.role === "student") ? data.baylorEmail : data.personalEmail
 
     try {
 
@@ -79,15 +51,15 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
       
       // get all data except for password
       const { 
-            personalEmail,
-            baylorEmail,
-            phoneNumber,
-            firstName, 
-            lastName,
-            city,
-            state,
-            role
-          } = data;
+        personalEmail,
+        baylorEmail,
+        phoneNumber,
+        firstName, 
+        lastName,
+        city,
+        state,
+        role
+      } = data
 
       const insert: UserDTO = {
         biography: "",
@@ -107,9 +79,6 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
         // add document to db
         await setDoc(doc(db, "users", user.uid), insert)
 
-        // set the current user credential
-        // setUser({ uid: user.uid, email: user.email, displayName: user.displayName })
-
         // set the error
         setError({ isError: false, message: null })
 
@@ -123,18 +92,18 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
     }
     catch (error: any) { 
       setError({ isError: true, message: error.toString() })  
-      throw error;
+      throw error
     }
 
   }
 
   // logout with current auth
-  const logOut = async () => {
-    await signOut(auth);
-    setUser(null);
+  const logOut = async () : Promise<void> => {
+    await signOut(auth)
+    setUser(null)
   }
 
-  const clearError = async () => setError({ isError: false, message: null })
+  const clearError = async () : Promise<void> => setError({ isError: false, message: null })
 
   // Hook for onAuthStateChange to set or remove the user
   React.useEffect(() => {
@@ -142,9 +111,9 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
       if (userCred) setUser({ uid: userCred.uid, email: userCred.email, displayName: userCred.displayName })
       else setUser(null)
 
-      setLoading(false);
+      setLoading(false)
     })
-    return () => unSub();
+    return () => unSub()
   }, [])
 
 
@@ -152,7 +121,7 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
     <AuthContext.Provider value={{ user, login, signUp, logOut, error, clearError }}>
       {(loading) ? null : children}
     </AuthContext.Provider>
-  );
-};
+  )
+}
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => useContext(AuthContext)

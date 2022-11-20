@@ -3,21 +3,11 @@ import type { NextPage } from "next"
 import { NextRouter, useRouter } from "next/router"
 import { useEffect } from "react"
 
-import { useForm, UseFormRegisterReturn } from "react-hook-form"
-
-interface LoginForm {
-    email: string;
-    password: string;
-}
-
-interface LoginValidation {
-    email: UseFormRegisterReturn;
-    password: UseFormRegisterReturn;
-}
+import { useForm } from "react-hook-form"
 
 const Login: NextPage = () => {
 
-  const { login, error: loginError, clearError: clearAuthErrors } = useAuth()
+  const { login, error: loginError, clearError: clearAuthErrors }: AuthContextType = useAuth()
   const router: NextRouter = useRouter()
 
   const {
