@@ -16,7 +16,7 @@ import { setDoc, doc } from "firebase/firestore"
 
 const AuthContext = createContext<any>({})
 
-export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   // current user data state
   const [user, setUser] = React.useState<MyUserCredential | null>(null)
@@ -124,4 +124,4 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
   )
 }
 
-export const useAuth = () => useContext(AuthContext)
+export const useAuth = (): any => useContext(AuthContext)

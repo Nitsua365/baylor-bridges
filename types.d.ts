@@ -90,3 +90,12 @@ declare interface LoginValidation {
   email: UseFormRegisterReturn;
   password: UseFormRegisterReturn;
 }
+
+// NavBar Props
+declare type NavBarProps = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  user: any,
+  uid: string,
+  handleLogout: () => Promise<void>,
+  enableSearchBar: boolean
+}

@@ -9,18 +9,10 @@ import { Menu } from "@headlessui/react"
 import Image from "next/image"
 import BULogo from "assets/BU.png"
 
-type NavBarProps = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  user: any,
-  uid: string,
-  handleLogout: () => Promise<void>,
-  enableSearchBar: boolean
-}
-
 const NavBar: React.FC<NavBarProps> = ({ user, uid, handleLogout, enableSearchBar=false }) => {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const MyLink = forwardRef((props: any, ref) => {
+  const MyLink: any = forwardRef((props: any, ref) => {
     const { href, children, ...rest } = props
     return (
       <Link href={href}>
