@@ -21,7 +21,7 @@ npm run dev
 ## PRODUCTION Environment:
 1. ```bash npm run build```
 2. ```bash npm start```
-3. When running ```bash npm start``` it will run the cloud firebase emulator and WILL use the production firebase
+3. When running ```npm start``` it will run the cloud firebase emulator and WILL use the production firebase
 
 ## Vercel Deployment
 - Branch will already deploy in a staging environment on Vercel
