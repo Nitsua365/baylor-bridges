@@ -99,12 +99,12 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
                     {`${user?.firstName.substring(0, 1)}${user.lastName.substring(0, 1)}`}
                   </Avatar>
                 </div>
-                <div className="flex-initial w-11/12 max-w-lg mr-96">
+                <div className="flex-initial w-full max-w-xl mr-96">
                   <h1 className="text-2xl font-semibold mt-4">
                     {`${user.firstName} ${user.lastName}`}
                   </h1>
                 </div>
-                <div className="flex-initial mt-2 ml-96 mr-2">
+                <div className="flex-initial ml-96">
                   <button disabled={!isDirty} className="border-2 p-4 disabled:bg-neutral-500 disabled:bg-none bg-gradient-to-r from-primary-500 to-primaryTwo-600 text-white font-medium text-sm leading-tight rounded-md shadow-md hover:bg-primary-500 hover:shadow-lg focus:bg-primary-600 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-primaryTwo-600 active:shadow-lg">
                     SAVE
                   </button>
