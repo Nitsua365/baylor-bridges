@@ -25,7 +25,6 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
 
   const {
     register,
-    getValues,
     reset: resetForm,
     formState: { errors: formErrors, isDirty },
     handleSubmit
@@ -59,18 +58,19 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
   }
 
   const validation: EditUserValidation = {
-    personalEmail: { ...register("personalEmail", { value: user.personalEmail || "" }) },
+    personalEmail: { ...register("personalEmail", { value: user.personalEmail || "", required: true }) },
     baylorEmail: {
       ...register("baylorEmail", {
         value: (user.role === "alumni") ? "" : user.baylorEmail,
         disabled: user.role === "alumni",
-        validate: (email) => /^.+@baylor.edu$/.test(email)
+        validate: (email) => /^.+@baylor.edu$/.test(email), 
+        required:  user.role === "student"
       })
     },
-    phoneNumber: { ...register("phoneNumber", { value: user.phoneNumber || "" }) },
-    city: { ...register("city", { value: user.city || "" }) },
-    state: { ...register("state", { value: user.state || "" }) },
-    biography: { ...register("biography", { value: user.biography || "" }) }
+    phoneNumber: { ...register("phoneNumber", { value: user.phoneNumber || "", required: true  }) },
+    city: { ...register("city", { value: user.city || "", required: true }) },
+    state: { ...register("state", { value: user.state || "", required: true }) },
+    biography: { ...register("biography", { value: user.biography || "", required: false }) }
   }
 
   return (
@@ -92,24 +92,22 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
           enableSearchBar={false} />
         <form onSubmit={handleSubmit(editUserHandle)}>
           <div className="items-center justify-center flex flex-col">
-            <div className="rounded-md shadow-xl bg-white max-w-7xl min-w-fit w-5/6 mt-12 mb-8">
+            <div className="rounded-md shadow-xl bg-white max-w-7xl w-5/6 mt-12 mb-8">
               <div className="flex flex-row pl-4 pr-16 pt-4 pb-4">
                 <div>
                   <Avatar alt={`${user.firstName} ${user.lastName}`} sx={{ width: 64, height: 64 }} className="mr-4">
                     {`${user?.firstName.substring(0, 1)}${user.lastName.substring(0, 1)}`}
                   </Avatar>
                 </div>
-                <div>
+                <div className="flex-initial w-96 mr-96">
                   <h1 className="text-2xl font-semibold mt-4">
                     {`${user.firstName} ${user.lastName}`}
                   </h1>
                 </div>
-                <div>
-                  {isDirty && (
-                    <button className="border-2 bg-primary-500 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-primary-500 hover:shadow-lg focus:bg-primary-600 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-primaryTwo-600 active:shadow-lg transition duration-100 ease-in-out">
-                      Save
-                    </button>
-                  )}
+                <div className="flex-initial mt-2 ml-96">
+                  <button disabled={!isDirty} className="border-2 p-4 bg-primary-500 text-white font-medium text-xs leading-tight rounded-md shadow-md hover:bg-primary-500 hover:shadow-lg focus:bg-primary-600 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-primaryTwo-600 active:shadow-lg transition duration-100 ease-in-out disabled:bg-neutral-500">
+                    Save
+                  </button>
                 </div>
               </div>
             </div>
@@ -125,15 +123,19 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
                   <input
                     {...validation.personalEmail}
                     className="text-lg pl-1 bg-neutral-100 outline-primary-500 rounded-md w-3/4"
-                    type="text" />
+                    type="text" 
+                  />
+                  {formErrors.personalEmail && <p className="text-red-500 pb-0 mb-0 text-xs">Invalid Email</p>}
                 </div>
                 <div>
                   <p>Baylor Email</p>
                   <input {...validation.baylorEmail} className="text-lg pl-1 disabled:bg-slate-300 bg-neutral-100 outline-primary-500 rounded-md w-3/4" type="text" />
+                  {formErrors.personalEmail && <p className="text-red-500 pb-0 mb-0 text-xs">Invalid Email</p>}
                 </div>
                 <div>
                   <p>Phone Number</p>
                   <input {...validation.phoneNumber} className="text-lg pl-1 bg-neutral-100 outline-primary-500 rounded-md w-3/4" type="text" />
+                  {formErrors.phoneNumber && <p className="text-red-500 pb-0 mb-0 text-xs">Invalid Phone Number</p>}
                 </div>
                 <div>
                   <p>Role</p>
@@ -142,6 +144,7 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
                 <div>
                   <p>City</p>
                   <input {...validation.city} className="text-lg pl-1 bg-neutral-100 outline-primary-500 rounded-md w-3/4" type="text" />
+                  {formErrors.city && <p className="text-red-500 pb-0 mb-0 text-xs">Invalid City</p>}
                 </div>
                 <div>
                   <p>State</p>
