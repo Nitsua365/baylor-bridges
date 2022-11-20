@@ -28,7 +28,7 @@ npm run dev
 - If the branch passes the build. It must be tested manually then deployed by tech lead
 - Branch will be merged into producction
 
-## Branch Naming: {DevName}-{Issue/Task}-{TicketNumber}
+## Branch Naming: {Name}-{Issue/Task}-{TicketNumber}
 
 ## DATA FETCHING CONVENTION:
 - Server side fetching is handled in getServerSideProps() and getStaticProps()
@@ -40,3 +40,6 @@ npm run dev
   - use "primaryTwo" color for the teal green color
   - use "secondary" for the yellow/gold color
   - use "neutral" for the grey color
+
+## When Declaring a new Type
+  - Declare it in the types.d.ts file in the project root directory
