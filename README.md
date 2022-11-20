@@ -7,8 +7,8 @@
 
 ## Getting Started
 
-1. ```bash npm install```
-2. ```bash npm install -g firebase-tools```
+1. ```npm install```
+2. ```npm install -g firebase-tools```
 3. run the development server:
 
 ```bash
@@ -16,11 +16,11 @@ npm run dev
 ```
  
 ## DEVELOPMENT Environment:
-- When running ```bash npm run dev``` it will run the local firebase emulator and WILL NOT use the production firebase
+- When running ```npm run dev``` it will run the local firebase emulator and WILL NOT use the production firebase
 
 ## PRODUCTION Environment:
-1. ```bash npm run build```
-2. ```bash npm start```
+1. ```npm run build```
+2. ```npm start```
 3. When running ```npm start``` it will run the cloud firebase emulator and WILL use the production firebase
 
 ## Vercel Deployment
