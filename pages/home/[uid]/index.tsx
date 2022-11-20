@@ -19,10 +19,10 @@ const Home: NextPage<HomePageProps> = ({ user, uid }) => {
   return (
     <>
       <div className="min-h-screen bg-neutral-200">
-        <NavBar 
+        <NavBar
           user={user}
-          uid={uid} 
-          handleLogout={handleLogout} 
+          uid={uid}
+          handleLogout={handleLogout}
           enableSearchBar={true}
         />
       </div>

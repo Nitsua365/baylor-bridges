@@ -5,6 +5,7 @@ import { getUserById } from "pages/api/users/[uid]"
 import { useProtection } from "utils/hooks/useProtection"
 import Avatar from "@mui/material/Avatar"
 import { useForm } from "react-hook-form"
+import states from "data/states.json"
 
 const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
   const [isAuthed]: readonly[boolean] = useProtection(uid)
@@ -24,7 +25,13 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
 
   const validation: EditUserValidation = {
     personalEmail: { ...register("personalEmail", { value: user.personalEmail }) },
-    baylorEmail: { ...register("baylorEmail", { value: user.baylorEmail, disabled: user.role === "alumni" }) },
+    baylorEmail: {
+      ...register("baylorEmail", {
+        value: user.baylorEmail, 
+        disabled: user.role === "alumni", 
+        validate: (email) => /^.+@baylor.edu$/.test(email) 
+      }) 
+    },
     phoneNumber: { ...register("phoneNumber", { value: user.phoneNumber }) },
     city: { ...register("city", { value: user.city }) },
     state: { ...register("state", { value: user.state }) },
@@ -83,7 +90,9 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
             </div>
             <div>
               <p>State</p>
-              <input { ...validation.state } className="text-lg pl-1 bg-neutral-100 outline-primary-500 rounded-md w-3/4" type="text" />
+              <select { ...validation.state } className="text-lg pl-1 bg-neutral-100 outline-primary-500 rounded-md w-3/4" type="text">
+                {states.map((state: { name: string, abbreviation: string }, idx: number) => <option key={`${state.name}_${idx}`} value={state.abbreviation}>{state.abbreviation}</option>)}
+              </select>
             </div>
           </div>
         </div>
@@ -98,7 +107,6 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
           </textarea>
         </div>
       </div>
-      
     </div>
   )
 }
