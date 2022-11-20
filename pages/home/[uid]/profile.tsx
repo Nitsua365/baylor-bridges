@@ -78,6 +78,7 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
       <Snackbar
         open={updateError}
         autoHideDuration={6000}
+        onClose={() => setUpdateError(false)}
       >
         <Alert severity="error" onClose={() => setUpdateError(false)}>
           Error: Can&apos;t update user information
