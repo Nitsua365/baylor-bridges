@@ -6,7 +6,6 @@ import { useProtection } from "utils/hooks/useProtection"
 import { getUserById } from "pages/api/users/[uid]"
 import NavBar from "components/home/NavBar"
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Home: NextPage<HomePageProps> = ({ user, uid }) => {
   const [isAuthed] : readonly[boolean] = useProtection(uid)
   const { logOut }: AuthContextType = useAuth()
@@ -20,10 +19,10 @@ const Home: NextPage<HomePageProps> = ({ user, uid }) => {
   return (
     <>
       <div className="min-h-screen bg-neutral-200">
-        <NavBar 
+        <NavBar
           user={user}
-          uid={uid} 
-          handleLogout={handleLogout} 
+          uid={uid}
+          handleLogout={handleLogout}
           enableSearchBar={true}
         />
       </div>
@@ -32,7 +31,6 @@ const Home: NextPage<HomePageProps> = ({ user, uid }) => {
 
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getServerSideProps : GetServerSideProps<HomePageProps> = async (context : any) => {
 
   const { uid } = context.params

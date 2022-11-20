@@ -13,7 +13,11 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup"
 const SignUp: NextPage = () => {
 
   // auth hook resources
-  const { signUp, error: authError, clearError: clearAuthErrors } = useAuth()
+  const { 
+    signUp, 
+    error: authError, 
+    clearError: clearAuthErrors 
+  }: AuthContextType = useAuth()
 
   // page router
   const router: NextRouter = useRouter()
@@ -35,7 +39,7 @@ const SignUp: NextPage = () => {
   const handleSignUp = async (data: UserFormData): Promise<void> => {
 
     try {
-      const uid: string | void = await signUp({ ...data, role: roleToggle })
+      const uid: string | null = await signUp({ ...data, role: roleToggle })
 
       if (uid && !authError?.isError)
         router.replace(`/home/${uid}`)

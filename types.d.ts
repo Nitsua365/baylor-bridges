@@ -23,7 +23,7 @@ declare interface AuthError {
 declare type AuthContextType = { 
   user: MyUserCredential, 
   login: (email: string, password: string) => Promise<string | undefined>, 
-  signUp: (data: UserFormData) => Promise<void>, 
+  signUp: (data: UserFormData) => Promise<string | null>, 
   logOut: () => Promise<void>, 
   error: AuthError, 
   clearError: () => Promise<void> 
@@ -78,6 +78,15 @@ declare type EditUserValidation = {
   city: UseFormRegisterReturn,
   state: UseFormRegisterReturn,
   biography: UseFormRegisterReturn
+}
+
+declare type EditUserDTO = {
+  personalEmail: string,
+  baylorEmail: string,
+  phoneNumber: string,
+  city: string,
+  state: string,
+  biography: string
 }
 
 // login validation
