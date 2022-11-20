@@ -1,12 +1,13 @@
 import NavBar from "components/home/NavBar"
 import { useAuth } from "context/AuthContext"
 import { GetServerSideProps, NextPage } from "next"
-import { getUserById } from "pages/api/users/[uid]"
+import { getUserById, updateUserById } from "pages/api/users/[uid]"
 import { useProtection } from "utils/hooks/useProtection"
 import Avatar from "@mui/material/Avatar"
 import { useForm } from "react-hook-form"
 import states from "data/states.json"
 import { useEffect } from "react"
+import { useMutation } from "react-query"
 
 const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
   const [isAuthed]: readonly[boolean] = useProtection(uid)
@@ -18,17 +19,17 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
     register,
     getValues,
     reset: resetForm,
-    formState : { errors: formErrors, isDirty, isSubmitSuccessful },
-    handleSubmit
+    formState : { errors: formErrors, isDirty },
+    handleSubmit,
+    setValue
   } = useForm<EditUserValidation>({ reValidateMode: "onBlur" })
 
-  useEffect(() => {
-    if (isSubmitSuccessful) resetForm()
-  }, [isSubmitSuccessful, resetForm])
+  const { mutateAsync } = useMutation((userData: BodyInit) => fetch(`/api/users/${uid}`, { method: "PUT", body: userData }), {
+    mutationKey: `/api/users/${uid}`,
+    onSuccess : ({ body }) => resetForm()
+  })
 
-  const editUserHandle = () => {
-
-  }
+  const editUserHandle = async (data: any) => await mutateAsync(data)
 
   // DON'T Move this code
   // prevents a rendering error for the hook form above and validates user below
@@ -59,7 +60,7 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
         handleLogout={handleLogout}
         enableSearchBar={false}
       />
-      <form onSubmit={handleSubmit()}>
+      <form onSubmit={handleSubmit(editUserHandle)}>
         <div className="items-center justify-center flex flex-col">
           <div className="rounded-md shadow-xl bg-white max-w-7xl min-w-fit w-5/6 mt-12 mb-8">
             <div className="flex flex-row pl-4 pr-16 pt-4 pb-4">
