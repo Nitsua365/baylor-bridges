@@ -5,7 +5,7 @@ import { useAuth } from "context/AuthContext"
 export const useProtection = (uid: string) => {
 
   const router: NextRouter = useRouter()
-  const { user } = useAuth()
+  const { user }: AuthContextType = useAuth()
 
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
 

@@ -9,7 +9,7 @@ import NavBar from "components/home/NavBar"
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Home: NextPage<HomePageProps> = ({ user, uid }) => {
   const [isAuthed] : readonly[boolean] = useProtection(uid)
-  const { logOut } = useAuth()
+  const { logOut }: AuthContextType = useAuth()
 
   if (!isAuthed || !user) {
     return <></>

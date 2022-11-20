@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from "react"
 import { auth, db } from "config/firebase"
 import { useContext, createContext } from "react"
@@ -31,7 +32,6 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
     try {
       const { user: userCred }: UserCredential = await signInWithEmailAndPassword(auth, email, password)
       setError({ isError: false, message: null })
-      // setUser({ email: userCred.email, uid: userCred.uid, displayName: userCred.displayName })
       return userCred?.uid
     }
     catch (error: any) { 
@@ -79,9 +79,6 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
         // add document to db
         await setDoc(doc(db, "users", user.uid), insert)
 
-        // set the current user credential
-        // setUser({ uid: user.uid, email: user.email, displayName: user.displayName })
-
         // set the error
         setError({ isError: false, message: null })
 
@@ -101,12 +98,12 @@ export const AuthProvider = ({ children } : { children : React.ReactNode }) => {
   }
 
   // logout with current auth
-  const logOut = async () => {
+  const logOut = async () : Promise<void> => {
     await signOut(auth)
     setUser(null)
   }
 
-  const clearError = async () => setError({ isError: false, message: null })
+  const clearError = async () : Promise<void> => setError({ isError: false, message: null })
 
   // Hook for onAuthStateChange to set or remove the user
   React.useEffect(() => {

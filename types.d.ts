@@ -20,6 +20,15 @@ declare interface AuthError {
   message: string | null
 }
 
+declare type AuthContextType = { 
+  user: MyUserCredential, 
+  login: (email: string, password: string) => Promise<string | undefined>, 
+  signUp: (data: UserFormData) => Promise<void>, 
+  logOut: () => Promise<void>, 
+  error: AuthError, 
+  clearError: () => Promise<void> 
+}
+
 // User Data Transfer Object should contain entire schema for User in Firestore
 declare interface UserDTO {
   role: string;

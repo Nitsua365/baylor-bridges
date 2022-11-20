@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form"
 
 const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
   const [isAuthed]: readonly[boolean] = useProtection(uid)
-  const { logOut } = useAuth()
+  const { logOut }: AuthContextType = useAuth()
 
   const handleLogout = async () : Promise<void> => await logOut()
 

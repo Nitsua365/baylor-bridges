@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form"
 
 const Login: NextPage = () => {
 
-  const { login, error: loginError, clearError: clearAuthErrors } = useAuth()
+  const { login, error: loginError, clearError: clearAuthErrors }: AuthContextType = useAuth()
   const router: NextRouter = useRouter()
 
   const {
