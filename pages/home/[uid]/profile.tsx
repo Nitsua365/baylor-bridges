@@ -10,6 +10,7 @@ import { useMutation } from "react-query"
 import { useRouter } from "next/router"
 import Snackbar from "@mui/material/Snackbar"
 import { useState } from "react"
+import { Alert } from "@mui/material"
 
 const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
 
@@ -77,9 +78,11 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
       <Snackbar
         open={updateError}
         autoHideDuration={6000}
-        message="Error: Can't update user information"
-        color="error" 
-      />
+      >
+        <Alert severity="error" onClose={() => setUpdateError(false)}>
+          Error: Can&apos;t update user information
+        </Alert>
+      </Snackbar>
       <div className="min-h-screen bg-neutral-200">
         <NavBar
           user={user}
