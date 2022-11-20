@@ -8,6 +8,10 @@ export async function getUserById(uid: string) {
   return doc.data()
 }
 
+export async function updateUserById(uid: string, body: EditUserDTO) {
+  await firestore.collection("users").doc(uid).update(body)
+}
+
 export default async function handler(
   req: NextApiRequest, 
   res: NextApiResponse<FirebaseFirestore.DocumentData | string>
@@ -26,6 +30,18 @@ export default async function handler(
         return res.status(404).send("User Not Found")
 
       return res.status(200).json(data)
+    }
+    case "PUT" : {
+      const { body } = req
+
+      try {
+        await updateUserById(uid, body)
+        return res.status(200).send({ isSuccessful: true, message: `Updated user: ${uid} successfully` })
+      }
+      catch (error: any) {
+        return res.status(500).send("Internal Server Error")
+      }
+
     }
     default: {
       return res.status(403).send(`Invalid method: ${method}`)

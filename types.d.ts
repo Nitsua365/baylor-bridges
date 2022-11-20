@@ -80,6 +80,15 @@ declare type EditUserValidation = {
   biography: UseFormRegisterReturn
 }
 
+declare type EditUserDTO = {
+  personalEmail: string,
+  baylorEmail: string,
+  phoneNumber: string,
+  city: string,
+  state: string,
+  biography: string
+}
+
 // login validation
 declare interface LoginForm {
   email: string;
