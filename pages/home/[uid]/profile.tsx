@@ -99,14 +99,14 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
                     {`${user?.firstName.substring(0, 1)}${user.lastName.substring(0, 1)}`}
                   </Avatar>
                 </div>
-                <div className="flex-initial w-96 mr-96">
+                <div className="flex-initial w-11/12 max-w-lg mr-96">
                   <h1 className="text-2xl font-semibold mt-4">
                     {`${user.firstName} ${user.lastName}`}
                   </h1>
                 </div>
-                <div className="flex-initial mt-2 ml-96">
-                  <button disabled={!isDirty} className="border-2 p-4 bg-primary-500 text-white font-medium text-xs leading-tight rounded-md shadow-md hover:bg-primary-500 hover:shadow-lg focus:bg-primary-600 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-primaryTwo-600 active:shadow-lg transition duration-100 ease-in-out disabled:bg-neutral-500">
-                    Save
+                <div className="flex-initial mt-2 ml-96 mr-2">
+                  <button disabled={!isDirty} className="border-2 p-4 disabled:bg-neutral-500 disabled:bg-none bg-gradient-to-r from-primary-500 to-primaryTwo-600 text-white font-medium text-sm leading-tight rounded-md shadow-md hover:bg-primary-500 hover:shadow-lg focus:bg-primary-600 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-primaryTwo-600 active:shadow-lg">
+                    SAVE
                   </button>
                 </div>
               </div>
@@ -130,7 +130,7 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
                 <div>
                   <p>Baylor Email</p>
                   <input {...validation.baylorEmail} className="text-lg pl-1 disabled:bg-slate-300 bg-neutral-100 outline-primary-500 rounded-md w-3/4" type="text" />
-                  {formErrors.personalEmail && <p className="text-red-500 pb-0 mb-0 text-xs">Invalid Email</p>}
+                  {formErrors.baylorEmail && <p className="text-red-500 pb-0 mb-0 text-xs">Invalid Email</p>}
                 </div>
                 <div>
                   <p>Phone Number</p>
