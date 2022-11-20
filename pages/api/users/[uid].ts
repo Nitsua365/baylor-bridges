@@ -8,8 +8,9 @@ export async function getUserById(uid: string) {
   return doc.data()
 }
 
-export async function updateUserById(uid: string, body: EditUserDTO): Promise<void> {
+export async function updateUserById(uid: string, body: EditUserDTO) {
   await firestore.collection("users").doc(uid).update(body)
+  return await getUserById(uid)
 }
 
 export default async function handler(
@@ -35,11 +36,11 @@ export default async function handler(
       const { body } = req
 
       try {
-        await updateUserById(uid, body)
-        return res.status(200).send({ isSuccessful: true, message: `Updated user: ${uid} successfully` })
+        const user = await updateUserById(uid, body)
+        return res.status(200).send({ user, isSuccessful: true, message: `user: ${uid} updated succesfully` })
       }
       catch (error: any) {
-        return res.status(500).send("Internal Server Error")
+        return res.status(500).send(`Internal Server Error: ${error.toString()}`)
       }
 
     }

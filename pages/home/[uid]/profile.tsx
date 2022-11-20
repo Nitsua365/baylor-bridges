@@ -1,35 +1,49 @@
 import NavBar from "components/home/NavBar"
 import { useAuth } from "context/AuthContext"
 import { GetServerSideProps, NextPage } from "next"
-import { getUserById, updateUserById } from "pages/api/users/[uid]"
+import { getUserById } from "pages/api/users/[uid]"
 import { useProtection } from "utils/hooks/useProtection"
 import Avatar from "@mui/material/Avatar"
 import { useForm } from "react-hook-form"
 import states from "data/states.json"
-import { useEffect } from "react"
 import { useMutation } from "react-query"
+import { useRouter } from "next/router"
 
 const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
   const [isAuthed]: readonly[boolean] = useProtection(uid)
   const { logOut }: AuthContextType = useAuth()
+  const router = useRouter()
 
   const handleLogout = async () : Promise<void> => await logOut()
+  const refreshData = () => router.replace(router.asPath)
 
   const {
     register,
     getValues,
     reset: resetForm,
     formState : { errors: formErrors, isDirty },
-    handleSubmit,
-    setValue
+    handleSubmit
   } = useForm<EditUserValidation>({ reValidateMode: "onBlur" })
 
-  const { mutateAsync } = useMutation((userData: BodyInit) => fetch(`/api/users/${uid}`, { method: "PUT", body: userData }), {
+  // react query mutation that handles PUT request for updating user
+  const { mutateAsync, mutate } = useMutation(async (userData: BodyInit): Promise<Response> => await fetch(`/api/users/${uid}`, { 
+    method: "PUT", 
+    headers: { "Content-Type": "application/json" }, 
+    body: JSON.stringify(userData) 
+  }), {
     mutationKey: `/api/users/${uid}`,
-    onSuccess : ({ body }) => resetForm()
+    onSuccess : async (data: Response) => { 
+      const { user } = await data.json()
+      resetForm(user)
+      refreshData()
+    },
+    onError: () => console.log("Failed")
   })
 
-  const editUserHandle = async (data: any) => await mutateAsync(data)
+  const editUserHandle = async (data: any) => { 
+    Object.entries(data).forEach(([k]) => data[k] = data?.[k] || "")
+    await mutateAsync(data)
+  }
 
   // DON'T Move this code
   // prevents a rendering error for the hook form above and validates user below
@@ -38,18 +52,18 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
   }
 
   const validation: EditUserValidation = {
-    personalEmail: { ...register("personalEmail", { value: user.personalEmail }) },
+    personalEmail: { ...register("personalEmail", { value: user.personalEmail || "" }) },
     baylorEmail: {
       ...register("baylorEmail", {
-        value: user.baylorEmail, 
+        value: (user.role === "alumni") ? "" : user.baylorEmail, 
         disabled: user.role === "alumni", 
         validate: (email) => /^.+@baylor.edu$/.test(email) 
       }) 
     },
-    phoneNumber: { ...register("phoneNumber", { value: user.phoneNumber }) },
-    city: { ...register("city", { value: user.city }) },
-    state: { ...register("state", { value: user.state }) },
-    biography: { ...register("biography", { value: user.biography }) }
+    phoneNumber: { ...register("phoneNumber", { value: user.phoneNumber || "" }) },
+    city: { ...register("city", { value: user.city || "" }) },
+    state: { ...register("state", { value: user.state || "" }) },
+    biography: { ...register("biography", { value: user.biography || "" }) }
   }
 
   return (
