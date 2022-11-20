@@ -28,11 +28,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [error, setError] = React.useState<AuthError | null>(null)
 
   // login with email and password
-  const login = async (email: string, password: string) : Promise<string | undefined> => { 
+  const login = async (email: string, password: string) : Promise<string | null> => { 
     try {
       const { user: userCred }: UserCredential = await signInWithEmailAndPassword(auth, email, password)
       setError({ isError: false, message: null })
-      return userCred?.uid
+      return userCred?.uid || null
     }
     catch (error: any) { 
       setError({ isError: true, message: error.toString() }) 
@@ -41,7 +41,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }
 
   // signUp with email and password
-  const signUp = async (data: UserFormData) : Promise<void | string> => {
+  const signUp = async (data: UserFormData) : Promise<string | null> => {
 
     const email: string = (data.role === "student") ? data.baylorEmail : data.personalEmail
 
@@ -95,6 +95,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       throw error
     }
 
+    return null
   }
 
   // logout with current auth

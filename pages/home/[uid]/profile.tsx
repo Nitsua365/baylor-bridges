@@ -103,7 +103,6 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
   )
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getServerSideProps : GetServerSideProps<HomePageProps> = async (context : any) => {
 
   const { uid } = context.params

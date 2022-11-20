@@ -23,7 +23,7 @@ declare interface AuthError {
 declare type AuthContextType = { 
   user: MyUserCredential, 
   login: (email: string, password: string) => Promise<string | undefined>, 
-  signUp: (data: UserFormData) => Promise<void>, 
+  signUp: (data: UserFormData) => Promise<string | null>, 
   logOut: () => Promise<void>, 
   error: AuthError, 
   clearError: () => Promise<void> 
