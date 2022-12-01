@@ -3,16 +3,14 @@ import { useAuth } from "context/AuthContext"
 import { GetServerSideProps, NextPage } from "next"
 import { getUserById } from "pages/api/users/[uid]"
 import { useProtection } from "utils/hooks/useProtection"
+import Avatar from "@mui/material/Avatar"
 import { useForm } from "react-hook-form"
 import states from "data/states.json"
 import { useMutation } from "react-query"
 import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
-import { useFilePicker } from "use-file-picker"
-
-import { Alert, Tooltip, Snackbar, Avatar } from "@mui/material"
-import { ref, StorageReference, uploadBytes } from "firebase/storage"
-import { storage } from "config/firebase"
+import Snackbar from "@mui/material/Snackbar"
+import { useState } from "react"
+import { Alert } from "@mui/material"
 
 const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
 
@@ -24,10 +22,6 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
 
   const handleLogout = async (): Promise<void> => await logOut()
   const refreshData = () => router.replace(router.asPath)
-  const editUserHandle = async (data: any) => {
-    Object.entries(data).forEach(([k]) => data[k] = data?.[k] || "")
-    await mutateAsync(data)
-  }
 
   const {
     register,
@@ -52,20 +46,10 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
     onError: () => setUpdateError(true)
   })
 
-  const [openFileSelector, { filesContent, loading: fileLoading, errors: fileErrors }] = useFilePicker({
-    accept: "image/*",
-    maxFileSize: 5,
-    multiple: false,
-    readAs: "ArrayBuffer"
-  })
-
-  useEffect(() => {
-    if (filesContent && filesContent.length) {
-      const rootRef: StorageReference = ref(storage, `profileImages/${uid}`)
-      console.log(rootRef.toString())
-      uploadBytes(rootRef, new TextEncoder().encode(filesContent[0].content))
-    }
-  }, [filesContent])
+  const editUserHandle = async (data: any) => {
+    Object.entries(data).forEach(([k]) => data[k] = data?.[k] || "")
+    await mutateAsync(data)
+  }
 
   // DON'T Move this code
   // prevents a rendering error for the hook form above and validates user below
@@ -111,12 +95,9 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
             <div className="rounded-md shadow-xl bg-white max-w-7xl w-5/6 mt-12 mb-8">
               <div className="flex flex-row pl-4 pr-16 pt-4 pb-4">
                 <div>
-                  <Tooltip title="Click here to upload photo" enterDelay={10} arrow>
-                    <Avatar onClick={() => openFileSelector()} alt={`${user.firstName} ${user.lastName}`} sx={{ width: 64, height: 64, cursor: "pointer" }} className="mr-4">
-                      {`${user?.firstName.substring(0, 1)}${user.lastName.substring(0, 1)}`}
-                    </Avatar>
-                  </Tooltip>
-                  {/* {fileErrors && <p className="text-red-500 pb-0 mb-0 text-xs">file error</p>} */}
+                  <Avatar alt={`${user.firstName} ${user.lastName}`} sx={{ width: 64, height: 64 }} className="mr-4">
+                    {`${user?.firstName.substring(0, 1)}${user.lastName.substring(0, 1)}`}
+                  </Avatar>
                 </div>
                 <div className="flex-initial w-full max-w-xl mr-96">
                   <h1 className="text-2xl font-semibold mt-4">

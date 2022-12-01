@@ -7,7 +7,7 @@ export const firebaseConfig = {
   messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_SENDER_ID,
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
-}
+};
 
 
 export const firebaseDevConfig = {
@@ -17,4 +17,4 @@ export const firebaseDevConfig = {
   databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DB_URL,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
   storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
-}
+};

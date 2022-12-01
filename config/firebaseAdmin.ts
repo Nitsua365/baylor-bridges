@@ -1,6 +1,6 @@
-import * as admin from "firebase-admin"
+import * as admin from 'firebase-admin'
 
-import { firebaseConfig } from "./firebase.config"
+import { firebaseConfig } from './firebase.config';
 
 const env = process.env.NODE_ENV === "production"
 
@@ -9,7 +9,7 @@ if (!admin.apps.length) {
     credential: admin.credential.cert({
       clientEmail: process.env.NEXT_PUBLIC_FIREBASE_CLIENT_EMAIL,
       projectId: firebaseConfig.projectId,
-      privateKey: process.env.NEXT_PUBLIC_FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n") || ""
+      privateKey: process.env.NEXT_PUBLIC_FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n') || ""
     }),
     projectId: firebaseConfig.projectId,
     // databaseURL: (env) ? firebaseConfig.databaseURL : firebaseDevConfig.databaseURL,
