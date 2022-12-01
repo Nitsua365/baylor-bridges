@@ -1,10 +1,10 @@
 // Import the functions you need from the SDKs you need
-import { firebaseConfig, firebaseDevConfig } from "./firebase.config";
+import { firebaseConfig, firebaseDevConfig } from "./firebase.config"
 
-import { FirebaseApp, initializeApp } from "firebase/app";
+import { FirebaseApp, initializeApp } from "firebase/app"
 import { Firestore, getFirestore, connectFirestoreEmulator } from "firebase/firestore"
 import { Auth, connectAuthEmulator, getAuth } from "firebase/auth"
-import { getStorage, FirebaseStorage, connectStorageEmulator } from "firebase/storage";
+import { getStorage, FirebaseStorage, connectStorageEmulator } from "firebase/storage"
 
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -13,21 +13,22 @@ import { getStorage, FirebaseStorage, connectStorageEmulator } from "firebase/st
 
 const env = process.env.NODE_ENV === "production"
 
-const app: FirebaseApp = (env) ? initializeApp(firebaseConfig) : initializeApp({ appId: firebaseDevConfig.appId, projectId: firebaseDevConfig.projectId, apiKey: firebaseDevConfig.apiKey });
+const app: FirebaseApp = (env) ? initializeApp(firebaseConfig) : initializeApp({ appId: firebaseDevConfig.appId, projectId: firebaseDevConfig.projectId, apiKey: firebaseDevConfig.apiKey, storageBucket: firebaseDevConfig.storageBucket })
 const db: Firestore = (env) ? getFirestore(app) : getFirestore()
-const auth: Auth = (env) ? getAuth(app) : getAuth();
-const storage: FirebaseStorage = (env) ? getStorage(app) : getStorage();
+const auth: Auth = (env) ? getAuth(app) : getAuth()
+const storage: FirebaseStorage = (env) ? getStorage(app) : getStorage()
 
 if (!env) {
-  connectFirestoreEmulator(db, 'localhost', 8081)
-  connectAuthEmulator(auth, 'http://localhost:9099');
-  connectStorageEmulator(storage, 'localhost', 9199);
+  connectFirestoreEmulator(db, "localhost", 8081)
+  connectAuthEmulator(auth, "http://localhost:9099")
+  connectStorageEmulator(storage, "localhost", 9199)
 }
 
 export {
   app,
   db,
-  auth
+  auth,
+  storage
 }
 
 // export default firebase;
