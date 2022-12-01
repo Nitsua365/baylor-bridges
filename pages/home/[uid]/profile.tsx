@@ -62,7 +62,6 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
   useEffect(() => {
     if (filesContent && filesContent.length) {
       const rootRef: StorageReference = ref(storage, `profileImages/${uid}`)
-      console.log(rootRef.toString())
       uploadBytes(rootRef, new TextEncoder().encode(filesContent[0].content))
     }
   }, [filesContent])
