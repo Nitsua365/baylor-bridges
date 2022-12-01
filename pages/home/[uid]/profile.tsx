@@ -11,12 +11,13 @@ import { useEffect, useState } from "react"
 import { useFilePicker } from "use-file-picker"
 
 import { Alert, Tooltip, Snackbar, Avatar } from "@mui/material"
-import { ref, StorageReference, uploadBytes } from "firebase/storage"
+import { getDownloadURL, ref, StorageReference, uploadBytes } from "firebase/storage"
 import { storage } from "config/firebase"
 
 const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
 
   const [updateError, setUpdateError] = useState<boolean>(false)
+  const [profilePicUrl, setProfilePicUrl] = useState<string | null>(null)
 
   const [isAuthed]: readonly [boolean] = useProtection(uid)
   const { logOut }: AuthContextType = useAuth()
@@ -60,9 +61,18 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
   })
 
   useEffect(() => {
+    getDownloadURL(ref(storage, `/profileImages/${uid}`))
+      .then(url => setProfilePicUrl(url))
+      .catch((err) => setProfilePicUrl(null))
+  }, [])
+
+  useEffect(() => {
     if (filesContent && filesContent.length) {
       const rootRef: StorageReference = ref(storage, `profileImages/${uid}`)
-      uploadBytes(rootRef, new TextEncoder().encode(filesContent[0].content))
+      uploadBytes(rootRef, new Blob(Array.of(filesContent[0].content)))
+      getDownloadURL(ref(storage, `/profileImages/${uid}`))
+        .then(url => setProfilePicUrl(url))
+        .catch((err) => setProfilePicUrl(null))
     }
   }, [filesContent])
 
@@ -111,7 +121,13 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
               <div className="flex flex-row pl-4 pr-16 pt-4 pb-4">
                 <div>
                   <Tooltip title="Click here to upload photo" enterDelay={10} arrow>
-                    <Avatar onClick={() => openFileSelector()} alt={`${user.firstName} ${user.lastName}`} sx={{ width: 64, height: 64, cursor: "pointer" }} className="mr-4">
+                    <Avatar 
+                      onClick={() => openFileSelector()} 
+                      alt={`${user.firstName} ${user.lastName}`} 
+                      src={profilePicUrl || ""} 
+                      sx={{ width: 64, height: 64, cursor: "pointer" }} 
+                      className="mr-4"
+                    >
                       {`${user?.firstName.substring(0, 1)}${user.lastName.substring(0, 1)}`}
                     </Avatar>
                   </Tooltip>
