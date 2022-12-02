@@ -74,7 +74,6 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
       await uploadBytes(rootRef, new Blob(Array.of(filesContent[0].content)))
       getDownloadURL(rootRef)
         .then((url) => setProfileImage(url))
-        .catch(() => setProfileImage(null))
     }
 
     if (filesContent && filesContent.length) {
