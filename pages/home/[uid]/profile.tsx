@@ -61,14 +61,15 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
     readAs: "ArrayBuffer"
   })
 
+  // Sets the profile pic on page load
   useEffect(() => {
     getDownloadURL(ref(storage, `profileImages/${uid}`))
       .then((url) => setProfileImage(url))
       .catch(() => setProfileImage(null))
   }, [])
 
+  // Sets the profile pic on upload of new pic
   useEffect(() => {
-
     const refreshProfileImage = async () : Promise<void> => {
       const rootRef: StorageReference = ref(storage, `profileImages/${uid}`)
       await uploadBytes(rootRef, new Blob(Array.of(filesContent[0].content)))
