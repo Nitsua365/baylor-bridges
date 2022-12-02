@@ -89,15 +89,19 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
   }
 
   const validation: EditUserValidation = {
-    personalEmail: { ...register("personalEmail", { value: user.personalEmail || "", required: true }) },
-    baylorEmail: {
-      ...register("baylorEmail", {
-        value: (user.role === "alumni") ? "" : user.baylorEmail,
-        disabled: user.role === "alumni",
-        validate: (email) => /^.+@baylor.edu$/.test(email), 
-        required:  user.role === "student"
-      })
-    },
+    // personalEmail: { 
+    //   ...register("personalEmail", { 
+    //     value: user.personalEmail || "", 
+    //     required: true
+    //   }) 
+    // },
+    // baylorEmail: {
+    //   ...register("baylorEmail", {
+    //     value: (user.role === "alumni") ? "" : user.baylorEmail,
+    //     required: true,
+    //     validate: (email) => /^.+@baylor.edu$/.test(email)
+    //   })
+    // },
     phoneNumber: { ...register("phoneNumber", { value: user.phoneNumber || "", required: true  }) },
     city: { ...register("city", { value: user.city || "", required: true }) },
     state: { ...register("state", { value: user.state || "", required: true }) },
@@ -160,17 +164,17 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
               <div className="grid grid-cols-2 mt-4 gap-4">
                 <div>
                   <p>Email</p>
-                  <input
+                  {/* <input
                     {...validation.personalEmail}
-                    className="text-lg pl-1 bg-neutral-100 outline-primary-500 rounded-md w-3/4"
-                    type="text" 
-                  />
-                  {formErrors.personalEmail && <p className="text-red-500 pb-0 mb-0 text-xs">Invalid Email</p>}
+                    className="disabled:bg-slate-300 bg-neutral-100 text-lg pl-1 bg-neutral-100 outline-primary-500 rounded-md w-3/4"
+                    type="text"
+                  /> */}
+                  <p className="text-lg">{user.personalEmail}</p>
                 </div>
                 <div>
                   <p>Baylor Email</p>
-                  <input {...validation.baylorEmail} className="text-lg pl-1 disabled:bg-slate-300 bg-neutral-100 outline-primary-500 rounded-md w-3/4" type="text" />
-                  {formErrors.baylorEmail && <p className="text-red-500 pb-0 mb-0 text-xs">Invalid Email</p>}
+                  {/* <input {...validation.baylorEmail} className="text-lg pl-1 disabled:bg-slate-300 bg-neutral-100 outline-primary-500 rounded-md w-3/4" type="text" /> */}
+                  <p className="text-lg">{user.baylorEmail}</p>
                 </div>
                 <div>
                   <p>Phone Number</p>
@@ -200,7 +204,7 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
                   Bio
                 </h3>
               </div>
-              <textarea { ...validation.biography } defaultValue={user.biography} placeholder="Enter Bio" className="pl-1 text-md h-40 bg-neutral-100 mt-3 max-w-5xl w-5/6 outline-primary-400 rounded-l resize-none" />
+              <textarea { ...validation.biography } defaultValue={user.biography} placeholder="Enter Bio" className="pl-1 text-md h-40 bg-neutral-100 mt-3 max-w-7xl w-full outline-primary-400 rounded-l resize-none" />
             </div>
           </div>
         </form>

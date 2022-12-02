@@ -72,8 +72,6 @@ declare type UserRoles = "student" | "alumni";
 
 // Edit User
 declare type EditUserValidation = {
-  personalEmail: UseFormRegisterReturn,
-  baylorEmail: UseFormRegisterReturn,
   phoneNumber: UseFormRegisterReturn,
   city: UseFormRegisterReturn,
   state: UseFormRegisterReturn,
