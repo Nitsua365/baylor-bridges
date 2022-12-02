@@ -17,7 +17,7 @@ import { storage } from "config/firebase"
 const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
 
   const [updateError, setUpdateError] = useState<boolean>(false)
-  const [profilePicUrl, setProfilePicUrl] = useState<string | null>(null)
+  const [profileImage, setProfileImage] = useState<string | null>(null)
 
   const [isAuthed]: readonly [boolean] = useProtection(uid)
   const { logOut }: AuthContextType = useAuth()
@@ -25,6 +25,7 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
 
   const handleLogout = async (): Promise<void> => await logOut()
   const refreshData = () => router.replace(router.asPath)
+  
   const editUserHandle = async (data: any) => {
     Object.entries(data).forEach(([k]) => data[k] = data?.[k] || "")
     await mutateAsync(data)
@@ -61,18 +62,23 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
   })
 
   useEffect(() => {
-    getDownloadURL(ref(storage, `/profileImages/${uid}`))
-      .then(url => setProfilePicUrl(url))
-      .catch((err) => setProfilePicUrl(null))
+    getDownloadURL(ref(storage, `profileImages/${uid}`))
+      .then((url) => setProfileImage(url))
+      .catch(() => setProfileImage(null))
   }, [])
 
   useEffect(() => {
-    if (filesContent && filesContent.length) {
+
+    const refreshProfileImage = async () : Promise<void> => {
       const rootRef: StorageReference = ref(storage, `profileImages/${uid}`)
-      uploadBytes(rootRef, new Blob(Array.of(filesContent[0].content)))
-      getDownloadURL(ref(storage, `/profileImages/${uid}`))
-        .then(url => setProfilePicUrl(url))
-        .catch((err) => setProfilePicUrl(null))
+      await uploadBytes(rootRef, new Blob(Array.of(filesContent[0].content)))
+      getDownloadURL(rootRef)
+        .then((url) => setProfileImage(url))
+        .catch(() => setProfileImage(null))
+    }
+
+    if (filesContent && filesContent.length) {
+      refreshProfileImage()
     }
   }, [filesContent])
 
@@ -124,7 +130,7 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
                     <Avatar 
                       onClick={() => openFileSelector()} 
                       alt={`${user.firstName} ${user.lastName}`} 
-                      src={profilePicUrl || ""} 
+                      src={profileImage || ""} 
                       sx={{ width: 64, height: 64, cursor: "pointer" }} 
                       className="mr-4"
                     >

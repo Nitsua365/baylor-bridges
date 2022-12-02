@@ -1,7 +1,7 @@
 
 // For Next Pages under home directory
 declare type HomePageProps = {
-  user: FirebaseFirestore.DocumentData | null, 
+  user: FirebaseFirestore.DocumentData | null,
   uid: string
 }
 
