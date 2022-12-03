@@ -89,19 +89,6 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
   }
 
   const validation: EditUserValidation = {
-    // personalEmail: { 
-    //   ...register("personalEmail", { 
-    //     value: user.personalEmail || "", 
-    //     required: true
-    //   }) 
-    // },
-    // baylorEmail: {
-    //   ...register("baylorEmail", {
-    //     value: (user.role === "alumni") ? "" : user.baylorEmail,
-    //     required: true,
-    //     validate: (email) => /^.+@baylor.edu$/.test(email)
-    //   })
-    // },
     phoneNumber: { ...register("phoneNumber", { value: user.phoneNumber || "", required: true  }) },
     city: { ...register("city", { value: user.city || "", required: true }) },
     state: { ...register("state", { value: user.state || "", required: true }) },
@@ -164,11 +151,6 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
               <div className="grid grid-cols-2 mt-4 gap-4">
                 <div>
                   <p>Email</p>
-                  {/* <input
-                    {...validation.personalEmail}
-                    className="disabled:bg-slate-300 bg-neutral-100 text-lg pl-1 bg-neutral-100 outline-primary-500 rounded-md w-3/4"
-                    type="text"
-                  /> */}
                   <p className="text-lg">{user.personalEmail}</p>
                 </div>
                 <div>
