@@ -173,8 +173,7 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
                 </div>
                 <div>
                   <p>Baylor Email</p>
-                  {/* <input {...validation.baylorEmail} className="text-lg pl-1 disabled:bg-slate-300 bg-neutral-100 outline-primary-500 rounded-md w-3/4" type="text" /> */}
-                  <p className="text-lg">{user.baylorEmail}</p>
+                  <p className="text-lg">{(user.baylorEmail) ? user.baylorEmail : "No Baylor Email"}</p>
                 </div>
                 <div>
                   <p>Phone Number</p>
