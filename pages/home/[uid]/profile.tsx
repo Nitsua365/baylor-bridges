@@ -14,6 +14,8 @@ import { Alert, Tooltip, Snackbar, Avatar } from "@mui/material"
 import { getDownloadURL, ref, StorageReference, uploadBytes } from "firebase/storage"
 import { storage } from "config/firebase"
 
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos"
+
 
 const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
 
@@ -119,9 +121,15 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
           handleLogout={handleLogout}
           enableSearchBar={false} 
         />
+        <div className="ml-36 mt-4">
+          <button onClick={() => router.push(`/home/${uid}`)} className="text-primary-500 p-2 font-semibold hover:bg-neutral-300 rounded-lg transition-colors duration-200 pointer-events-auto">
+            <ArrowBackIosIcon fontSize="small" />
+            Back To Home
+          </button>
+        </div>
         <form onSubmit={handleSubmit(editUserHandle)}>
           <div className="items-center justify-center flex flex-col">
-            <div className="rounded-md shadow-xl bg-white max-w-7xl w-5/6 mt-12 mb-8">
+            <div className="rounded-md shadow-xl bg-white max-w-7xl w-5/6 mt-4 mb-8">
               <div className="flex flex-row pl-4 pr-16 pt-4 pb-4">
                 <div>
                   <Tooltip title="Click here to upload photo" enterDelay={10} arrow>
@@ -135,7 +143,6 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
                       {`${user?.firstName.substring(0, 1)}${user.lastName.substring(0, 1)}`}
                     </Avatar>
                   </Tooltip>
-                  {/* {fileErrors && <p className="text-red-500 pb-0 mb-0 text-xs">file error</p>} */}
                 </div>
                 <div className="flex-initial w-full max-w-xl mr-96">
                   <h1 className="text-2xl font-semibold mt-4">
