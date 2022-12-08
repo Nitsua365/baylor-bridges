@@ -15,10 +15,9 @@ import { getDownloadURL, ref, StorageReference, uploadBytes } from "firebase/sto
 import { storage } from "config/firebase"
 
 
-
 const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
 
-  const [snackBarErrorMsg, setSnackBarErrorMsg] = useState<SnackBarError>({ isError: false, isSuccess: false, msg: null })
+  const [snackBarMsg, setSnackBarMsg] = useState<SnackBarError>({ isError: false, isSuccess: false, msg: null })
 
   const [profileImage, setProfileImage] = useState<string | null>(null)
 
@@ -52,9 +51,9 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
       const { user } = await data.json()
       resetForm(user)
       refreshData()
-      setSnackBarErrorMsg({ isError: false, isSuccess: true, msg: "User Profile Updated" })
+      setSnackBarMsg({ isError: false, isSuccess: true, msg: "User Profile Updated" })
     },
-    onError: () => setSnackBarErrorMsg({ isError: true, isSuccess: false, msg: "Can't update profile information" })
+    onError: () => setSnackBarMsg({ isError: true, isSuccess: false, msg: "Can't update profile information" })
   })
 
   const [openFileSelector, { filesContent, loading: fileLoading, errors: fileErrors }] = useFilePicker({
@@ -68,7 +67,7 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
   useEffect(() => {
     getDownloadURL(ref(storage, `profileImages/${uid}`))
       .then((url) => setProfileImage(url))
-      .catch((error) => setSnackBarErrorMsg({ isError: true, isSuccess: false, msg: "Can't fetch profile image"}))
+      .catch(() => setSnackBarMsg({ isError: true, isSuccess: false, msg: "Can't fetch profile image"}))
   }, [])
 
   // Sets the profile pic on upload of new pic
@@ -79,17 +78,13 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
       getDownloadURL(rootRef)
         .then((url) => { 
           setProfileImage(url)
-          setSnackBarErrorMsg({ isError: false, isSuccess: true, msg: "Updated Profile Image" })
+          setSnackBarMsg({ isError: false, isSuccess: true, msg: "Updated Profile Image" })
         })
-        .catch((err) => setSnackBarErrorMsg({ isError: true, isSuccess: false, msg: "Can't fetch profile image"}))
+        .catch(() => setSnackBarMsg({ isError: true, isSuccess: false, msg: "Can't fetch profile image"}))
     }
 
-    if (!fileLoading && filesContent && filesContent.length) {
-      refreshProfileImage()
-    }
-    else if (fileErrors[0]) {
-      setSnackBarErrorMsg({ isError: true, isSuccess: false, msg: "File Upload Error" })
-    }
+    if (!fileLoading && filesContent && filesContent.length) refreshProfileImage()
+    else if (fileErrors[0]) setSnackBarMsg({ isError: true, isSuccess: false, msg: "File Upload Error" })
   }, [filesContent, fileLoading, fileErrors])
 
   // DON'T Move this code
@@ -108,13 +103,13 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
   return (
     <>
       <Snackbar
-        open={snackBarErrorMsg.isError || snackBarErrorMsg.isSuccess}
+        open={snackBarMsg.isError || snackBarMsg.isSuccess}
         autoHideDuration={2000}
-        onClose={() => setSnackBarErrorMsg({ isError: false, isSuccess: false, msg: null })}
+        onClose={() => setSnackBarMsg({ isError: false, isSuccess: false, msg: null })}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
-        <Alert severity={(snackBarErrorMsg.isError) ? "error" : "success"} onClose={() => setSnackBarErrorMsg({ isError: false, isSuccess: false, msg: null })}>
-          {snackBarErrorMsg.msg}
+        <Alert severity={(snackBarMsg.isError) ? "error" : "success"} onClose={() => setSnackBarMsg({ isError: false, isSuccess: false, msg: null })}>
+          {snackBarMsg.msg}
         </Alert>
       </Snackbar>
       <div className="min-h-screen bg-neutral-200">
@@ -122,7 +117,8 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
           user={user}
           uid={uid}
           handleLogout={handleLogout}
-          enableSearchBar={false} />
+          enableSearchBar={false} 
+        />
         <form onSubmit={handleSubmit(editUserHandle)}>
           <div className="items-center justify-center flex flex-col">
             <div className="rounded-md shadow-xl bg-white max-w-7xl w-5/6 mt-12 mb-8">
