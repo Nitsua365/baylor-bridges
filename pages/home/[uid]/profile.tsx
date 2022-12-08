@@ -14,9 +14,12 @@ import { Alert, Tooltip, Snackbar, Avatar } from "@mui/material"
 import { getDownloadURL, ref, StorageReference, uploadBytes } from "firebase/storage"
 import { storage } from "config/firebase"
 
+
+
 const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
 
-  const [updateError, setUpdateError] = useState<boolean>(false)
+  const [snackBarErrorMsg, setSnackBarErrorMsg] = useState<SnackBarError>({ isError: false, isSuccess: false, msg: null })
+
   const [profileImage, setProfileImage] = useState<string | null>(null)
 
   const [isAuthed]: readonly [boolean] = useProtection(uid)
@@ -49,9 +52,9 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
       const { user } = await data.json()
       resetForm(user)
       refreshData()
-      setUpdateError(false)
+      setSnackBarErrorMsg({ isError: false, isSuccess: true, msg: "User Profile Updated" })
     },
-    onError: () => setUpdateError(true)
+    onError: () => setSnackBarErrorMsg({ isError: true, isSuccess: false, msg: "Can't update profile information" })
   })
 
   const [openFileSelector, { filesContent, loading: fileLoading, errors: fileErrors }] = useFilePicker({
@@ -65,7 +68,7 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
   useEffect(() => {
     getDownloadURL(ref(storage, `profileImages/${uid}`))
       .then((url) => setProfileImage(url))
-      .catch(() => setProfileImage(null))
+      .catch((error) => setSnackBarErrorMsg({ isError: true, isSuccess: false, msg: "Can't fetch profile image"}))
   }, [])
 
   // Sets the profile pic on upload of new pic
@@ -74,13 +77,20 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
       const rootRef: StorageReference = ref(storage, `profileImages/${uid}`)
       await uploadBytes(rootRef, new Blob(Array.of(filesContent[0].content)))
       getDownloadURL(rootRef)
-        .then((url) => setProfileImage(url))
+        .then((url) => { 
+          setProfileImage(url)
+          setSnackBarErrorMsg({ isError: false, isSuccess: true, msg: "Updated Profile Image" })
+        })
+        .catch((err) => setSnackBarErrorMsg({ isError: true, isSuccess: false, msg: "Can't fetch profile image"}))
     }
 
-    if (filesContent && filesContent.length) {
+    if (!fileLoading && filesContent && filesContent.length) {
       refreshProfileImage()
     }
-  }, [filesContent])
+    else if (fileErrors[0]) {
+      setSnackBarErrorMsg({ isError: true, isSuccess: false, msg: "File Upload Error" })
+    }
+  }, [filesContent, fileLoading, fileErrors])
 
   // DON'T Move this code
   // prevents a rendering error for the hook form above and validates user below
@@ -98,12 +108,13 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
   return (
     <>
       <Snackbar
-        open={updateError}
-        autoHideDuration={6000}
-        onClose={() => setUpdateError(false)}
+        open={snackBarErrorMsg.isError || snackBarErrorMsg.isSuccess}
+        autoHideDuration={2000}
+        onClose={() => setSnackBarErrorMsg({ isError: false, isSuccess: false, msg: null })}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
-        <Alert severity="error" onClose={() => setUpdateError(false)}>
-          Error: Can&apos;t update user information
+        <Alert severity={(snackBarErrorMsg.isError) ? "error" : "success"} onClose={() => setSnackBarErrorMsg({ isError: false, isSuccess: false, msg: null })}>
+          {snackBarErrorMsg.msg}
         </Alert>
       </Snackbar>
       <div className="min-h-screen bg-neutral-200">

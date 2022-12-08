@@ -106,3 +106,10 @@ declare type NavBarProps = {
   handleLogout: () => Promise<void>,
   enableSearchBar: boolean
 }
+
+// Profile SnackBar Error
+declare type SnackBarError = {
+  isError: boolean,
+  isSuccess: boolean,
+  msg: string | null
+}
