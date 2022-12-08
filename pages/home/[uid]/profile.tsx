@@ -69,7 +69,7 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
   useEffect(() => {
     getDownloadURL(ref(storage, `profileImages/${uid}`))
       .then((url) => setProfileImage(url))
-      .catch(() => setSnackBarMsg({ isError: true, isSuccess: false, msg: "Can't fetch profile image"}))
+      .catch(() => ({}))
   }, [])
 
   // Sets the profile pic on upload of new pic
