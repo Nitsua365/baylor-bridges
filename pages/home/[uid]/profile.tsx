@@ -60,7 +60,7 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
 
   const [openFileSelector, { filesContent, loading: fileLoading, errors: fileErrors }] = useFilePicker({
     accept: "image/*",
-    maxFileSize: 5,
+    maxFileSize: 1,
     multiple: false,
     readAs: "ArrayBuffer"
   })
