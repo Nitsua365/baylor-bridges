@@ -72,8 +72,6 @@ declare type UserRoles = "student" | "alumni";
 
 // Edit User
 declare type EditUserValidation = {
-  personalEmail: UseFormRegisterReturn,
-  baylorEmail: UseFormRegisterReturn,
   phoneNumber: UseFormRegisterReturn,
   city: UseFormRegisterReturn,
   state: UseFormRegisterReturn,
@@ -107,4 +105,11 @@ declare type NavBarProps = {
   uid: string,
   handleLogout: () => Promise<void>,
   enableSearchBar: boolean
+}
+
+// Profile SnackBar Error
+declare type SnackBarError = {
+  isError: boolean,
+  isSuccess: boolean,
+  msg: string | null
 }

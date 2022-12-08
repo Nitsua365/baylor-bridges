@@ -14,9 +14,13 @@ import { Alert, Tooltip, Snackbar, Avatar } from "@mui/material"
 import { getDownloadURL, ref, StorageReference, uploadBytes } from "firebase/storage"
 import { storage } from "config/firebase"
 
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos"
+
+
 const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
 
-  const [updateError, setUpdateError] = useState<boolean>(false)
+  const [snackBarMsg, setSnackBarMsg] = useState<SnackBarError>({ isError: false, isSuccess: false, msg: null })
+
   const [profileImage, setProfileImage] = useState<string | null>(null)
 
   const [isAuthed]: readonly [boolean] = useProtection(uid)
@@ -49,14 +53,14 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
       const { user } = await data.json()
       resetForm(user)
       refreshData()
-      setUpdateError(false)
+      setSnackBarMsg({ isError: false, isSuccess: true, msg: "User Profile Updated" })
     },
-    onError: () => setUpdateError(true)
+    onError: () => setSnackBarMsg({ isError: true, isSuccess: false, msg: "Can't update profile information" })
   })
 
   const [openFileSelector, { filesContent, loading: fileLoading, errors: fileErrors }] = useFilePicker({
     accept: "image/*",
-    maxFileSize: 5,
+    maxFileSize: 1,
     multiple: false,
     readAs: "ArrayBuffer"
   })
@@ -65,7 +69,7 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
   useEffect(() => {
     getDownloadURL(ref(storage, `profileImages/${uid}`))
       .then((url) => setProfileImage(url))
-      .catch(() => setProfileImage(null))
+      .catch(() => ({}))
   }, [])
 
   // Sets the profile pic on upload of new pic
@@ -74,13 +78,16 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
       const rootRef: StorageReference = ref(storage, `profileImages/${uid}`)
       await uploadBytes(rootRef, new Blob(Array.of(filesContent[0].content)))
       getDownloadURL(rootRef)
-        .then((url) => setProfileImage(url))
+        .then((url) => { 
+          setProfileImage(url)
+          setSnackBarMsg({ isError: false, isSuccess: true, msg: "Updated Profile Image" })
+        })
+        .catch(() => setSnackBarMsg({ isError: true, isSuccess: false, msg: "Can't fetch profile image"}))
     }
 
-    if (filesContent && filesContent.length) {
-      refreshProfileImage()
-    }
-  }, [filesContent])
+    if (!fileLoading && filesContent && filesContent.length) refreshProfileImage()
+    else if (fileErrors[0]) setSnackBarMsg({ isError: true, isSuccess: false, msg: "File Upload Error" })
+  }, [filesContent, fileLoading, fileErrors])
 
   // DON'T Move this code
   // prevents a rendering error for the hook form above and validates user below
@@ -89,15 +96,6 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
   }
 
   const validation: EditUserValidation = {
-    personalEmail: { ...register("personalEmail", { value: user.personalEmail || "", required: true }) },
-    baylorEmail: {
-      ...register("baylorEmail", {
-        value: (user.role === "alumni") ? "" : user.baylorEmail,
-        disabled: user.role === "alumni",
-        validate: (email) => /^.+@baylor.edu$/.test(email), 
-        required:  user.role === "student"
-      })
-    },
     phoneNumber: { ...register("phoneNumber", { value: user.phoneNumber || "", required: true  }) },
     city: { ...register("city", { value: user.city || "", required: true }) },
     state: { ...register("state", { value: user.state || "", required: true }) },
@@ -107,12 +105,13 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
   return (
     <>
       <Snackbar
-        open={updateError}
-        autoHideDuration={6000}
-        onClose={() => setUpdateError(false)}
+        open={snackBarMsg.isError || snackBarMsg.isSuccess}
+        autoHideDuration={2000}
+        onClose={() => setSnackBarMsg({ isError: false, isSuccess: false, msg: null })}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
-        <Alert severity="error" onClose={() => setUpdateError(false)}>
-          Error: Can&apos;t update user information
+        <Alert severity={(snackBarMsg.isError) ? "error" : "success"} onClose={() => setSnackBarMsg({ isError: false, isSuccess: false, msg: null })}>
+          {snackBarMsg.msg}
         </Alert>
       </Snackbar>
       <div className="min-h-screen bg-neutral-200">
@@ -120,10 +119,17 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
           user={user}
           uid={uid}
           handleLogout={handleLogout}
-          enableSearchBar={false} />
+          enableSearchBar={false} 
+        />
+        <div className="ml-36 mt-4">
+          <button onClick={() => router.push(`/home/${uid}`)} className="text-primary-500 p-2 font-semibold hover:bg-neutral-300 rounded-lg transition-colors duration-200 pointer-events-auto">
+            <ArrowBackIosIcon fontSize="small" />
+            Back To Home
+          </button>
+        </div>
         <form onSubmit={handleSubmit(editUserHandle)}>
           <div className="items-center justify-center flex flex-col">
-            <div className="rounded-md shadow-xl bg-white max-w-7xl w-5/6 mt-12 mb-8">
+            <div className="rounded-md shadow-xl bg-white max-w-7xl w-5/6 mt-4 mb-8">
               <div className="flex flex-row pl-4 pr-16 pt-4 pb-4">
                 <div>
                   <Tooltip title="Click here to upload photo" enterDelay={10} arrow>
@@ -137,7 +143,6 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
                       {`${user?.firstName.substring(0, 1)}${user.lastName.substring(0, 1)}`}
                     </Avatar>
                   </Tooltip>
-                  {/* {fileErrors && <p className="text-red-500 pb-0 mb-0 text-xs">file error</p>} */}
                 </div>
                 <div className="flex-initial w-full max-w-xl mr-96">
                   <h1 className="text-2xl font-semibold mt-4">
@@ -160,17 +165,11 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
               <div className="grid grid-cols-2 mt-4 gap-4">
                 <div>
                   <p>Email</p>
-                  <input
-                    {...validation.personalEmail}
-                    className="text-lg pl-1 bg-neutral-100 outline-primary-500 rounded-md w-3/4"
-                    type="text" 
-                  />
-                  {formErrors.personalEmail && <p className="text-red-500 pb-0 mb-0 text-xs">Invalid Email</p>}
+                  <p className="text-lg">{user.personalEmail}</p>
                 </div>
                 <div>
                   <p>Baylor Email</p>
-                  <input {...validation.baylorEmail} className="text-lg pl-1 disabled:bg-slate-300 bg-neutral-100 outline-primary-500 rounded-md w-3/4" type="text" />
-                  {formErrors.baylorEmail && <p className="text-red-500 pb-0 mb-0 text-xs">Invalid Email</p>}
+                  <p className="text-lg">{(user.baylorEmail) ? user.baylorEmail : "No Baylor Email"}</p>
                 </div>
                 <div>
                   <p>Phone Number</p>
@@ -200,7 +199,7 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
                   Bio
                 </h3>
               </div>
-              <textarea { ...validation.biography } defaultValue={user.biography} placeholder="Enter Bio" className="pl-1 text-md h-40 bg-neutral-100 mt-3 max-w-5xl w-5/6 outline-primary-400 rounded-l resize-none" />
+              <textarea { ...validation.biography } defaultValue={user.biography} placeholder="Enter Bio" className="pl-1 text-md h-40 bg-neutral-100 mt-3 max-w-7xl w-full outline-primary-400 rounded-l resize-none" />
             </div>
           </div>
         </form>
