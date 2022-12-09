@@ -5,8 +5,9 @@ import { useProtection } from "utils/hooks/useProtection"
 
 import { getUserById } from "pages/api/users/[uid]"
 import NavBar from "components/home/NavBar"
+import { getPaginatedUsers } from "pages/api/users"
 
-const Home: NextPage<HomePageProps> = ({ user, uid }) => {
+const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
   const [isAuthed]: readonly [boolean] = useProtection(uid)
   const { logOut }: AuthContextType = useAuth()
 
@@ -34,12 +35,13 @@ const Home: NextPage<HomePageProps> = ({ user, uid }) => {
           <div className="flex-initial w-2/3">
             <div className="block content-center pb-2 pt-2 rounded-md shadow-xl bg-white max-w-full min-w-fit w-11/12">
               <div className="flex flex-col justify-center items-center">
-                <div className="flex-initial pb-6 pt-2 rounded-md shadow-xl bg-neutral-300 max-w-full min-w-fit w-11/12 mb-8">
-
-                </div>
-                <div className="flex-initial pb-6 pt-2 rounded-md shadow-xl bg-neutral-300 max-w-full min-w-fit w-11/12 mb-8">
-                  
-                </div>
+                {alumni.map((obj: any, idx: number) => 
+                  <div key={`${JSON.stringify(obj)}_${idx}`} className="flex-initial pl-2 pb-6 pt-2 rounded-md shadow-xl bg-neutral-300 max-w-full min-w-fit w-11/12 mb-8">
+                    <h1 className="font-bold">{obj.firstName}</h1>
+                    <h1>{obj.lastName}</h1>
+                    <p>{obj.biography}</p>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -55,10 +57,12 @@ export const getServerSideProps: GetServerSideProps<HomePageProps> = async (cont
   const { uid } = context.params
 
   const user: FirebaseFirestore.DocumentData | undefined = await getUserById(uid)
+  const alumni = await getPaginatedUsers(0, 25, "lastName")
 
   return {
     props: {
       user: user || null,
+      alumni,
       uid
     }
   }

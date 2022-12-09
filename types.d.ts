@@ -2,6 +2,7 @@
 // For Next Pages under home directory
 declare type HomePageProps = {
   user: FirebaseFirestore.DocumentData | null,
+  alumni: Array
   uid: string
 }
 
