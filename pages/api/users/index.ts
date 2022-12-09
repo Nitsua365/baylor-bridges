@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import { NextApiRequest, NextApiResponse } from "next"
 
 import { firestore } from "config/firebaseAdmin"
@@ -19,14 +20,13 @@ export default async function handler(
     return res.status(400).send("Invalid pagination queries")
 
   switch (method) {
-  case "GET": {
-    const result = await getPaginatedUsers(+start, +limit)
-    return res.status(200).json(result)
-  }
-  default: {
-    return res.status(403).send(`Invalid method: ${method}`)
-  }
-      
+    case "GET": {
+      const result = await getPaginatedUsers(+start, +limit)
+      return res.status(200).json(result)
+    }
+    default: {
+      return res.status(403).send(`Invalid method: ${method}`)
+    }
   }
 
 }
