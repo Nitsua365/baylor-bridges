@@ -7,14 +7,14 @@ import { getUserById } from "pages/api/users/[uid]"
 import NavBar from "components/home/NavBar"
 
 const Home: NextPage<HomePageProps> = ({ user, uid }) => {
-  const [isAuthed] : readonly[boolean] = useProtection(uid)
+  const [isAuthed]: readonly [boolean] = useProtection(uid)
   const { logOut }: AuthContextType = useAuth()
 
   if (!isAuthed || !user) {
     return <></>
   }
 
-  const handleLogout = async () : Promise<void> => await logOut()
+  const handleLogout = async (): Promise<void> => await logOut()
 
   return (
     <>
@@ -25,13 +25,25 @@ const Home: NextPage<HomePageProps> = ({ user, uid }) => {
           handleLogout={handleLogout}
           enableSearchBar={true}
         />
+        <div className="mt-8 ml-8 max-w-full flex flex-row items-center justify-center">
+          <div className="flex-initial w-1/3">
+            <div className="block pb-6 pt-2 rounded-md shadow-xl bg-white max-w-7xl min-w-fit w-11/12 mb-8">
+
+            </div>
+          </div>
+          <div className="flex-initial w-2/3">
+            <div className="block pb-6 pt-2 rounded-md shadow-xl bg-white max-w-full min-w-fit w-11/12 mb-8">
+
+            </div>
+          </div>
+        </div>
       </div>
     </>
   )
 
 }
 
-export const getServerSideProps : GetServerSideProps<HomePageProps> = async (context : any) => {
+export const getServerSideProps: GetServerSideProps<HomePageProps> = async (context: any) => {
 
   const { uid } = context.params
 
