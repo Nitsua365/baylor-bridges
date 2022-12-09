@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next"
 
 import { firestore } from "config/firebaseAdmin"
 
-export async function getUserById(uid: string) { 
+export async function getUserById(uid: string): Promise<FirebaseFirestore.DocumentData | undefined> { 
   const doc: FirebaseFirestore.DocumentSnapshot<FirebaseFirestore.DocumentData> = await firestore.collection("users").doc(uid).get()
   return doc.data()
 }
