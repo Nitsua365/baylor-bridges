@@ -15,9 +15,10 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
   const [isAuthed]: readonly[boolean] = useProtection(uid)
   const { logOut }: AuthContextType = useAuth()
 
+  // data fetch URL's for profile images
   const { data: profileImages } = useQuery(
     `profileImages/${uid}`,
-    async () => { 
+    async () => {
       const profilePics = alumni.map(({ uid }: UserDTO) => getDownloadURL(ref(storage, `profileImages/${uid}`)).then((res) => res).catch(() => null))
       return await Promise.all(profilePics)
     }
