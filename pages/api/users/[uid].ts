@@ -8,7 +8,7 @@ export async function getUserById(uid: string): Promise<FirebaseFirestore.Docume
   return doc.data()
 }
 
-export async function updateUserById(uid: string, body: EditUserDTO) {
+export async function updateUserById(uid: string, body: EditUserDTO): Promise<FirebaseFirestore.DocumentData | undefined> {
   await firestore.collection("users").doc(uid).update(body)
   return await getUserById(uid)
 }

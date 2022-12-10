@@ -13,7 +13,7 @@ export async function getPaginatedUsers(start: number, limit: number, orderBy?: 
   else
     users = await coll.startAt(start).limit(limit).get()
 
-  return users.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+  return users.docs.map((doc) => ({ uid: doc.id, ...doc.data() }))
 }
 
 export default async function handler(
@@ -30,6 +30,7 @@ export default async function handler(
   if (typeof orderBy !== "string" && orderBy !== undefined)
     return res.status(400).send("Invalid orderBy query")
 
+  // switch based off HTTP method
   switch (method) {
     case "GET": {
       const result = await getPaginatedUsers(+start, +limit, orderBy)

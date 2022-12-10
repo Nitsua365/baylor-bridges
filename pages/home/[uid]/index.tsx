@@ -6,10 +6,25 @@ import { useProtection } from "utils/hooks/useProtection"
 import { getUserById } from "pages/api/users/[uid]"
 import NavBar from "components/home/NavBar"
 import { getPaginatedUsers } from "pages/api/users"
+import { useQuery } from "react-query"
+import { getDownloadURL, ref } from "firebase/storage"
+import { storage } from "config/firebase"
+import Avatar from "@mui/material/Avatar"
 
 const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
-  const [isAuthed]: readonly [boolean] = useProtection(uid)
+  const [isAuthed]: readonly[boolean] = useProtection(uid)
   const { logOut }: AuthContextType = useAuth()
+
+  const { data: profileImages, isLoading: profilePicLoading } = useQuery(
+    `profileImages/${uid}`,
+    async () => { 
+      const profilePics = alumni.map(({ uid }: UserDTO) => getDownloadURL(ref(storage, `profileImages/${uid}`)).then((res) => res).catch(() => null))
+
+      return await Promise.all(profilePics)
+    }
+  ) 
+
+  console.log(profileImages)
 
   if (!isAuthed || !user) {
     return <></>
@@ -39,7 +54,8 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
                   <div key={`${JSON.stringify(obj)}_${idx}`} className="flex-initial pl-2 pb-6 pt-2 rounded-md shadow-xl bg-neutral-300 max-w-full min-w-fit w-11/12 mb-8">
                     <h1 className="font-bold">{obj.firstName}</h1>
                     <h1>{obj.lastName}</h1>
-                    <p>{obj.biography}</p>
+                    <p className="font-light text-sm">{obj.biography}</p>
+                    <Avatar src={profileImages[idx] || ""} />
                   </div>
                 )}
               </div>

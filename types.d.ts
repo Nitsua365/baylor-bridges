@@ -1,8 +1,13 @@
 
 // For Next Pages under home directory
 declare type HomePageProps = {
-  user: FirebaseFirestore.DocumentData | null,
+  user: FirebaseFirestore.DocumentData | UserDTO | null,
   alumni: Array
+  uid: string
+}
+
+declare type ProfilePageProps = {
+  user: FirebaseFirestore.DocumentData | UserDTO | null,
   uid: string
 }
 
@@ -32,6 +37,7 @@ declare type AuthContextType = {
 
 // User Data Transfer Object should contain entire schema for User in Firestore
 declare interface UserDTO {
+  uid?: string;
   role: string;
   personalEmail: string;
   baylorEmail: string;
@@ -80,8 +86,6 @@ declare type EditUserValidation = {
 }
 
 declare type EditUserDTO = {
-  personalEmail: string,
-  baylorEmail: string,
   phoneNumber: string,
   city: string,
   state: string,
