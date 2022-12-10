@@ -49,7 +49,7 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
           <div className="flex-initial w-2/3">
             <div className="block content-center pb-2 pt-2 rounded-md shadow-xl bg-white max-w-full min-w-fit w-11/12">
               <div className="flex flex-col justify-center items-center">
-                {alumni.map((obj: any, idx: number) => 
+                {alumni.map((obj: UserDTO, idx: number) => 
                   <div key={`${JSON.stringify(obj)}_${idx}`} className="flex-initial pl-2 pb-6 pt-2 rounded-md shadow-xl bg-neutral-300 max-w-full min-w-fit w-11/12 mb-8">
                     <h1 className="font-bold">{obj.firstName}</h1>
                     <h1>{obj.lastName}</h1>
