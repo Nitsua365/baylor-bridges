@@ -15,11 +15,10 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
   const [isAuthed]: readonly[boolean] = useProtection(uid)
   const { logOut }: AuthContextType = useAuth()
 
-  const { data: profileImages, isLoading: profilePicLoading } = useQuery(
+  const { data: profileImages } = useQuery(
     `profileImages/${uid}`,
     async () => { 
       const profilePics = alumni.map(({ uid }: UserDTO) => getDownloadURL(ref(storage, `profileImages/${uid}`)).then((res) => res).catch(() => null))
-
       return await Promise.all(profilePics)
     }
   ) 
@@ -55,7 +54,9 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
                     <h1 className="font-bold">{obj.firstName}</h1>
                     <h1>{obj.lastName}</h1>
                     <p className="font-light text-sm">{obj.biography}</p>
-                    <Avatar src={profileImages[idx] || ""} />
+                    <Avatar src={profileImages?.[idx] || ""}> 
+                      {`${obj?.firstName.substring(0, 1)}${obj.lastName.substring(0, 1)}`}
+                    </Avatar>
                   </div>
                 )}
               </div>
