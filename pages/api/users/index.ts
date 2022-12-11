@@ -3,6 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next"
 
 import { firestore } from "config/firebaseAdmin"
 
+// service layer function to get Paginated and Filtered users
 export async function getPaginatedUsers(start: number, limit: number, orderBy?: string | undefined, roleFilter?: UserRoles) {
 
   const coll: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData> = firestore.collection("users")
@@ -26,18 +27,20 @@ export default async function handler(
   res: NextApiResponse<FirebaseFirestore.DocumentData | string>
 ) { 
 
-  const isUserRole = (x: string): x is UserRoles => x === "student" || x === "alumni"
+  const isUserRole = (x: string | string[] | undefined): x is UserRoles => x === "student" || x === "alumni" || x === undefined
 
   const { method, query: { start, limit, q, orderBy, roleFilter } } = req
 
   // check the start and limit queries
-  if (!start || !limit)
+  if (typeof start !== "string" || typeof limit !== "string" || isNaN(start) || isNaN(limit))
     return res.status(400).send("Invalid pagination queries")
 
+  // check the order by data type
   if (typeof orderBy !== "string" && orderBy !== undefined)
     return res.status(400).send("Invalid orderBy query")
 
-  if (typeof roleFilter !== "string" || !isUserRole(roleFilter))
+  // check the roleFilter and ensure UserRole type
+  if (!isUserRole(roleFilter))
     return res.status(400).send("Invalid roleFilter query must be: \"alumni\" or \"student\"")
 
   // switch based off HTTP method
