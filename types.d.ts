@@ -112,6 +112,12 @@ declare type NavBarProps = {
   enableSearchBar: boolean
 }
 
+// UserCard Props
+declare type UserCardProps = {
+  user: UserDTO,
+  profileImageUrl: string | null
+}
+
 // Profile SnackBar Error
 declare type SnackBarError = {
   isError: boolean,

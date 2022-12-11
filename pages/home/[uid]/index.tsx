@@ -9,7 +9,7 @@ import { getPaginatedUsers } from "pages/api/users"
 import { useQuery } from "react-query"
 import { getDownloadURL, ref } from "firebase/storage"
 import { storage } from "config/firebase"
-import Avatar from "@mui/material/Avatar"
+import UserCard from "components/home/UserCard"
 
 const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
   const [isAuthed]: readonly[boolean] = useProtection(uid)
@@ -49,22 +49,7 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
             <div className="block content-center pb-2 pt-8 rounded-md shadow-xl bg-white max-w-full min-w-fit w-11/12">
               <div className="flex flex-col justify-center items-center">
                 {alumni.map((obj: UserDTO, idx: number) => 
-                  <div key={`${obj.uid}_${idx}`} className="group flex flex-initial items-center justify-between pl-2 pb-2 pt-2 rounded-md shadow-md hover:shadow-xl transition-shadow duration-200 bg-neutral-300 max-w-full min-w-fit w-11/12 mb-8 cursor-pointer">
-                    <div className="flex-col">
-                      <h1 className="font-bold text-primary-600 group-hover:text-primary-500 group-hover:underline">{obj.firstName} {obj.lastName}</h1>
-                      <p>{obj.city}, {obj.state}</p>
-                      <p className="font-light text-sm max-w-2xl">{obj.biography}</p>
-                    </div>
-                    <div className="flex-row mr-3">
-                      <Avatar 
-                        src={profileImages?.[idx] || ""}
-                        alt={`${user.firstName} ${user.lastName}`}
-                        sx={{ width: 64, height: 64 }}
-                      >
-                        {`${obj?.firstName.substring(0, 1)}${obj.lastName.substring(0, 1)}`}
-                      </Avatar>
-                    </div>
-                  </div>
+                  <UserCard key={`${obj.uid}_${idx}`} profileImageUrl={profileImages?.[idx]} user={obj} />
                 )}
               </div>
             </div>
