@@ -49,16 +49,20 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
             <div className="block content-center pb-2 pt-8 rounded-md shadow-xl bg-white max-w-full min-w-fit w-11/12">
               <div className="flex flex-col justify-center items-center">
                 {alumni.map((obj: UserDTO, idx: number) => 
-                  <div key={`${obj.uid}_${idx}`} className="flex-initial pl-2 pb-2 pt-2 rounded-md shadow-xl bg-neutral-300 max-w-full min-w-fit w-11/12 mb-8 cursor-pointer">
-                    <h1 className="font-bold">{obj.firstName} {obj.lastName}</h1>
-                    <p className="font-light text-sm">{obj.biography}</p>
-                    <Avatar 
-                      src={profileImages?.[idx] || ""}
-                      alt={`${user.firstName} ${user.lastName}`}
-                      sx={{ width: 64, height: 64 }}
-                    > 
-                      {`${obj?.firstName.substring(0, 1)}${obj.lastName.substring(0, 1)}`}
-                    </Avatar>
+                  <div key={`${obj.uid}_${idx}`} className="flex flex-initial items-center justify-between pl-2 pb-2 pt-2 rounded-md shadow-xl bg-neutral-300 max-w-full min-w-fit w-11/12 mb-8 cursor-pointer">
+                    <div className="flex-col">
+                      <h1 className="font-bold">{obj.firstName} {obj.lastName}</h1>
+                      <p className="font-light text-sm">{obj.biography}</p>
+                    </div>
+                    <div className="flex-row mr-3">
+                      <Avatar 
+                        src={profileImages?.[idx] || ""}
+                        alt={`${user.firstName} ${user.lastName}`}
+                        sx={{ width: 64, height: 64 }}
+                      >
+                        {`${obj?.firstName.substring(0, 1)}${obj.lastName.substring(0, 1)}`}
+                      </Avatar>
+                    </div>
                   </div>
                 )}
               </div>
