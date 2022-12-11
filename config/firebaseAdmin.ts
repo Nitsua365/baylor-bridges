@@ -12,8 +12,9 @@ if (!admin.apps.length) {
       privateKey: process.env.NEXT_PUBLIC_FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n") || ""
     }),
     projectId: firebaseConfig.projectId,
+    // storageBucket: (env) ? firebaseConfig.storageBucket : firebaseDevConfig.storageBucket
     // databaseURL: (env) ? firebaseConfig.databaseURL : firebaseDevConfig.databaseURL,
-  });
+  })
 }
 
 const firestore = admin.firestore()

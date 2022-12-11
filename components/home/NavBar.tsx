@@ -27,13 +27,13 @@ const NavBar: React.FC<NavBarProps> = ({ user, uid, handleLogout, enableSearchBa
   return (
     <>
       <nav className="text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed relative bg-gradient-to-r from-primary-500 via-primary-600 to-primaryTwo-600 shadow-sm p-4">
-        <div className="container flex flex-wrap items-center justify-between mx-auto">
+        <div className="flex flex-row items-center justify-between">
           <div className="flex">
             <div className="flex-1">
               <Image width={48} height={48} src={BULogo} alt="Not Found" />
             </div>
             {enableSearchBar && (
-              <div className="flex-1 inline-flex flex-shrink ml-16 mt-1 max-w-xl">
+              <div className="flex-1 inline-flex flex-shrink ml-16 mt-1 max-w-full">
                 <input className="h-10 text-neutral-600 text-2xl rounded-md outline-4 focus:outline-primary-400 w-96" placeholder="Search Alumni" />
                 <button className="border-2 rounded-md mb-2 pl-1 pr-1">
                   <SearchIcon fontSize="large" />
@@ -41,7 +41,8 @@ const NavBar: React.FC<NavBarProps> = ({ user, uid, handleLogout, enableSearchBa
               </div>
             )}
           </div>
-          <div>
+          <div className="grow w-max"></div>
+          <div className="flex">
             <Menu as={Fragment}>
               <Menu.Button className="p-2 border-2 border-white rounded-md hover:bg-white hover:text-black transition-colors duration-75">
                 {user?.firstName}

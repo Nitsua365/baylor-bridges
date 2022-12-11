@@ -17,7 +17,7 @@ import { storage } from "config/firebase"
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos"
 
 
-const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
+const Profile: NextPage<ProfilePageProps> = ({ user, uid }) => {
 
   const [snackBarMsg, setSnackBarMsg] = useState<SnackBarError>({ isError: false, isSuccess: false, msg: null })
 
@@ -208,7 +208,7 @@ const Profile: NextPage<HomePageProps> = ({ user, uid }) => {
   )
 }
 
-export const getServerSideProps: GetServerSideProps<HomePageProps> = async (context: any) => {
+export const getServerSideProps: GetServerSideProps<ProfilePageProps> = async (context: any) => {
 
   const { uid } = context.params
 
