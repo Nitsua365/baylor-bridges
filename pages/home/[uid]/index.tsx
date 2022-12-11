@@ -19,7 +19,7 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
   const { data: profileImages } = useQuery(
     `profileImages/${uid}`,
     async () => {
-      const profilePics = alumni.map(({ uid }: UserDTO) => getDownloadURL(ref(storage, `profileImages/${uid}`)).then((res) => res).catch(() => null))
+      const profilePics = alumni.map(({ uid }: UserDTO) => getDownloadURL(ref(storage, `profileImages/${uid}`)).then(res => res).catch(() => null))
       return await Promise.all(profilePics)
     }
   ) 

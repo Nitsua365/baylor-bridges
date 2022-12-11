@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next"
 
 import { firestore } from "config/firebaseAdmin"
 
-export async function getPaginatedUsers(start: number, limit: number, orderBy?: string | undefined) {
+export async function getPaginatedUsers(start: number, limit: number, orderBy?: string | undefined, roleFilter?: "alumni" | "students") {
 
   const coll = firestore.collection("users")
   let users
@@ -21,7 +21,7 @@ export default async function handler(
   res: NextApiResponse<FirebaseFirestore.DocumentData | string>
 ) { 
 
-  const { method, query: { start, limit, q, orderBy } } = req
+  const { method, query: { start, limit, q, orderBy, roleFilter } } = req
 
   // check the start and limit queries
   if (!start || !limit)
