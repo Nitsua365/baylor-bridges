@@ -7,19 +7,19 @@ import { firestore } from "config/firebaseAdmin"
 export async function getPaginatedUsers(start: number, limit: number, orderBy?: string | undefined, roleFilter?: UserRoles) {
 
   const coll: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData> = firestore.collection("users")
-  let users
+  let users: any
 
   if (orderBy)
     users = await coll.orderBy(orderBy).startAt(start).limit(limit).get()
   else
     users = await coll.startAt(start).limit(limit).get()
 
-  users = users.docs.map((doc) => ({ uid: doc.id, ...doc.data() }))
+  users = users.docs.map((doc : any) => ({ uid: doc.id, ...doc.data() }))
 
   return (!roleFilter) ? 
     users
     :
-    users.filter(({ role } : UserDTO) => role === roleFilter)
+    users.filter(({ role }: UserDTO) => role === roleFilter)
 } 
 
 export default async function handler(
