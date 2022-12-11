@@ -52,7 +52,8 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
                   <div key={`${obj.uid}_${idx}`} className="flex flex-initial items-center justify-between pl-2 pb-2 pt-2 rounded-md shadow-xl bg-neutral-300 max-w-full min-w-fit w-11/12 mb-8 cursor-pointer">
                     <div className="flex-col">
                       <h1 className="font-bold">{obj.firstName} {obj.lastName}</h1>
-                      <p className="font-light text-sm">{obj.biography}</p>
+                      <p>{obj.city}, {obj.state}</p>
+                      <p className="font-light text-sm max-w-2xl">{obj.biography}</p>
                     </div>
                     <div className="flex-row mr-3">
                       <Avatar 
