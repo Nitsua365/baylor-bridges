@@ -64,7 +64,7 @@ export const getServerSideProps: GetServerSideProps<HomePageProps> = async (cont
   const { uid } = context.params
 
   const user: FirebaseFirestore.DocumentData | undefined = await getUserById(uid)
-  const alumni = await getPaginatedUsers(0, 25, "lastName")
+  const alumni = await getPaginatedUsers(0, 25, "lastName", "alumni")
 
   return {
     props: {
