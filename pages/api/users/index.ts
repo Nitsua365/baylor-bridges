@@ -32,7 +32,7 @@ export default async function handler(
   const { method, query: { start, limit, q, orderBy, roleFilter } } = req
 
   // check the start and limit queries
-  if (typeof start !== "string" || typeof limit !== "string" || isNaN(start) || isNaN(limit))
+  if (typeof start !== "string" || typeof limit !== "string" || isNaN(+start) || isNaN(+limit))
     return res.status(400).send("Invalid pagination queries")
 
   // check the order by data type
