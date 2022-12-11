@@ -48,9 +48,7 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
           <div className="flex-initial w-2/3">
             <div className="block content-center pb-2 pt-8 rounded-md shadow-xl bg-white max-w-full min-w-fit w-11/12">
               <div className="flex flex-col justify-center items-center">
-                {alumni.map((obj: UserDTO, idx: number) => 
-                  <UserCard key={`${obj.uid}_${idx}`} profileImageUrl={profileImages?.[idx]} user={obj} />
-                )}
+                {alumni.map((obj: UserDTO, idx: number) => <UserCard key={`${obj.uid}_${idx}`} profileImageUrl={profileImages?.[idx]} user={obj} /> )}
               </div>
             </div>
           </div>
