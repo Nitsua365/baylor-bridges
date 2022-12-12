@@ -4,7 +4,7 @@ import { NextApiRequest, NextApiResponse } from "next"
 import { firestore } from "config/firebaseAdmin"
 
 // service layer function to get Paginated and Filtered users
-export async function getPaginatedUsers(start: number, limit: number, orderBy?: string | undefined, roleFilter?: UserRoles) {
+export async function getPaginatedUsers(start: number, limit: number, orderBy?: string, roleFilter?: UserRoles) {
 
   const coll: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData> = firestore.collection("users")
   let users: any

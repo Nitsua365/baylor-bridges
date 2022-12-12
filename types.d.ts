@@ -6,6 +6,13 @@ declare type HomePageProps = {
   uid: string
 }
 
+declare type SearchPageProps = {
+  user: FirebaseFirestore.DocumentData | UserDTO | null,
+  alumni: Array
+  uid: string
+  q: string
+}
+
 declare type ProfilePageProps = {
   user: FirebaseFirestore.DocumentData | UserDTO | null,
   uid: string
