@@ -20,7 +20,11 @@ export async function getPaginatedUsers(start: number, limit: number, orderBy?: 
     users
     :
     users.filter(({ role }: UserDTO) => role === roleFilter)
-} 
+}
+
+export async function getFullTextSearchUsers({ start, limit, orderBy, roleFilter, q } : UsersServiceParams) {
+
+}
 
 export default async function handler(
   req: NextApiRequest, 
@@ -39,6 +43,9 @@ export default async function handler(
   if (typeof orderBy !== "string" && orderBy !== undefined)
     return res.status(400).send("Invalid orderBy query")
 
+  if (typeof q !== "string" && q !== undefined)
+    return res.status(400).send("Invalid full text query")
+
   // check the roleFilter and ensure UserRole type
   if (!isUserRole(roleFilter))
     return res.status(400).send("Invalid roleFilter query must be: \"alumni\" or \"student\"")
@@ -46,7 +53,10 @@ export default async function handler(
   // switch based off HTTP method
   switch (method) {
     case "GET": {
-      const result = await getPaginatedUsers(+start, +limit, orderBy, roleFilter)
+      const result = (q) ? 
+      await getPaginatedUsers(+start, +limit, orderBy, roleFilter)
+      :
+      await 
       return res.status(200).json(result)
     }
     default: {

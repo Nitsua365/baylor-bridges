@@ -1,4 +1,3 @@
-
 // For Next Pages under home directory
 declare type HomePageProps = {
   user: FirebaseFirestore.DocumentData | UserDTO | null,
@@ -17,8 +16,6 @@ declare type ProfilePageProps = {
   user: FirebaseFirestore.DocumentData | UserDTO | null,
   uid: string
 }
-
-// User Validation Types
 
 // Auth User Credential
 declare type MyUserCredential = {
@@ -130,4 +127,13 @@ declare type SnackBarError = {
   isError: boolean,
   isSuccess: boolean,
   msg: string | null
+}
+
+// GET /users/[uid] types
+declare type UsersServiceParams = { 
+  start: number,
+  limit: number,
+  orderBy: string,
+  roleFilter: UserRoles,
+  q: string
 }
