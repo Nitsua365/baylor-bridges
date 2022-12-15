@@ -133,7 +133,7 @@ declare type SnackBarError = {
 declare type UsersServiceParams = { 
   start: number,
   limit: number,
-  orderBy: string,
-  roleFilter: UserRoles,
+  orderBy?: string,
+  roleFilter?: UserRoles,
   q: string
 }

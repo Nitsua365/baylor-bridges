@@ -13,6 +13,7 @@ import {
 } from "firebase/auth"
 
 import { setDoc, doc } from "firebase/firestore"
+import MeiliClient from "config/mellisearch.config"
 
 const AuthContext = createContext<any>({})
 
@@ -78,11 +79,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         // add document to db
         await setDoc(doc(db, "users", user.uid), insert)
+        
+        // try {
+
+        // add to meili index
+        // await MeiliClient.index("users").addDocuments([{ ...insert, uid: user.uid }])
 
         // set the error
         setError({ isError: false, message: null })
 
         return user.uid
+        // }
+        // catch (error: any) {
+        //   setError({ isError: true, message: error.toString() }) 
+        // }
       
       }
       catch(error: any) {
