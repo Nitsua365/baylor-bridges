@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next"
 
 import { firestore } from "config/firebaseAdmin"
 
-import MeiliClient from "config/mellisearch.config"
+import MeiliClient from "config/meilisearch.config"
 import { Index } from "meilisearch"
 
 // service layer function to get Paginated and Filtered users
