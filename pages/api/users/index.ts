@@ -32,8 +32,8 @@ export async function getFullTextSearchUsers({ start, limit, orderBy, roleFilter
   const results = await userIndex.search(q, { 
     offset: start,
     limit,
-    sort: [`${orderBy}:asc`],
-    filter: `role = ${roleFilter}`
+    sort: (orderBy) ? [`${orderBy}:asc`] : [],
+    filter: (roleFilter) ? `role = ${roleFilter}` : ""
   })
   
   return results
@@ -67,7 +67,9 @@ export default async function handler(
   // switch based off HTTP method
   switch (method) {
     case "GET": {
-      const result = (q) ? 
+
+      console.log(start, limit, orderBy, roleFilter, q)
+      const result = (!q) ? 
         await getPaginatedUsers(+start, +limit, orderBy, roleFilter)
         :
         await getFullTextSearchUsers({ start: +start, limit: +limit, orderBy, roleFilter, q })

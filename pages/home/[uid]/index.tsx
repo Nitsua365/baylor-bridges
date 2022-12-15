@@ -10,10 +10,12 @@ import { useQuery } from "react-query"
 import { getDownloadURL, ref } from "firebase/storage"
 import { storage } from "config/firebase"
 import UserCard from "components/home/UserCard"
+import { useRouter } from "next/router"
 
 const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
   const [isAuthed]: readonly[boolean] = useProtection(uid)
   const { logOut }: AuthContextType = useAuth()
+  const router = useRouter()
 
   // data fetch URL's for profile images
   const { data: profileImages } = useQuery(
@@ -29,6 +31,7 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
   }
 
   const handleLogout = async (): Promise<void> => await logOut()
+  const handleSearch = (q: string) => router.push({ pathname: "/home/[uid]/search", query: { uid, limit: 25, start: 0, q } })
 
   return (
     <>
@@ -38,6 +41,7 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
           uid={uid}
           handleLogout={handleLogout}
           enableSearchBar={true}
+          handleSearch={handleSearch}
         />
         <div className="mt-8 ml-8 max-w-full flex flex-row items-center justify-center">
           <div className="flex-initial w-1/3">
