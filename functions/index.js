@@ -8,19 +8,25 @@ const MeiliClient = new MeiliSearch({
 
 const UserIndex = MeiliClient.index("users");
 
-// // Create and Deploy Your First Cloud Functions
-// // https://firebase.google.com/docs/functions/write-firebase-functions
-//
-// exports.helloWorld = functions.https.onRequest((request, response) => {
-//   functions.logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
-
 exports.addToMeiliIndex = functions.firestore.document("/users/{uid}")
 
   .onCreate(snapshot => {
     const newData = snapshot.data();
     const uid = snapshot.id;
 
-    UserIndex.addDocuments([{ uid, ...newData }])
+    return UserIndex.addDocuments([{ uid, ...newData }])
   })
+
+exports.updateToMeiliIndex = functions.firestore.document("/users/{uid}")
+
+  .onUpdate(snapshot => {
+    const newData = snapshot.after.data()
+    const uid = snapshot.after.id
+
+    return UserIndex.updateDocuments([{ uid, ...newData }])
+  })
+
+
+exports.deleteFromMeiliIndex = functions.firestore.document("/users/{uid}")
+
+  .onDelete(snapshot => UserIndex.deleteDocument(snapshot.id))
