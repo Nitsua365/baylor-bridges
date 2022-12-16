@@ -1,6 +1,6 @@
 import MeiliSearch from "meilisearch"
 
-const MeiliClient = new MeiliSearch({
+const MeiliClient: MeiliSearch = new MeiliSearch({
   host: process.env.NEXT_PUBLIC_MEILISEARCH_HOST || "",
   apiKey: process.env.NEXT_PUBLIC_MEILISEARCH_API_KEY || "",
 })
