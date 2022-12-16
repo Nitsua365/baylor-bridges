@@ -1,4 +1,4 @@
-import React, { Fragment, forwardRef } from "react"
+import React, { Fragment, forwardRef, useState } from "react"
 
 import Link from "next/link"
 
@@ -9,7 +9,9 @@ import { Menu } from "@headlessui/react"
 import Image from "next/image"
 import BULogo from "assets/BU.png"
 
-const NavBar: React.FC<NavBarProps> = ({ user, uid, handleLogout, enableSearchBar=false }) => {
+const NavBar: React.FC<NavBarProps> = ({ user, uid, handleLogout, enableSearchBar=false, handleSearch }) => {
+
+  const [searchQuery, setSearchQuery] = useState("")
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const MyLink: any = forwardRef((props: any, ref) => {
@@ -34,8 +36,9 @@ const NavBar: React.FC<NavBarProps> = ({ user, uid, handleLogout, enableSearchBa
             </div>
             {enableSearchBar && (
               <div className="flex-1 inline-flex flex-shrink ml-16 mt-1 max-w-full">
-                <input className="h-10 text-neutral-600 text-2xl rounded-md outline-4 focus:outline-primary-400 w-96" placeholder="Search Alumni" />
-                <button className="border-2 rounded-md mb-2 pl-1 pr-1">
+                {/* eslint-disable-next-line */}
+                <input onInput={(e: React.FormEvent<HTMLInputElement>) => setSearchQuery((e.target as HTMLInputElement).value)} className="h-10 text-neutral-600 text-2xl rounded-md outline-4 focus:outline-primary-400 w-96" placeholder="Search Alumni" />
+                <button className="border-2 rounded-md mb-2 pl-1 pr-1" onClick={() => handleSearch(searchQuery)}>
                   <SearchIcon fontSize="large" />
                 </button>
               </div>

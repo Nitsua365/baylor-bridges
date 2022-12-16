@@ -75,15 +75,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
 
       try {
-
         // add document to db
         await setDoc(doc(db, "users", user.uid), insert)
-
-        // set the error
+        
         setError({ isError: false, message: null })
 
-        return user.uid
-      
+        return user.uid    
       }
       catch(error: any) {
         setError({ isError: true, message: error.toString() }) 

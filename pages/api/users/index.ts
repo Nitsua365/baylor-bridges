@@ -3,8 +3,11 @@ import { NextApiRequest, NextApiResponse } from "next"
 
 import { firestore } from "config/firebaseAdmin"
 
+import MeiliClient from "config/meilisearch.config"
+import { Index } from "meilisearch"
+
 // service layer function to get Paginated and Filtered users
-export async function getPaginatedUsers(start: number, limit: number, orderBy?: string | undefined, roleFilter?: UserRoles) {
+export async function getPaginatedUsers(start: number, limit: number, orderBy?: string, roleFilter?: UserRoles) {
 
   const coll: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData> = firestore.collection("users")
   let users: any
@@ -20,7 +23,21 @@ export async function getPaginatedUsers(start: number, limit: number, orderBy?: 
     users
     :
     users.filter(({ role }: UserDTO) => role === roleFilter)
-} 
+}
+
+export async function getFullTextSearchUsers({ start, limit, orderBy, roleFilter, q } : UsersServiceParams) {
+
+  const userIndex: Index = MeiliClient.index("users")
+
+  const results = await userIndex.search(q, { 
+    offset: start,
+    limit,
+    sort: (orderBy) ? [`${orderBy}:asc`] : [],
+    filter: (roleFilter) ? `role = ${roleFilter}` : ""
+  })
+  
+  return results
+}
 
 export default async function handler(
   req: NextApiRequest, 
@@ -39,6 +56,10 @@ export default async function handler(
   if (typeof orderBy !== "string" && orderBy !== undefined)
     return res.status(400).send("Invalid orderBy query")
 
+  // check the search query
+  if (typeof q !== "string" || q === undefined)
+    return res.status(400).send("Invalid full text query")
+
   // check the roleFilter and ensure UserRole type
   if (!isUserRole(roleFilter))
     return res.status(400).send("Invalid roleFilter query must be: \"alumni\" or \"student\"")
@@ -46,7 +67,13 @@ export default async function handler(
   // switch based off HTTP method
   switch (method) {
     case "GET": {
-      const result = await getPaginatedUsers(+start, +limit, orderBy, roleFilter)
+
+      console.log(start, limit, orderBy, roleFilter, q)
+      const result = (!q) ? 
+        await getPaginatedUsers(+start, +limit, orderBy, roleFilter)
+        :
+        await getFullTextSearchUsers({ start: +start, limit: +limit, orderBy, roleFilter, q })
+
       return res.status(200).json(result)
     }
     default: {

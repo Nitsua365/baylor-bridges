@@ -1,5 +1,9 @@
 {
   "projects": {
-    "default": "baylor-bridges-74f40"
-  }
+    "default": "baylor-bridges-74f40",
+    "dev": "baylor-bridges-74f40",
+    "prod": "baylor-bridges-74f40"
+  },
+  "targets": {},
+  "etags": {}
 }
