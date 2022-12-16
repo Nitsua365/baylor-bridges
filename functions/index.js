@@ -1,5 +1,7 @@
 const functions = require("firebase-functions");
 const { MeiliSearch } = require("meilisearch");
+const dotenv = require("dotenv");
+dotenv.config()
 
 const MeiliClient = new MeiliSearch({
   host: functions.config().meili.host,
