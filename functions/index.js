@@ -1,11 +1,9 @@
 const functions = require("firebase-functions");
 const { MeiliSearch } = require("meilisearch");
-const dotenv = require("dotenv");
-dotenv.config()
 
 const MeiliClient = new MeiliSearch({
-  host: functions.config().meili.host,
-  apiKey: functions.config().meili.apikey,
+  host: (process.env.NODE_ENV === "production") ? functions.config().meili.host : functions.config().meili.dev_host,
+  apiKey: (process.env.NODE_ENV === "production") ? functions.config().meili.apikey : functions.config().meili.dev_apikey,
 });
 
 const UserIndex = MeiliClient.index("users");
