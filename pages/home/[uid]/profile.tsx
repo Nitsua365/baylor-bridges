@@ -119,7 +119,8 @@ const Profile: NextPage<ProfilePageProps> = ({ user, uid }) => {
           user={user}
           uid={uid}
           handleLogout={handleLogout}
-          enableSearchBar={false} 
+          enableSearchBar={false}
+          handleSearch={() => ({})}
         />
         <div className="ml-36 mt-4">
           <button onClick={() => router.push(`/home/${uid}`)} className="text-primary-500 p-2 font-semibold hover:bg-neutral-300 rounded-lg transition-colors duration-200 pointer-events-auto">
