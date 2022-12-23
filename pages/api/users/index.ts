@@ -74,11 +74,14 @@ export default async function handler(
   if (!isUserRole(roleFilter))
     return res.status(400).send("Invalid roleFilter query must be: \"alumni\" or \"student\"")
 
+  if (typeof filters !== "string" || filters === undefined) {
+    return res.status(400).send("Invalid filters")
+  }
+
   // switch based off HTTP method
   switch (method) {
     case "GET": {
 
-      console.log(start, limit, orderBy, roleFilter, q)
       const result = (!q) ? 
         await getPaginatedUsers(+start, +limit, orderBy, roleFilter)
         :
