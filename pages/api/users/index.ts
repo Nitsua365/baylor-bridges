@@ -50,7 +50,7 @@ export default async function handler(
     method, 
     query: { 
       start, 
-      limit, 
+      limit,
       q, 
       orderBy, 
       roleFilter, 

@@ -145,3 +145,5 @@ declare type SearchQueryHomePage = {
   filters?: string
   orderBy?: string
 }
+
+declare type FilterableAttributes = "city" | "state" | "role"

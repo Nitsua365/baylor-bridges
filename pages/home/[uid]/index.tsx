@@ -5,13 +5,13 @@ import { useProtection } from "utils/hooks/useProtection"
 
 import { getUserById } from "pages/api/users/[uid]"
 import NavBar from "components/home/NavBar"
-import { getFullTextSearchUsers, getPaginatedUsers } from "pages/api/users"
+import { getFullTextSearchUsers } from "pages/api/users"
 import { useQuery } from "react-query"
 import { getDownloadURL, ref } from "firebase/storage"
 import { storage } from "config/firebase"
 import UserCard from "components/home/UserCard"
 import { NextRouter, useRouter } from "next/router"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 
 
 const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
@@ -37,7 +37,10 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
   const { data: profileImages } = useQuery(
     `profileImages/${alumni.map((user: UserDTO) => user.uid).join(",")}`,
     async () => {
-      const profilePics = alumni.map(({ uid }: UserDTO) => getDownloadURL(ref(storage, `profileImages/${uid}`)).then(res => res).catch(() => null))
+      const profilePics = alumni.map(({ uid }: UserDTO) => 
+        getDownloadURL(ref(storage, `profileImages/${uid}`))
+          .then(res => res)
+          .catch(() => null))
       return await Promise.all(profilePics)
     }
   )
@@ -78,9 +81,9 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
                 <div>
                   {!isLoadingSettings && searchSettings.filterableAttributes
                     .filter((filter: string) => filter !== "role")
-                    .map((item: "city" | "state", idx: number) => (
+                    .map((item: FilterableAttributes, idx: number) => (
                       <div key={`${item}_${idx}_outerdiv`}>
-                        <p key={`${item}_${idx}_title`}>
+                        <p className="text-lg" key={`${item}_${idx}_title`}>
                           {item}
                         </p>
                         <div className="flex flex-col" key={`${item}_${idx}_div`}>
@@ -98,7 +101,8 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
                                     (filt: string) => { 
                                       if (!filt.includes(e.target.value)) return `${item} = ${e.target.value} ${(filt.length) ? "OR" : ""} ${filt}`
                                       else return filt.split("OR").filter(filterItem => !filterItem.includes(e.target.value)).join("OR")
-                                    })} 
+                                    }
+                                  )}
                                 />
                                 {name}</label>
                             ))}
