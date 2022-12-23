@@ -12,6 +12,7 @@ import { storage } from "config/firebase"
 import UserCard from "components/home/UserCard"
 import { NextRouter, useRouter } from "next/router"
 import { useState } from "react"
+import { Menu } from "@headlessui/react"
 
 
 const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
@@ -98,7 +99,7 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
                                   key={`${item}_${idx}_${name}_checkbox`}
                                   className="ml-2 mr-1"
                                   onInput={(e: React.ChangeEvent<HTMLInputElement>) => setFilters(
-                                    (filt: string) => { 
+                                    (filt: string) => {
                                       if (!filt.includes(e.target.value)) return `${item} = ${e.target.value} ${(filt.length) ? "OR" : ""} ${filt}`
                                       else return filt.split("OR").filter(filterItem => !filterItem.includes(e.target.value)).join("OR")
                                     }
