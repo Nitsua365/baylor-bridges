@@ -94,7 +94,7 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
                         <p key={`${item}_${idx}_title`}>
                           {item}
                         </p>
-                        <div key={`${item}_${idx}_div`}>
+                        <div className="flex flex-col" key={`${item}_${idx}_div`}>
                           {Array.from(new Set(alumni.map((user: UserDTO) => user[item])))
                             .map((name: any) => (
                               <label key={`${item}_${idx}_${name}_label`}>
@@ -104,6 +104,7 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
                                   defaultChecked={false}
                                   type="checkbox"
                                   key={`${item}_${idx}_${name}_checkbox`}
+                                  className="ml-2 mr-1"
                                   onInput={(e: React.ChangeEvent<HTMLInputElement>) => setFilters(
                                     (filt: string) => { 
                                       if (!filt.includes(e.target.value)) return `${item} = ${e.target.value} ${(filt.length) ? "OR" : ""} ${filt}`
