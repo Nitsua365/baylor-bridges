@@ -11,9 +11,8 @@ import { getDownloadURL, ref } from "firebase/storage"
 import { storage } from "config/firebase"
 import UserCard from "components/home/UserCard"
 import { NextRouter, useRouter } from "next/router"
-import { useState } from "react"
-import { getAttributes } from "pages/api/search/settings"
-import { Settings } from "meilisearch"
+import { useEffect, useState } from "react"
+import { URLSearchParams } from "url"
 
 
 const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
@@ -25,7 +24,15 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
   const [orderBy, setOrderBy] = useState("")
 
   const handleLogout = async (): Promise<void> => await logOut()
-  const handleSearch = (q: string): Promise<boolean> => router.push({ pathname: router.asPath, query: { q, filters, orderBy } })
+  const handleSearch = (q: string) => { 
+    const queryParams: SearchQueryHomePage = {}
+  
+    if (q) queryParams["q"] = q
+    if (filters) queryParams["filters"] = filters
+    if (orderBy) queryParams["orderBy"] = orderBy
+
+    router.replace({ pathname: `/home/${uid}`, query: { ...queryParams } })
+  }
 
   // data fetch URL's for profile images
   const { data: profileImages } = useQuery(
@@ -47,6 +54,9 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
       return await res.json()
     }
   )
+
+  // useEffect(() => {
+  // }, [filters, orderBy])
 
   if (!isAuthed || !user) {
     return <></>
@@ -108,10 +118,17 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
 
 export const getServerSideProps: GetServerSideProps<HomePageProps> = async (context: any) => {
 
-  const { uid } = context.params
+  const { uid, q, filters, orderBy } = context.query
 
   const user: FirebaseFirestore.DocumentData | undefined = await getUserById(uid)
-  const alumni = await getFullTextSearchUsers({ start: 0, limit: 25, orderBy: "lastName", roleFilter: "alumni", q: "" })
+  const alumni = await getFullTextSearchUsers({ 
+    start: 0, 
+    limit: 25, 
+    orderBy: orderBy || "lastName", 
+    roleFilter: "alumni", 
+    q: q || "", 
+    filters: filters || "" 
+  })
 
   return {
     props: {
@@ -121,21 +138,5 @@ export const getServerSideProps: GetServerSideProps<HomePageProps> = async (cont
     }
   }
 }
-
-// export const getServerSideProps: GetServerSideProps<SearchPageProps> = async (context: any) => {
-
-//   const { uid, q, orderBy, filters } = context.query
-
-//   const user: FirebaseFirestore.DocumentData | undefined = await getUserById(uid)
-//   const alumni = await getFullTextSearchUsers({ start: 0, limit: 25, orderBy, roleFilter: "alumni", filters, q })
-
-//   return {
-//     props: {
-//       user: user || null,
-//       alumni: alumni.hits || null,
-//       uid
-//     }
-//   }
-// }
 
 export default Home

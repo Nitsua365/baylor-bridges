@@ -138,3 +138,10 @@ declare type UsersServiceParams = {
   filters?: string,
   q: string
 }
+
+// Search Query Home Page
+declare type SearchQueryHomePage = {
+  q?: string
+  filters?: string
+  orderBy?: string
+}
