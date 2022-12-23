@@ -28,18 +28,14 @@ export async function getPaginatedUsers(start: number, limit: number, orderBy?: 
 export async function getFullTextSearchUsers({ start, limit, orderBy, roleFilter, filters, q } : UsersServiceParams) {
 
   const userIndex: Index = MeiliClient.index("users")
-  
-  let filterString: string[]
 
-  if (filters) {
-    filterString = filters.split(",")
-  }
+  console.log("hello", (roleFilter) ? `role = ${roleFilter}${(filters?.length) ? ` AND ${filters}` : "" }` : filters)
 
-  const results = await userIndex.search(q, { 
+  const results = await userIndex.search(q, {
     offset: start,
     limit,
     sort: (orderBy) ? [`${orderBy}:asc`] : [],
-    filter: (roleFilter) ? `role = ${roleFilter}` : ""
+    filter: (roleFilter) ? `role = ${roleFilter}${(filters?.length) ? ` AND ${filters}` : "" }` : filters
   })
   
   return results

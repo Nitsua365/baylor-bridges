@@ -1,4 +1,4 @@
-import type { GetServerSideProps, GetStaticProps, NextPage } from "next"
+import type { GetServerSideProps, NextPage } from "next"
 
 import { useAuth } from "context/AuthContext"
 import { useProtection } from "utils/hooks/useProtection"
@@ -12,7 +12,6 @@ import { storage } from "config/firebase"
 import UserCard from "components/home/UserCard"
 import { NextRouter, useRouter } from "next/router"
 import { useEffect, useState } from "react"
-import { URLSearchParams } from "url"
 
 
 const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
@@ -20,8 +19,8 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
   const { logOut }: AuthContextType = useAuth()
   const router: NextRouter = useRouter()
 
-  const [filters, setFilters] = useState("")
-  const [orderBy, setOrderBy] = useState("")
+  const [filters, setFilters] = useState<string>("")
+  const [orderBy, setOrderBy] = useState<string>("")
 
   const handleLogout = async (): Promise<void> => await logOut()
   const handleSearch = (q: string) => { 
@@ -55,8 +54,16 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
     }
   )
 
-  // useEffect(() => {
-  // }, [filters, orderBy])
+  useEffect(() => {
+
+    const query: SearchQueryHomePage = {}
+
+    if (filters && filters.length) query["filters"] = filters
+    if (orderBy && orderBy.length) query["orderBy"] = orderBy
+
+    router.replace({ pathname: `/home/${uid}`, query })
+      
+  }, [filters, orderBy])
 
   if (!isAuthed || !user) {
     return <></>
@@ -91,7 +98,18 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
                           {Array.from(new Set(alumni.map((user: UserDTO) => user[item])))
                             .map((name: any) => (
                               <label key={`${item}_${idx}_${name}_label`}>
-                                <input id={`${name}_checkbox`} value={name} defaultChecked={false} type="checkbox" key={`${item}_${idx}_${name}_checkbox`} />
+                                <input 
+                                  id={`${name}_checkbox`}
+                                  value={name}
+                                  defaultChecked={false}
+                                  type="checkbox"
+                                  key={`${item}_${idx}_${name}_checkbox`}
+                                  onInput={(e: React.ChangeEvent<HTMLInputElement>) => setFilters(
+                                    (filt: string) => { 
+                                      if (!filt.includes(e.target.value)) return `${item} = ${e.target.value} ${(filt.length) ? "OR" : ""} ${filt}`
+                                      else return filt.split("OR").filter(filterItem => !filterItem.includes(e.target.value)).join("OR")
+                                    })} 
+                                />
                                 {name}</label>
                             ))}
                         </div>
@@ -121,13 +139,13 @@ export const getServerSideProps: GetServerSideProps<HomePageProps> = async (cont
   const { uid, q, filters, orderBy } = context.query
 
   const user: FirebaseFirestore.DocumentData | undefined = await getUserById(uid)
-  const alumni = await getFullTextSearchUsers({ 
-    start: 0, 
-    limit: 25, 
-    orderBy: orderBy || "lastName", 
-    roleFilter: "alumni", 
-    q: q || "", 
-    filters: filters || "" 
+  const alumni = await getFullTextSearchUsers({
+    start: 0,
+    limit: 25,
+    orderBy: orderBy || "lastName",
+    roleFilter: "alumni",
+    q: q || "",
+    filters: filters || ""
   })
 
   return {
