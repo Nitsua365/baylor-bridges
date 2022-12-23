@@ -8,15 +8,15 @@ import { getFullTextSearchUsers } from "pages/api/users"
 import { getUserById } from "pages/api/users/[uid]"
 import { useQuery } from "react-query"
 import { useProtection } from "utils/hooks/useProtection"
-import { useRouter } from "next/router"
+import { NextRouter, useRouter } from "next/router"
 
 const Search: NextPage<SearchPageProps> = ({ user, uid, alumni }) => {
   const [isAuthed]: readonly[boolean] = useProtection(uid)
   const { logOut }: AuthContextType = useAuth()
-  const router = useRouter()
+  const router: NextRouter = useRouter()
 
   const handleLogout = async (): Promise<void> => await logOut()
-  const handleSearch = (q: string) => router.push({ pathname: "/home/[uid]/search", query: { uid, limit: 25, start: 0, q } })
+  const handleSearch = (q: string): Promise<boolean> => router.push({ pathname: "/home/[uid]/search", query: { uid, limit: 25, start: 0, q } })
 
   // data fetch URL's for profile images
   const { data: profileImages } = useQuery(
@@ -25,7 +25,7 @@ const Search: NextPage<SearchPageProps> = ({ user, uid, alumni }) => {
       const profilePics = alumni.map(({ uid }: UserDTO) => getDownloadURL(ref(storage, `profileImages/${uid}`)).then(res => res).catch(() => null))
       return await Promise.all(profilePics)
     }
-  ) 
+  )
 
   if (!isAuthed || !user) {
     return <></>
@@ -43,7 +43,7 @@ const Search: NextPage<SearchPageProps> = ({ user, uid, alumni }) => {
       <div className="mt-8 ml-8 max-w-full flex flex-row items-center justify-center">
         <div className="flex-initial w-1/3">
           <div className="block pb-6 pt-2 rounded-md shadow-xl bg-white max-w-7xl min-w-fit w-11/12 mb-8">
-              
+            <h1>Filters</h1>
           </div>
         </div>
         <div className="flex-initial w-2/3">
@@ -63,7 +63,7 @@ export const getServerSideProps: GetServerSideProps<SearchPageProps> = async (co
   const { uid, q, start, limit, orderBy } = context.query
 
   const user: FirebaseFirestore.DocumentData | undefined = await getUserById(uid)
-  const alumni = await getFullTextSearchUsers({start: +start, limit: +limit, orderBy: orderBy, roleFilter: "alumni", q})
+  const alumni = await getFullTextSearchUsers({ start: +start, limit: +limit, orderBy, roleFilter: "alumni", q })
 
   return {
     props: {

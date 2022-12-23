@@ -9,7 +9,6 @@ declare type SearchPageProps = {
   user: FirebaseFirestore.DocumentData | UserDTO | null,
   alumni: Array
   uid: string
-  q: string
 }
 
 declare type ProfilePageProps = {
@@ -136,5 +135,6 @@ declare type UsersServiceParams = {
   limit: number,
   orderBy?: string,
   roleFilter?: UserRoles,
+  filters?: string,
   q: string
 }
