@@ -54,16 +54,6 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
     }
   )
 
-  useEffect(() => {
-
-    const query: SearchQueryHomePage = {}
-
-    if (filters && filters.length) query["filters"] = filters
-    if (orderBy && orderBy.length) query["orderBy"] = orderBy
-
-    router.replace({ pathname: `/home/${uid}`, query })
-      
-  }, [filters, orderBy])
 
   if (!isAuthed || !user) {
     return <></>
