@@ -54,7 +54,6 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
     }
   )
 
-
   if (!isAuthed || !user) {
     return <></>
   }

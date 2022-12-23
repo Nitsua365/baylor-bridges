@@ -29,8 +29,6 @@ export async function getFullTextSearchUsers({ start, limit, orderBy, roleFilter
 
   const userIndex: Index = MeiliClient.index("users")
 
-  console.log("hello", (roleFilter) ? `role = ${roleFilter}${(filters?.length) ? ` AND ${filters}` : "" }` : filters)
-
   const results = await userIndex.search(q, {
     offset: start,
     limit,
