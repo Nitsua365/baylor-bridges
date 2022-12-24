@@ -11,8 +11,9 @@ import { getDownloadURL, ref } from "firebase/storage"
 import { storage } from "config/firebase"
 import UserCard from "components/home/UserCard"
 import { NextRouter, useRouter } from "next/router"
-import { useState } from "react"
+import { Fragment, useEffect, useState } from "react"
 import { Menu } from "@headlessui/react"
+import ChevronDownIcon from "@heroicons/react/20/solid/ChevronDownIcon"
 
 
 const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
@@ -22,6 +23,7 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
 
   const [filters, setFilters] = useState<string>("")
   const [orderBy, setOrderBy] = useState<string>("")
+  const [searchQuery, setSearchQuery] = useState<string>("")
 
   const handleLogout = async (): Promise<void> => await logOut()
   const handleSearch = (q: string) => { 
@@ -57,6 +59,19 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
       return await res.json()
     }
   )
+
+  useEffect(() => {
+
+    const queryPage: SearchQueryHomePage = {}
+
+    if (router.query["uid"]) delete router.query["uid"]
+
+    if (filters) queryPage["filters"] = filters
+    if (orderBy) queryPage["orderBy"] = orderBy
+
+    router.replace({ pathname: `/home/${uid}`, query: { ...router.query, ...queryPage } })
+
+  }, [filters, orderBy])
 
   if (!isAuthed || !user) {
     return <></>
@@ -100,7 +115,7 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
                                   className="ml-2 mr-1"
                                   onInput={(e: React.ChangeEvent<HTMLInputElement>) => setFilters(
                                     (filt: string) => {
-                                      if (!filt.includes(e.target.value)) return `${item} = ${e.target.value} ${(filt.length) ? "OR" : ""} ${filt}`
+                                      if (!filt.includes(e.target.value)) return `${item} = ${e.target.value} ${(filt.length) ? "OR" : ""}${filt}`
                                       else return filt.split("OR").filter(filterItem => !filterItem.includes(e.target.value)).join("OR")
                                     }
                                   )}
@@ -117,6 +132,36 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
           </div>
           <div className="flex-initial w-2/3">
             <div className="block content-center pb-2 pt-8 rounded-md shadow-xl bg-white max-w-full min-w-fit w-11/12">
+              <div className="flex">
+                <Menu as={Fragment}>
+                  <Menu.Button className="p-2 border-2 border-white rounded-md hover:bg-white hover:text-black transition-colors duration-75">
+                    Sort By
+                    <ChevronDownIcon className="w-4 h-4 inline" />
+                  </Menu.Button>
+                  <Menu.Items as="div" className="grid grid-flow-row absolute top-14 mt-2 w-30 origin-bottom-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <Menu.Item as={Fragment}>
+                      {({ active }) => (
+                        <button
+                          className={`${(active) ? "bg-primaryTwo-600 text-white" : "bg-primaryTwo-50 text-black"} rounded-md pt-2 pb-2 pl-4 pr-4 transition-colors duration-150`}
+                          value="firstName"
+                          onClick={(e) => setOrderBy((e.target as HTMLInputElement).value)}>
+                          Firstname
+                        </button>
+                      )}
+                    </Menu.Item>
+                    <Menu.Item as={Fragment}>
+                      {({ active }) => (
+                        <button
+                          className={`${(active) ? "bg-primaryTwo-600 text-white" : "bg-primaryTwo-50 text-black"} rounded-md pt-2 pb-2 pl-4 pr-4 transition-colors duration-150`}
+                          value="lastName"
+                          onClick={(e) => setOrderBy((e.target as HTMLInputElement).value)}>
+                          Lastname
+                        </button>
+                      )}
+                    </Menu.Item>
+                  </Menu.Items>
+                </Menu>
+              </div>
               <div className="flex flex-col justify-center items-center">
                 {alumni.map((obj: UserDTO, idx: number) => <UserCard key={`${obj.uid}_${idx}`} profileImageUrl={profileImages?.[idx]} user={obj} /> )}
               </div>

@@ -6,7 +6,7 @@ import { useProtection } from "utils/hooks/useProtection"
 import { useForm } from "react-hook-form"
 import states from "data/states.json"
 import { useMutation } from "react-query"
-import { useRouter } from "next/router"
+import { NextRouter, useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { useFilePicker } from "use-file-picker"
 
@@ -24,7 +24,7 @@ const Profile: NextPage<ProfilePageProps> = ({ user, uid }) => {
 
   const [isAuthed]: readonly [boolean] = useProtection(uid)
   const { logOut }: AuthContextType = useAuth()
-  const router = useRouter()
+  const router: NextRouter = useRouter()
 
   const handleLogout = async (): Promise<void> => await logOut()
   const refreshData = () => router.replace(router.asPath)

@@ -52,7 +52,7 @@ const NavBar: React.FC<NavBarProps> = ({ user, uid, handleLogout, enableSearchBa
                 <ChevronDownIcon className="w-4 h-4 inline" />
               </Menu.Button>
               <Menu.Items as="div" className="grid grid-flow-row absolute top-14 mt-2 w-30 origin-top-left divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                <Menu.Item as="div" className="grid grid-flow-row shadow-2xl">
+                <Menu.Item as={Fragment}>
                   {({ active }) => (
                     <MyLink
                       href={`/home/${uid}/profile`}
