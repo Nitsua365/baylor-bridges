@@ -96,7 +96,7 @@ const SignUp: NextPage = () => {
     <>
       <div className="grid h-screen place-items-center rounded overflow-hidden shadow-2xl">
         <div className="block p-6 rounded-lg shadow-lg bg-white max-w-lg">
-          <h5 className="text-gray-900 text-xl leading-tight font-medium mb-3">
+          <h5 className="text-test-100 text-xl leading-tight font-medium mb-3">
             Sign up
           </h5>
 
