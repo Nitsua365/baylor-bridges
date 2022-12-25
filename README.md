@@ -9,7 +9,8 @@
 
 1. ```npm install```
 2. ```npm install -g firebase-tools```
-3. run the development server:
+3. ```firebase use dev```
+4. run the development server:
 
 ```bash
 npm run dev
