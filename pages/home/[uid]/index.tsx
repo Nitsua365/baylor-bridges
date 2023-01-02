@@ -1,3 +1,4 @@
+// eslint-disable no-alert, no-console
 import type { GetServerSideProps, NextPage } from "next"
 
 import { useAuth } from "context/AuthContext"
@@ -11,10 +12,9 @@ import { getDownloadURL, ref } from "firebase/storage"
 import { storage } from "config/firebase"
 import UserCard from "components/home/UserCard"
 import { NextRouter, useRouter } from "next/router"
-import { Fragment, useEffect, useState } from "react"
+import { Fragment, useRef, useState } from "react"
 import { Menu } from "@headlessui/react"
 import ChevronDownIcon from "@heroicons/react/20/solid/ChevronDownIcon"
-
 
 const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
   const [isAuthed]: readonly[boolean] = useProtection(uid)
@@ -23,13 +23,13 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
 
   const [filters, setFilters] = useState<string>("")
   const [orderBy, setOrderBy] = useState<string>("")
-  const [searchQuery, setSearchQuery] = useState<string>("")
+  const queryRef: React.MutableRefObject<string> = useRef("")
 
   const handleLogout = async (): Promise<void> => await logOut()
-  const handleSearch = (q: string) => { 
+  const handleSearch = (q: string): void => {
     const queryParams: SearchQueryHomePage = {}
   
-    if (q) queryParams["q"] = q
+    if (q) queryParams["q"] = queryRef.current
     if (filters) queryParams["filters"] = filters
     if (orderBy) queryParams["orderBy"] = orderBy
 
@@ -38,41 +38,16 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
 
   // data fetch URL's for profile images
   const { data: profileImages } = useQuery(
-    `profileImages/${alumni.map((user: UserDTO) => user.uid).join(",")}`,
+    `profileImages/${alumni.hits.map((user: UserDTO) => user.uid).join(",")}`,
     async () => {
-      const profilePics = alumni.map(({ uid }: UserDTO) => 
+      const profilePics = alumni.hits.map(({ uid }: UserDTO) => 
         getDownloadURL(ref(storage, `profileImages/${uid}`))
           .then(res => res)
           .catch(() => null))
       return await Promise.all(profilePics)
     }
   )
-
-  // data fetch for filterable attributes
-  const { data: searchSettings, isLoading: isLoadingSettings } = useQuery(
-    "/api/search/settings",
-    async () => {
-      const res: Response = await fetch("/api/search/settings?indexName=users", {
-        method: "GET",
-        headers: { "Content-Type": "application/json" }
-      })
-      return await res.json()
-    }
-  )
-
-  useEffect(() => {
-
-    const queryPage: SearchQueryHomePage = {}
-
-    if (router.query["uid"]) delete router.query["uid"]
-
-    if (filters) queryPage["filters"] = filters
-    if (orderBy) queryPage["orderBy"] = orderBy
-
-    router.replace({ pathname: `/home/${uid}`, query: { ...router.query, ...queryPage } })
-
-  }, [filters, orderBy])
-
+  
   if (!isAuthed || !user) {
     return <></>
   }
@@ -84,8 +59,9 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
           user={user}
           uid={uid}
           handleLogout={handleLogout}
-          enableSearchBar={true}
           handleSearch={handleSearch}
+          enableSearchBar={true}
+          queryRef={queryRef}
         />
         <div className="mt-8 ml-8 max-w-full flex flex-row items-center justify-center">
           <div className="flex-initial w-1/3">
@@ -95,37 +71,36 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
                   Filters
                 </h1>
                 <div>
-                  {!isLoadingSettings && searchSettings.filterableAttributes
-                    .filter((filter: string) => filter !== "role")
-                    .map((item: FilterableAttributes, idx: number) => (
-                      <div key={`${item}_${idx}_outerdiv`}>
-                        <p className="text-lg" key={`${item}_${idx}_title`}>
-                          {item}
-                        </p>
-                        <div className="flex flex-col" key={`${item}_${idx}_div`}>
-                          {Array.from(new Set(alumni.map((user: UserDTO) => user[item])))
-                            .map((name: any) => (
-                              <label key={`${item}_${idx}_${name}_label`}>
-                                <input 
-                                  id={`${name}_checkbox`}
-                                  value={name}
-                                  defaultChecked={false}
-                                  type="checkbox"
-                                  key={`${item}_${idx}_${name}_checkbox`}
-                                  className="ml-2 mr-1"
-                                  onInput={(e: React.ChangeEvent<HTMLInputElement>) => setFilters(
-                                    (filt: string) => {
-                                      if (!filt.includes(e.target.value)) return `${item} = ${e.target.value} ${(filt.length) ? "OR" : ""}${filt}`
-                                      else return filt.split("OR").filter(filterItem => !filterItem.includes(e.target.value)).join("OR")
-                                    }
-                                  )}
-                                />
-                                {name}</label>
-                            ))}
-                        </div>
+                  {Object.entries(alumni.facetDistribution).map(([facetName, facets]: [string, unknown], idx: number) => (
+                    <div key={`${facetName}_${idx}_outerdiv`}>
+                      <p className="text-lg" key={`${facetName}_${idx}_title`}>
+                        {facetName}
+                      </p>
+                      <div className="flex flex-col" key={`${facetName}_${idx}_div`}>
+                        {/* eslint-disable-next-line @typescript-eslint/ban-types */}
+                        {Object.entries(facets as Object).map(([facetDataName, count]: [string, number], subIndx: number) => (
+                          <label key={`${facetName}_${subIndx}_${facetDataName}_label`}>
+                            <input 
+                              id={`${facetDataName}_checkbox`}
+                              value={facetDataName}
+                              defaultChecked={false}
+                              type="checkbox"
+                              key={`${facetName}_${subIndx}_${facetDataName}_checkbox`}
+                              className="ml-2 mr-1"
+                              onInput={(e: React.ChangeEvent<HTMLInputElement>) => setFilters(
+                                (filt: string) => {
+                                  if (!filt.includes(e.target.value)) return `${facetName} = ${e.target.value} ${(filt.length) ? "OR" : ""}${filt}`
+                                  else return filt.split("OR").filter(filterItem => !filterItem.includes(e.target.value)).join("OR")
+                                }
+                              )}
+                            />
+                            {`${facetDataName} (${count})`}
+                          </label>
+                        ))}
                       </div>
-                    )
-                    )}
+                    </div>
+                  ))
+                  }
                 </div>
               </div>
             </div>
@@ -163,7 +138,7 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
                 </Menu>
               </div>
               <div className="flex flex-col justify-center items-center">
-                {alumni.map((obj: UserDTO, idx: number) => <UserCard key={`${obj.uid}_${idx}`} profileImageUrl={profileImages?.[idx]} user={obj} /> )}
+                {alumni.hits.map((obj: UserDTO, idx: number) => <UserCard key={`${obj.uid}_${idx}`} profileImageUrl={profileImages?.[idx]} user={obj} /> )}
               </div>
             </div>
           </div>
@@ -176,7 +151,7 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
 
 export const getServerSideProps: GetServerSideProps<HomePageProps> = async (context: any) => {
 
-  const { uid, q, filters, orderBy } = context.query
+  const { uid, orderBy, q, filters } = context.query
 
   const user: FirebaseFirestore.DocumentData | undefined = await getUserById(uid)
   const alumni = await getFullTextSearchUsers({
@@ -188,10 +163,12 @@ export const getServerSideProps: GetServerSideProps<HomePageProps> = async (cont
     filters: filters || ""
   })
 
+  console.log(alumni)
+
   return {
     props: {
       user: user || null,
-      alumni: alumni.hits || null,
+      alumni,
       uid
     }
   }

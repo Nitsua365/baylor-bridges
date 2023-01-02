@@ -4,7 +4,7 @@ import { NextApiRequest, NextApiResponse } from "next"
 import { firestore } from "config/firebaseAdmin"
 
 import MeiliClient from "config/meilisearch.config"
-import { Index } from "meilisearch"
+import { Index, Settings } from "meilisearch"
 
 // service layer function to get Paginated and Filtered users
 export async function getPaginatedUsers(start: number, limit: number, orderBy?: string, roleFilter?: UserRoles) {
@@ -28,12 +28,14 @@ export async function getPaginatedUsers(start: number, limit: number, orderBy?: 
 export async function getFullTextSearchUsers({ start, limit, orderBy, roleFilter, filters, q } : UsersServiceParams) {
 
   const userIndex: Index = MeiliClient.index("users")
+  const settings: Settings = await userIndex.getSettings()
 
   const results = await userIndex.search(q, {
     offset: start,
     limit,
     sort: (orderBy) ? [`${orderBy}:asc`] : [],
-    filter: (roleFilter) ? `role = ${roleFilter}${(filters?.length) ? ` AND ${filters}` : "" }` : filters
+    filter: (roleFilter) ? `role = ${roleFilter}${(filters?.length) ? ` AND ${filters}` : "" }` : filters,
+    facets: settings.filterableAttributes?.filter((attr: string) => attr !== "role")
   })
   
   return results
@@ -82,10 +84,7 @@ export default async function handler(
   switch (method) {
     case "GET": {
 
-      const result = (!q) ? 
-        await getPaginatedUsers(+start, +limit, orderBy, roleFilter)
-        :
-        await getFullTextSearchUsers({ start: +start, limit: +limit, orderBy, roleFilter, filters, q })
+      const result = await getFullTextSearchUsers({ start: +start, limit: +limit, orderBy, roleFilter, filters, q })
 
       return res.status(200).json(result)
     }

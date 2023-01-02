@@ -113,7 +113,8 @@ declare type NavBarProps = {
   uid: string,
   handleLogout: () => Promise<void>,
   handleSearch: (q: string) => void,
-  enableSearchBar: boolean
+  enableSearchBar: boolean,
+  queryRef: React.MutableRefObject
 }
 
 // UserCard Props
