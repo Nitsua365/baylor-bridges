@@ -22,6 +22,8 @@ const Profile: NextPage<ProfilePageProps> = ({ user, uid }) => {
 
   const [profileImage, setProfileImage] = useState<string | null>(null)
 
+  const [biographyLength, setBiographyLength] = useState<number>(user?.biography.length)
+
   const [isAuthed]: readonly [boolean] = useProtection(uid)
   const { logOut }: AuthContextType = useAuth()
   const router: NextRouter = useRouter()
@@ -38,7 +40,8 @@ const Profile: NextPage<ProfilePageProps> = ({ user, uid }) => {
     register,
     reset: resetForm,
     formState: { errors: formErrors, isDirty },
-    handleSubmit
+    handleSubmit,
+    getValues
   } = useForm<EditUserValidation>({ reValidateMode: "onBlur" })
 
   // react query mutation that handles PUT request for updating user
@@ -99,7 +102,12 @@ const Profile: NextPage<ProfilePageProps> = ({ user, uid }) => {
     phoneNumber: { ...register("phoneNumber", { value: user.phoneNumber || "", required: true  }) },
     city: { ...register("city", { value: user.city || "", required: true }) },
     state: { ...register("state", { value: user.state || "", required: true }) },
-    biography: { ...register("biography", { value: user.biography || "", required: false }) }
+    biography: { ...register("biography", {
+      value: user.biography || "",
+      required: false, 
+      validate: () => getValues().biography.length <= 500
+    }) 
+    }
   }
 
   return (
@@ -194,13 +202,15 @@ const Profile: NextPage<ProfilePageProps> = ({ user, uid }) => {
                 </div>
               </div>
             </div>
-            <div className="block pl-6 pr-6 pb-6 pt-2 rounded-lg shadow-xl bg-white max-w-7xl min-w-fit w-5/6">
+            <div className="block pl-6 pr-6 pb-6 pt-2 mb-4 rounded-lg shadow-xl bg-white max-w-7xl min-w-fit w-5/6">
               <div className="border-solid border-neutral-300 border-b-2 bottom-1 pb-1">
                 <h3 className="text-xl mt-4">
                   Bio
                 </h3>
               </div>
-              <textarea { ...validation.biography } defaultValue={user.biography} placeholder="Enter Bio" className="pl-1 text-md h-40 bg-neutral-100 mt-3 max-w-7xl w-full outline-primary-400 rounded-l resize-none" />
+              <textarea { ...validation.biography } defaultValue={user.biography} onInput={(e) => setBiographyLength((e.target as HTMLInputElement).value.length)} placeholder="Enter Bio" className="pl-1 text-md h-40 bg-neutral-100 mt-3 max-w-7xl w-full outline-primary-400 rounded-l resize-none" />
+              <h3 className="text-lg">{biographyLength}/500</h3>
+              {formErrors.biography && <p className="text-red-500 pb-0 mb-0 text-sm">Biography is too long</p>}
             </div>
           </div>
         </form>
