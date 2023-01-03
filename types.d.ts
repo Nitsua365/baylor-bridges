@@ -9,7 +9,6 @@ declare type SearchPageProps = {
   user: FirebaseFirestore.DocumentData | UserDTO | null,
   alumni: Array
   uid: string
-  q: string
 }
 
 declare type ProfilePageProps = {
@@ -109,12 +108,12 @@ declare interface LoginValidation {
 
 // NavBar Props
 declare type NavBarProps = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  queryRef?: React.MutableRefObject,
   user: any,
   uid: string,
   handleLogout: () => Promise<void>,
   handleSearch: (q: string) => void,
-  enableSearchBar: boolean
+  enableSearchBar: boolean,
 }
 
 // UserCard Props
@@ -136,5 +135,15 @@ declare type UsersServiceParams = {
   limit: number,
   orderBy?: string,
   roleFilter?: UserRoles,
+  filters?: string,
   q: string
 }
+
+// Search Query Home Page
+declare type SearchQueryHomePage = {
+  q?: string
+  filters?: string
+  orderBy?: string
+}
+
+declare type FilterableAttributes = "city" | "state" | "role"

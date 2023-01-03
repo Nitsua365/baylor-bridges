@@ -6,7 +6,7 @@ import { useProtection } from "utils/hooks/useProtection"
 import { useForm } from "react-hook-form"
 import states from "data/states.json"
 import { useMutation } from "react-query"
-import { useRouter } from "next/router"
+import { NextRouter, useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { useFilePicker } from "use-file-picker"
 
@@ -16,7 +16,6 @@ import { storage } from "config/firebase"
 
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos"
 
-
 const Profile: NextPage<ProfilePageProps> = ({ user, uid }) => {
 
   const [snackBarMsg, setSnackBarMsg] = useState<SnackBarError>({ isError: false, isSuccess: false, msg: null })
@@ -25,7 +24,7 @@ const Profile: NextPage<ProfilePageProps> = ({ user, uid }) => {
 
   const [isAuthed]: readonly [boolean] = useProtection(uid)
   const { logOut }: AuthContextType = useAuth()
-  const router = useRouter()
+  const router: NextRouter = useRouter()
 
   const handleLogout = async (): Promise<void> => await logOut()
   const refreshData = () => router.replace(router.asPath)
@@ -43,20 +42,21 @@ const Profile: NextPage<ProfilePageProps> = ({ user, uid }) => {
   } = useForm<EditUserValidation>({ reValidateMode: "onBlur" })
 
   // react query mutation that handles PUT request for updating user
-  const { mutateAsync } = useMutation(async (userData: BodyInit): Promise<Response> => await fetch(`/api/users/${uid}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(userData)
-  }), {
-    mutationKey: `/api/users/${uid}`,
-    onSuccess: async (data: Response) => {
-      const { user } = await data.json()
-      resetForm(user)
-      refreshData()
-      setSnackBarMsg({ isError: false, isSuccess: true, msg: "User Profile Updated" })
-    },
-    onError: () => setSnackBarMsg({ isError: true, isSuccess: false, msg: "Can't update profile information" })
-  })
+  const { mutateAsync } = useMutation(
+    async (userData: BodyInit): Promise<Response> => await fetch(`/api/users/${uid}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(userData)
+    }), {
+      mutationKey: `/api/users/${uid}`,
+      onSuccess: async (data: Response) => {
+        const { user } = await data.json()
+        resetForm(user)
+        refreshData()
+        setSnackBarMsg({ isError: false, isSuccess: true, msg: "User Profile Updated" })
+      },
+      onError: () => setSnackBarMsg({ isError: true, isSuccess: false, msg: "Can't update profile information" })
+    })
 
   const [openFileSelector, { filesContent, loading: fileLoading, errors: fileErrors }] = useFilePicker({
     accept: "image/*",

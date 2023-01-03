@@ -3,21 +3,20 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     match /users/{user} {
-      allow read: if isSignedIn();
-      allow write: if isSignedIn() && isUser(user);
+      allow read: if isSignedIn()
+      allow write: if isSignedIn() && isUser(user)
     }
 
     match /users {
-      allow read:
-        if isSignedIn();
+      allow read: if isSignedIn()
     }
 
     function isSignedIn() {
-      return request.auth != null && request.auth.uid != null;
+      return request.auth != null && request.auth.uid != null
     }
 
     function isUser(uid) {
-      return request.auth.uid == uid;
+      return request.auth.uid == uid
     }
   }
 }

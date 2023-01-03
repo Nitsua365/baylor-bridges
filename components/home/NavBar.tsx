@@ -1,4 +1,4 @@
-import React, { Fragment, forwardRef, useState } from "react"
+import React, { Fragment, forwardRef } from "react"
 
 import Link from "next/link"
 
@@ -9,9 +9,7 @@ import { Menu } from "@headlessui/react"
 import Image from "next/image"
 import BULogo from "assets/BU.png"
 
-const NavBar: React.FC<NavBarProps> = ({ user, uid, handleLogout, enableSearchBar=false, handleSearch }) => {
-
-  const [searchQuery, setSearchQuery] = useState("")
+const NavBar: React.FC<NavBarProps> = ({ user, uid, handleLogout, enableSearchBar=false, handleSearch, queryRef }) => {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const MyLink: any = forwardRef((props: any, ref) => {
@@ -37,8 +35,8 @@ const NavBar: React.FC<NavBarProps> = ({ user, uid, handleLogout, enableSearchBa
             {enableSearchBar && (
               <div className="flex-1 inline-flex flex-shrink ml-16 mt-1 max-w-full">
                 {/* eslint-disable-next-line */}
-                <input onInput={(e: React.FormEvent<HTMLInputElement>) => setSearchQuery((e.target as HTMLInputElement).value)} className="h-10 text-neutral-600 text-2xl rounded-md outline-4 focus:outline-primary-400 w-96" placeholder="Search Alumni" />
-                <button className="border-2 rounded-md mb-2 pl-1 pr-1" onClick={() => handleSearch(searchQuery)}>
+                <input onInput={(e: React.FormEvent<HTMLInputElement>) => queryRef.current = (e.target as HTMLInputElement).value} className="h-10 text-neutral-600 text-2xl rounded-md outline-4 focus:outline-primary-400 w-96" placeholder="Search Alumni" />
+                <button className="border-2 rounded-md mb-2 pl-1 pr-1" onClick={() => handleSearch(queryRef.current)}>
                   <SearchIcon fontSize="large" />
                 </button>
               </div>
@@ -52,7 +50,7 @@ const NavBar: React.FC<NavBarProps> = ({ user, uid, handleLogout, enableSearchBa
                 <ChevronDownIcon className="w-4 h-4 inline" />
               </Menu.Button>
               <Menu.Items as="div" className="grid grid-flow-row absolute top-14 mt-2 w-30 origin-top-left divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                <Menu.Item as="div" className="grid grid-flow-row shadow-2xl">
+                <Menu.Item as={Fragment}>
                   {({ active }) => (
                     <MyLink
                       href={`/home/${uid}/profile`}
