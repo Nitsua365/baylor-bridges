@@ -105,7 +105,7 @@ const Profile: NextPage<ProfilePageProps> = ({ user, uid }) => {
     biography: { ...register("biography", {
       value: user.biography || "",
       required: false, 
-      validate: () => getValues().biography.length <= 500
+      maxLength: 500
     }) 
     }
   }
