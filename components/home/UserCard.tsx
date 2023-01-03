@@ -7,7 +7,7 @@ const UserCard: React.FC<UserCardProps> = ({ profileImageUrl, user }) => {
       <div className="flex-col">
         <h1 className="font-bold text-primary-600 group-hover:text-primary-500 group-hover:underline">{user.firstName} {user.lastName}</h1>
         <p>{user.city}, {user.state}</p>
-        <p className="font-light text-sm max-w-2xl">{user.biography}</p>
+        <p className="font-light text-sm max-w-2xl">{user.biography.substring(0, 255)}{(user.biography.length > 255) ? "..." : ""}</p>
       </div>
       <div className="flex-row mr-3">
         <Avatar
