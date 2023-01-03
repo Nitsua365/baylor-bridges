@@ -40,8 +40,7 @@ const Profile: NextPage<ProfilePageProps> = ({ user, uid }) => {
     register,
     reset: resetForm,
     formState: { errors: formErrors, isDirty },
-    handleSubmit,
-    getValues
+    handleSubmit
   } = useForm<EditUserValidation>({ reValidateMode: "onBlur" })
 
   // react query mutation that handles PUT request for updating user
