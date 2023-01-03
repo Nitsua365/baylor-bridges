@@ -210,7 +210,7 @@ const Profile: NextPage<ProfilePageProps> = ({ user, uid }) => {
               </div>
               <textarea { ...validation.biography } defaultValue={user.biography} onInput={(e) => setBiographyLength((e.target as HTMLInputElement).value.length)} placeholder="Enter Bio" className="pl-1 text-md h-40 bg-neutral-100 mt-3 max-w-7xl w-full outline-primary-400 rounded-l resize-none" />
               <h3 className="text-lg">{biographyLength}/500</h3>
-              {formErrors.biography && <p className="text-red-500 pb-0 mb-0 text-sm">Biography is to long</p>}
+              {formErrors.biography && <p className="text-red-500 pb-0 mb-0 text-sm">Biography is too long</p>}
             </div>
           </div>
         </form>
