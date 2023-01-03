@@ -23,7 +23,7 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
 
   const [filters, setFilters] = useState<string>("")
   const [orderBy, setOrderBy] = useState<string>("")
-  const queryRef: React.MutableRefObject<string> = useRef("")
+  const queryRef: React.MutableRefObject<string> = useRef<string>("")
 
   const handleLogout = async (): Promise<void> => await logOut()
 
@@ -37,7 +37,8 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
     router.replace({ pathname: `/home/${uid}`, query: { ...queryParams } })
   }
 
-  useEffect(() => handleSearch(queryRef.current), [filters, orderBy])
+  // refresh search results and querying for searching alumni
+  useEffect(() => { console.log(filters); handleSearch(queryRef.current) }, [filters, orderBy])
 
   // data fetch URL's for profile images
   const { data: profileImages } = useQuery(
@@ -88,11 +89,12 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
                               value={facetDataName}
                               defaultChecked={false}
                               type="checkbox"
+                              checked={router.asPath.includes(facetDataName)}
                               key={`${facetName}_${subIndx}_${facetDataName}_checkbox`}
                               className="ml-2 mr-1"
                               onInput={(e: React.ChangeEvent<HTMLInputElement>) => setFilters(
                                 (filt: string) => {
-                                  if (!filt.includes(e.target.value)) return `${facetName} = ${e.target.value} ${(filt.length) ? "OR" : ""}${filt}`
+                                  if (!filt.includes(e.target.value)) return `${facetName} = ${e.target.value} ${(filt.length) ? "OR" : ""} ${filt}`
                                   else return filt.split("OR").filter(filterItem => !filterItem.includes(e.target.value)).join("OR")
                                 }
                               )}
@@ -117,6 +119,16 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
                     <ChevronDownIcon className="w-4 h-4 inline" />
                   </Menu.Button>
                   <Menu.Items as="div" className="grid grid-flow-row absolute top-14 mt-2 w-30 origin-bottom-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <Menu.Item as={Fragment}>
+                      {({ active }) => (
+                        <button
+                          className={`${(active) ? "bg-primaryTwo-600 text-white" : "bg-primaryTwo-50 text-black"} rounded-md pt-2 pb-2 pl-4 pr-4 transition-colors duration-150`}
+                          value=""
+                          onClick={() => setOrderBy("")}>
+                          None
+                        </button>
+                      )}
+                    </Menu.Item>
                     <Menu.Item as={Fragment}>
                       {({ active }) => (
                         <button
