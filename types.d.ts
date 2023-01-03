@@ -108,13 +108,12 @@ declare interface LoginValidation {
 
 // NavBar Props
 declare type NavBarProps = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  queryRef?: React.MutableRefObject,
   user: any,
   uid: string,
   handleLogout: () => Promise<void>,
   handleSearch: (q: string) => void,
   enableSearchBar: boolean,
-  queryRef: React.MutableRefObject
 }
 
 // UserCard Props

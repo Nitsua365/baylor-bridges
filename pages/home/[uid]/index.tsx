@@ -12,7 +12,7 @@ import { getDownloadURL, ref } from "firebase/storage"
 import { storage } from "config/firebase"
 import UserCard from "components/home/UserCard"
 import { NextRouter, useRouter } from "next/router"
-import { Fragment, useRef, useState } from "react"
+import { Fragment, useEffect, useRef, useState } from "react"
 import { Menu } from "@headlessui/react"
 import ChevronDownIcon from "@heroicons/react/20/solid/ChevronDownIcon"
 
@@ -26,6 +26,7 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
   const queryRef: React.MutableRefObject<string> = useRef("")
 
   const handleLogout = async (): Promise<void> => await logOut()
+
   const handleSearch = (q: string): void => {
     const queryParams: SearchQueryHomePage = {}
   
@@ -35,6 +36,8 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
 
     router.replace({ pathname: `/home/${uid}`, query: { ...queryParams } })
   }
+
+  useEffect(() => handleSearch(queryRef.current), [filters, orderBy])
 
   // data fetch URL's for profile images
   const { data: profileImages } = useQuery(
@@ -162,8 +165,6 @@ export const getServerSideProps: GetServerSideProps<HomePageProps> = async (cont
     q: q || "",
     filters: filters || ""
   })
-
-  console.log(alumni)
 
   return {
     props: {
