@@ -101,13 +101,23 @@ const Profile: NextPage<ProfilePageProps> = ({ user, uid }) => {
     phoneNumber: { ...register("phoneNumber", { 
       value: user.phoneNumber || "", 
       required: true,
+      disabled: !isUser
     }) },
-    city: { ...register("city", { value: user.city || "", required: true }) },
-    state: { ...register("state", { value: user.state || "", required: true }) },
+    city: { ...register("city", { 
+      value: user.city || "", 
+      required: true,
+      disabled: !isUser
+    }) },
+    state: { ...register("state", { 
+      value: user.state || "", 
+      required: true,
+      disabled: !isUser
+    }) },
     biography: { ...register("biography", {
       value: user.biography || "",
       required: false, 
-      maxLength: 500
+      maxLength: 500,
+      disabled: !isUser
     }) 
     }
   }

@@ -9,13 +9,13 @@ export const useProtection = ({ uid, notAuthed, notUser } : UseProtectionProps) 
   const [isUser, setIsUser] = useState<boolean>(false)
 
   useEffect(() => {
-    if (!user || uid !== user.uid) {
+    if (!user) {
       if (notAuthed) notAuthed()
       setIsAuthenticated(false)
     }
     else setIsAuthenticated(true)
 
-    if (uid !== user.uid) {
+    if (uid !== user?.uid) {
       if (notUser) notUser()
       setIsUser(false)
     }
