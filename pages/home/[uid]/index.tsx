@@ -17,9 +17,9 @@ import { Menu } from "@headlessui/react"
 import ChevronDownIcon from "@heroicons/react/20/solid/ChevronDownIcon"
 
 const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
-  const [isAuthed]: readonly[boolean] = useProtection(uid)
-  const { logOut }: AuthContextType = useAuth()
   const router: NextRouter = useRouter()
+  const [isAuthed]: readonly[boolean] = useProtection(uid, () => router.replace("/"))
+  const { logOut }: AuthContextType = useAuth()
 
   const [filters, setFilters] = useState<string>("")
   const [orderBy, setOrderBy] = useState<string>("")

@@ -24,7 +24,7 @@ const Profile: NextPage<ProfilePageProps> = ({ user, uid }) => {
 
   const [biographyLength, setBiographyLength] = useState<number>(user?.biography.length)
 
-  const [isAuthed]: readonly [boolean] = useProtection(uid)
+  const [isAuthed, isUser]: readonly[boolean, boolean] = useProtection({ uid })
   const { logOut }: AuthContextType = useAuth()
   const router: NextRouter = useRouter()
 
@@ -98,7 +98,10 @@ const Profile: NextPage<ProfilePageProps> = ({ user, uid }) => {
   }
 
   const validation: EditUserValidation = {
-    phoneNumber: { ...register("phoneNumber", { value: user.phoneNumber || "", required: true  }) },
+    phoneNumber: { ...register("phoneNumber", { 
+      value: user.phoneNumber || "", 
+      required: true,
+    }) },
     city: { ...register("city", { value: user.city || "", required: true }) },
     state: { ...register("state", { value: user.state || "", required: true }) },
     biography: { ...register("biography", {

@@ -147,3 +147,9 @@ declare type SearchQueryHomePage = {
 }
 
 declare type FilterableAttributes = "city" | "state" | "role"
+
+declare type UseProtectionProps = { 
+  uid: string, 
+  notAuthed?: () => void, 
+  notUser?: () => void 
+}
