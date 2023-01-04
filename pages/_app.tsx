@@ -11,7 +11,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <NextNProgress color='teal' />
+        <NextNProgress color="teal" />
         <Component {...pageProps} />
       </AuthProvider>
     </QueryClientProvider>

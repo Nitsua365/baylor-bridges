@@ -99,17 +99,17 @@ const Profile: NextPage<ProfilePageProps> = ({ user, uid }) => {
 
   const validation: EditUserValidation = {
     phoneNumber: { ...register("phoneNumber", { 
-      value: user.phoneNumber || "", 
+      value: user.phoneNumber || "",
       required: true,
       disabled: !isUser
     }) },
     city: { ...register("city", { 
-      value: user.city || "", 
+      value: user.city || "",
       required: true,
       disabled: !isUser
     }) },
     state: { ...register("state", { 
-      value: user.state || "", 
+      value: user.state || "",
       required: true,
       disabled: !isUser
     }) },

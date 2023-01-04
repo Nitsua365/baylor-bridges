@@ -18,7 +18,7 @@ import ChevronDownIcon from "@heroicons/react/20/solid/ChevronDownIcon"
 
 const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
   const router: NextRouter = useRouter()
-  const [isAuthed]: readonly[boolean] = useProtection(uid, () => router.replace("/"))
+  const [isAuthed]: readonly[boolean, boolean] = useProtection({ uid, notAuthed: () => router.replace("/") })
   const { logOut }: AuthContextType = useAuth()
 
   const [filters, setFilters] = useState<string>("")
