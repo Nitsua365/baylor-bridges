@@ -175,6 +175,7 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
                       key={`${obj.uid}_${idx}_modal`}
                       open={openModal[idx]}
                       user={obj}
+                      profileImage={profileImages?.[idx]}
                       handleClose={() => setOpenModal(modals => {
                         const newModals = [...modals]
                         newModals[idx] = false
