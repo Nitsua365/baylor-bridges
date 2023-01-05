@@ -15,6 +15,7 @@ import { NextRouter, useRouter } from "next/router"
 import { Fragment, useEffect, useRef, useState } from "react"
 import { Menu } from "@headlessui/react"
 import ChevronDownIcon from "@heroicons/react/20/solid/ChevronDownIcon"
+import UserModal from "components/home/UserModal"
 
 const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
   const [isAuthed]: readonly[boolean] = useProtection(uid)
@@ -24,6 +25,8 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
   const [filters, setFilters] = useState<string>("")
   const [orderBy, setOrderBy] = useState<string>("")
   const queryRef: React.MutableRefObject<string> = useRef<string>("")
+
+  const [openModal, setOpenModal] = useState<Array<boolean>>(alumni.hits.map(() => false))
 
   const handleLogout = async (): Promise<void> => await logOut()
 
@@ -38,7 +41,7 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
   }
 
   // refresh search results and querying for searching alumni
-  useEffect(() => { console.log(filters); handleSearch(queryRef.current) }, [filters, orderBy])
+  useEffect(() => { handleSearch(queryRef.current) }, [filters, orderBy])
 
   // data fetch URL's for profile images
   const { data: profileImages } = useQuery(
@@ -49,6 +52,9 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
           .then(res => res)
           .catch(() => null))
       return await Promise.all(profilePics)
+    },
+    {
+      retry: false
     }
   )
   
@@ -153,7 +159,30 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
                 </Menu>
               </div>
               <div className="flex flex-col justify-center items-center">
-                {alumni.hits.map((obj: UserDTO, idx: number) => <UserCard key={`${obj.uid}_${idx}`} profileImageUrl={profileImages?.[idx]} user={obj} /> )}
+                {alumni.hits.map((obj: UserDTO, idx: number) => (
+                  <>
+                    <UserCard 
+                      onClick={() => setOpenModal(modals => {
+                        const newModals = [...modals]
+                        newModals[idx] = true
+                        return newModals
+                      })} 
+                      key={`${obj.uid}_${idx}`} 
+                      profileImageUrl={profileImages?.[idx]} 
+                      user={obj} 
+                    />
+                    <UserModal
+                      key={`${obj.uid}_${idx}_modal`}
+                      open={openModal[idx]}
+                      user={obj}
+                      handleClose={() => setOpenModal(modals => {
+                        const newModals = [...modals]
+                        newModals[idx] = false
+                        return newModals
+                      })} />
+                  </>
+                ))
+                }
               </div>
             </div>
           </div>
