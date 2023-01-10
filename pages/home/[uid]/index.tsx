@@ -7,7 +7,7 @@ import { useProtection } from "utils/hooks/useProtection"
 import { getUserById } from "pages/api/users/[uid]"
 import NavBar from "components/home/NavBar"
 import { getFullTextSearchUsers } from "pages/api/users"
-import { useQuery } from "react-query"
+import { useMutation, useQuery } from "react-query"
 import { getDownloadURL, ref } from "firebase/storage"
 import { storage } from "config/firebase"
 import UserCard from "components/home/UserCard"
@@ -16,12 +16,15 @@ import { Fragment, useEffect, useRef, useState } from "react"
 import { Menu } from "@headlessui/react"
 import ChevronDownIcon from "@heroicons/react/20/solid/ChevronDownIcon"
 import UserModal from "components/home/UserModal"
+import Alert from "@mui/material/Alert"
+import Snackbar from "@mui/material/Snackbar"
 
 const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
   const [isAuthed]: readonly[boolean] = useProtection(uid)
   const { logOut }: AuthContextType = useAuth()
   const router: NextRouter = useRouter()
 
+  const [snackBarMsg, setSnackBarMsg] = useState<SnackBarError>({ isError: false, isSuccess: false, msg: null })
   const [filters, setFilters] = useState<string>("")
   const [orderBy, setOrderBy] = useState<string>("")
   const queryRef: React.MutableRefObject<string> = useRef<string>("")
@@ -57,6 +60,18 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
       retry: false
     }
   )
+
+  const { mutate: connectUser } = useMutation(
+    async (connectData: BodyInit): Promise<Response> => fetch("/api/users/connect", { 
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(connectData)
+    }), {
+      mutationKey: "/api/users/connect",
+      onSuccess: () => { setSnackBarMsg({ isError: false, isSuccess: true, msg: "Connection Request Sent" }) },
+      onError: () => setSnackBarMsg({ isError: true, isSuccess: false, msg: "Cannot connect to user" })
+    }
+  )
   
   if (!isAuthed || !user) {
     return <></>
@@ -64,6 +79,16 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
 
   return (
     <>
+      <Snackbar
+        open={snackBarMsg.isError || snackBarMsg.isSuccess}
+        autoHideDuration={2000}
+        onClose={() => setSnackBarMsg({ isError: false, isSuccess: false, msg: null })}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert severity={(snackBarMsg.isError) ? "error" : "success"} onClose={() => setSnackBarMsg({ isError: false, isSuccess: false, msg: null })}>
+          {snackBarMsg.msg}
+        </Alert>
+      </Snackbar>
       <div className="min-h-screen bg-neutral-200">
         <NavBar
           user={user}
@@ -140,7 +165,8 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
                         <button
                           className={`${(active) ? "bg-primaryTwo-600 text-white" : "bg-primaryTwo-50 text-black"} rounded-md pt-2 pb-2 pl-4 pr-4 transition-colors duration-150`}
                           value="firstName"
-                          onClick={(e) => setOrderBy((e.target as HTMLInputElement).value)}>
+                          onClick={(e) => setOrderBy((e.target as HTMLInputElement).value)}
+                        >
                           Firstname
                         </button>
                       )}
@@ -150,7 +176,8 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
                         <button
                           className={`${(active) ? "bg-primaryTwo-600 text-white" : "bg-primaryTwo-50 text-black"} rounded-md pt-2 pb-2 pl-4 pr-4 transition-colors duration-150`}
                           value="lastName"
-                          onClick={(e) => setOrderBy((e.target as HTMLInputElement).value)}>
+                          onClick={(e) => setOrderBy((e.target as HTMLInputElement).value)}
+                        >
                           Lastname
                         </button>
                       )}
@@ -180,7 +207,12 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
                         const newModals = [...modals]
                         newModals[idx] = false
                         return newModals
-                      })} />
+                      })} 
+                      handleConnect={() => { 
+                        const connectObj: any = { currentUser: uid, connectUser: obj.uid || "" }
+                        connectUser(connectObj) 
+                      }}
+                    />
                   </>
                 ))
                 }

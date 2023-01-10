@@ -50,6 +50,7 @@ declare interface UserDTO {
   city: string;
   state: string;
   biography: string;
+  connections: { [string]: string };
 }
 
 // Sign-up Form 
@@ -148,3 +149,12 @@ declare type SearchQueryHomePage = {
 }
 
 declare type FilterableAttributes = "city" | "state" | "role"
+
+// User Modal type
+declare type UserModalProps = { 
+  user: UserDTO, 
+  profileImage: string, 
+  open: boolean, 
+  handleClose: () => void,
+  handleConnect: () => void
+}
