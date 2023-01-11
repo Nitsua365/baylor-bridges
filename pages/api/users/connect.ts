@@ -5,12 +5,12 @@ export async function connectService(currentUserId: string, connectUserId: strin
   const currentUser: FirebaseFirestore.DocumentSnapshot<FirebaseFirestore.DocumentData> = await firestore.collection("users").doc(currentUserId).get()
   const currentUserData: FirebaseFirestore.DocumentData | undefined = currentUser.data()
 
-  const connectUser: FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData> = await firestore.collection("users").doc(connectUserId)
+  // const connectUser: FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData> = await firestore.collection("users").doc(connectUserId)
 
   if (!currentUserData)
     throw new Error(`User Data not found with user id: ${currentUserId}`)
 
-  currentUserData["connections"][connectUserId] = connectUser
+  currentUserData["connections"][connectUserId] = connectUserId
 
   await firestore.collection("users").doc(currentUserId).update(currentUserData)
 }

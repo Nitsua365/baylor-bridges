@@ -19,7 +19,7 @@ const UserModal: React.FC<UserModalProps> = ({
         aria-labelledby="parent-modal-title"
         aria-describedby="parent-modal-description"
       >
-        <Box className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8/12 bg-neutral-100 border-2 border-solid border-neutral-600 shadow-2xl pt-2 pl-4 pr-4 pb-3">
+        <Box className="absolute rounded-md top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8/12 bg-neutral-100 border-2 border-solid border-neutral-600 shadow-2xl pt-2 pl-4 pr-4 pb-3">
           <div className="flex flex-row pl-4 pr-16 pt-4 pb-4">
             <div>
               <Avatar

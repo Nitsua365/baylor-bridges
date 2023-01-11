@@ -142,7 +142,7 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
             </div>
           </div>
           <div className="flex-initial w-2/3">
-            <div className="block content-center pb-2 pt-8 rounded-md shadow-xl bg-white max-w-full min-w-fit w-11/12">
+            <div className="block content-center pb-2 pt-4 rounded-md shadow-xl bg-white max-w-full min-w-fit w-11/12">
               <div className="flex">
                 <Menu as={Fragment}>
                   <Menu.Button className="p-2 mb-4 border-2 border-white rounded-md hover:bg-white hover:text-black transition-colors duration-75">
@@ -251,6 +251,8 @@ export const getServerSideProps: GetServerSideProps<HomePageProps> = async (cont
     q: q || "",
     filters: filters || ""
   })
+
+  delete user?.connections
 
   return {
     props: {
