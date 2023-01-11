@@ -32,6 +32,7 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
   const [openModal, setOpenModal] = useState<Array<boolean>>(alumni.hits.map(() => false))
 
   const handleLogout = async (): Promise<void> => await logOut()
+  const refreshData = () => router.replace(router.asPath)
 
   const handleSearch = (q: string): void => {
     const queryParams: SearchQueryHomePage = {}
@@ -68,7 +69,10 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
       body: JSON.stringify(connectData)
     }), {
       mutationKey: "/api/users/connect",
-      onSuccess: () => { setSnackBarMsg({ isError: false, isSuccess: true, msg: "Connection Request Sent" }) },
+      onSuccess: () => { 
+        setSnackBarMsg({ isError: false, isSuccess: true, msg: "Connection Request Sent" })
+        refreshData()
+      },
       onError: () => setSnackBarMsg({ isError: true, isSuccess: false, msg: "Cannot connect to user" })
     }
   )
@@ -221,9 +225,9 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
                       })} 
                       handleConnect={() => { 
                         const connectObj: any = { currentUser: uid, connectUser: obj.uid || "" }
-                        connectUser(connectObj) 
+                        connectUser(connectObj)
                       }}
-                      disableConnect={uid === obj.uid}
+                      disableConnect={uid === obj.uid || !!user.connections?.[obj.uid || ""]}
                     />
                   </>
                 ))
@@ -251,8 +255,6 @@ export const getServerSideProps: GetServerSideProps<HomePageProps> = async (cont
     q: q || "",
     filters: filters || ""
   })
-
-  delete user?.connections
 
   return {
     props: {
