@@ -145,11 +145,11 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
             <div className="block content-center pb-2 pt-8 rounded-md shadow-xl bg-white max-w-full min-w-fit w-11/12">
               <div className="flex">
                 <Menu as={Fragment}>
-                  <Menu.Button className="p-2 border-2 border-white rounded-md hover:bg-white hover:text-black transition-colors duration-75">
+                  <Menu.Button className="p-2 mb-4 border-2 border-white rounded-md hover:bg-white hover:text-black transition-colors duration-75">
                     Sort By
                     <ChevronDownIcon className="w-4 h-4 inline" />
                   </Menu.Button>
-                  <Menu.Items as="div" className="grid grid-flow-row absolute top-14 mt-2 w-30 origin-bottom-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                  <Menu.Items as="div" className="grid grid-flow-row absolute mt-2 w-30 origin-bottom-left divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                     <Menu.Item as={Fragment}>
                       {({ active }) => (
                         <button
@@ -157,6 +157,17 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
                           value=""
                           onClick={() => setOrderBy("")}>
                           None
+                        </button>
+                      )}
+                    </Menu.Item>
+                    <Menu.Item as={Fragment}>
+                      {({ active }) => (
+                        <button
+                          className={`${(active) ? "bg-primaryTwo-600 text-white" : "bg-primaryTwo-50 text-black"} rounded-md pt-2 pb-2 pl-4 pr-4 transition-colors duration-150`}
+                          value="city"
+                          onClick={(e) => setOrderBy((e.target as HTMLInputElement).value)}
+                        >
+                          City
                         </button>
                       )}
                     </Menu.Item>
@@ -212,6 +223,7 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
                         const connectObj: any = { currentUser: uid, connectUser: obj.uid || "" }
                         connectUser(connectObj) 
                       }}
+                      disableConnect={uid === obj.uid}
                     />
                   </>
                 ))

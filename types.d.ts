@@ -50,7 +50,7 @@ declare interface UserDTO {
   city: string;
   state: string;
   biography: string;
-  connections: { [string]: string };
+  connections: { [string]: string | FirebaseFirestore.DocumentReference };
 }
 
 // Sign-up Form 
@@ -156,5 +156,6 @@ declare type UserModalProps = {
   profileImage: string, 
   open: boolean, 
   handleClose: () => void,
-  handleConnect: () => void
+  handleConnect: () => void,
+  disableConnect: boolean
 }

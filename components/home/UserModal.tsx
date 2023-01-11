@@ -8,7 +8,8 @@ const UserModal: React.FC<UserModalProps> = ({
   profileImage, 
   open=false, 
   handleClose,
-  handleConnect
+  handleConnect,
+  disableConnect
 }) => {
   return (
     <>
@@ -31,12 +32,15 @@ const UserModal: React.FC<UserModalProps> = ({
               </Avatar>
             </div>
             <div className="flex-initial w-full max-w-xl mr-96">
-              <h1 className="text-3xl font-semibold mt-5">
+              <h1 className="text-3xl font-semibold mt-2">
                 {`${user.firstName} ${user.lastName}`}
               </h1>
+              <h3 className="text-xl text-neutral-500">
+                {user.city}, {user.state}
+              </h3>
             </div>
             <div className="flex-end ml-8 mt-1">
-              <button onClick={() => handleConnect()} className="border-2 p-4 disabled:bg-neutral-500 disabled:bg-none bg-gradient-to-r from-primary-500 to-primaryTwo-600 text-white font-medium text-sm leading-tight rounded-md shadow-md hover:bg-primary-500 hover:shadow-lg focus:bg-primary-600 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-primaryTwo-600 active:shadow-lg">
+              <button onClick={() => handleConnect()} disabled={disableConnect} className="border-2 p-4 disabled:bg-neutral-500 disabled:bg-none bg-gradient-to-r from-primary-500 to-primaryTwo-600 text-white font-medium text-sm leading-tight rounded-md shadow-md hover:bg-primary-500 hover:shadow-lg focus:bg-primary-600 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-primaryTwo-600 active:shadow-lg">
                 CONNECT
               </button>
             </div>
