@@ -120,7 +120,7 @@ declare type NavBarProps = {
 // UserCard Props
 declare type UserCardProps = {
   user: UserDTO,
-  onClick: () => void,
+  onClick?: () => void,
   profileImageUrl: string | null
 }
 

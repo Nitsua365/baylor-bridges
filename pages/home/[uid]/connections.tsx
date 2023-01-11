@@ -5,7 +5,7 @@ import { GetServerSideProps, NextPage } from "next"
 import { getUserById } from "pages/api/users/[uid]"
 import { useQuery } from "react-query"
 
-const Connections: NextPage<{ user: UserDTO, userConnections: any }> = ({
+const Connections: NextPage<{ user: FirebaseFirestore.DocumentData | UserDTO | null, userConnections: any }> = ({
   user,
   userConnections
 }) => {
@@ -27,22 +27,27 @@ const Connections: NextPage<{ user: UserDTO, userConnections: any }> = ({
 
   return (
     <div>
-      {userConnections.map((connection: UserDTO, idx: number) => <UserCard key={`${connection.firstName}_${connection.lastName}_connection`} onClick={(): void => {}} profileImageUrl={profileImages?.[idx] || ""} user={connection}  /> )}
+      {userConnections.map((connection: UserDTO, idx: number) => 
+        <UserCard 
+          key={`${connection.firstName}_${connection.lastName}_connection`} 
+          profileImageUrl={profileImages?.[idx] || ""} 
+          user={connection}  
+        /> )}
     </div>
   )
 }
 
-export const getServerSideProps: GetServerSideProps<{ user: UserDTO, userConnections: any }> = async (context: any) => {
+export const getServerSideProps: GetServerSideProps<{ user: FirebaseFirestore.DocumentData | UserDTO | null, userConnections: any }> = async (context: any) => {
 
   const { uid } = context.query
 
   const user: FirebaseFirestore.DocumentData | undefined = await getUserById(uid)
-  const userConnections = await Promise.all(Object.entries(user?.connections).map(([k, v]) => getUserById(k)))
-  
+  const userConnections: any = (user?.connections) ? await Promise.all(Object.entries(user?.connections).map(([k, ]) => getUserById(k))) : []
+
   return {
     props: {
       user: user || null,
-      userConnections
+      userConnections: userConnections
     }
   }
 }
