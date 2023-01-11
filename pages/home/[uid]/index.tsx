@@ -7,7 +7,7 @@ import { useProtection } from "utils/hooks/useProtection"
 import { getUserById } from "pages/api/users/[uid]"
 import NavBar from "components/home/NavBar"
 import { getFullTextSearchUsers } from "pages/api/users"
-import { useQuery } from "react-query"
+import { useMutation, useQuery } from "react-query"
 import { getDownloadURL, ref } from "firebase/storage"
 import { storage } from "config/firebase"
 import UserCard from "components/home/UserCard"
@@ -15,17 +15,24 @@ import { NextRouter, useRouter } from "next/router"
 import { Fragment, useEffect, useRef, useState } from "react"
 import { Menu } from "@headlessui/react"
 import ChevronDownIcon from "@heroicons/react/20/solid/ChevronDownIcon"
+import UserModal from "components/home/UserModal"
+import Alert from "@mui/material/Alert"
+import Snackbar from "@mui/material/Snackbar"
 
 const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
   const router: NextRouter = useRouter()
   const [isAuthed]: readonly[boolean, boolean] = useProtection({ uid, notAuthed: () => router.replace("/") })
   const { logOut }: AuthContextType = useAuth()
 
+  const [snackBarMsg, setSnackBarMsg] = useState<SnackBarError>({ isError: false, isSuccess: false, msg: null })
   const [filters, setFilters] = useState<string>("")
   const [orderBy, setOrderBy] = useState<string>("")
   const queryRef: React.MutableRefObject<string> = useRef<string>("")
 
+  const [openModal, setOpenModal] = useState<Array<boolean>>(alumni.hits.map(() => false))
+
   const handleLogout = async (): Promise<void> => await logOut()
+  const refreshData = () => router.replace(router.asPath)
 
   const handleSearch = (q: string): void => {
     const queryParams: SearchQueryHomePage = {}
@@ -38,7 +45,7 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
   }
 
   // refresh search results and querying for searching alumni
-  useEffect(() => { console.log(filters); handleSearch(queryRef.current) }, [filters, orderBy])
+  useEffect(() => { handleSearch(queryRef.current) }, [filters, orderBy])
 
   // data fetch URL's for profile images
   const { data: profileImages } = useQuery(
@@ -49,6 +56,24 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
           .then(res => res)
           .catch(() => null))
       return await Promise.all(profilePics)
+    },
+    {
+      retry: false
+    }
+  )
+
+  const { mutate: connectUser } = useMutation(
+    async (connectData: BodyInit): Promise<Response> => fetch("/api/users/connect", { 
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(connectData)
+    }), {
+      mutationKey: "/api/users/connect",
+      onSuccess: () => { 
+        setSnackBarMsg({ isError: false, isSuccess: true, msg: "Connection Request Sent" })
+        refreshData()
+      },
+      onError: () => setSnackBarMsg({ isError: true, isSuccess: false, msg: "Cannot connect to user" })
     }
   )
   
@@ -58,6 +83,16 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
 
   return (
     <>
+      <Snackbar
+        open={snackBarMsg.isError || snackBarMsg.isSuccess}
+        autoHideDuration={2000}
+        onClose={() => setSnackBarMsg({ isError: false, isSuccess: false, msg: null })}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert severity={(snackBarMsg.isError) ? "error" : "success"} onClose={() => setSnackBarMsg({ isError: false, isSuccess: false, msg: null })}>
+          {snackBarMsg.msg}
+        </Alert>
+      </Snackbar>
       <div className="min-h-screen bg-neutral-200">
         <NavBar
           user={user}
@@ -111,14 +146,14 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
             </div>
           </div>
           <div className="flex-initial w-2/3">
-            <div className="block content-center pb-2 pt-8 rounded-md shadow-xl bg-white max-w-full min-w-fit w-11/12">
+            <div className="block content-center pb-2 pt-4 rounded-md shadow-xl bg-white max-w-full min-w-fit w-11/12">
               <div className="flex">
                 <Menu as={Fragment}>
-                  <Menu.Button className="p-2 border-2 border-white rounded-md hover:bg-white hover:text-black transition-colors duration-75">
+                  <Menu.Button className="p-2 mb-4 border-2 border-white rounded-md hover:bg-white hover:text-black transition-colors duration-75">
                     Sort By
                     <ChevronDownIcon className="w-4 h-4 inline" />
                   </Menu.Button>
-                  <Menu.Items as="div" className="grid grid-flow-row absolute top-14 mt-2 w-30 origin-bottom-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                  <Menu.Items as="div" className="grid grid-flow-row absolute mt-2 w-30 origin-bottom-left divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                     <Menu.Item as={Fragment}>
                       {({ active }) => (
                         <button
@@ -133,8 +168,20 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
                       {({ active }) => (
                         <button
                           className={`${(active) ? "bg-primaryTwo-600 text-white" : "bg-primaryTwo-50 text-black"} rounded-md pt-2 pb-2 pl-4 pr-4 transition-colors duration-150`}
+                          value="city"
+                          onClick={(e) => setOrderBy((e.target as HTMLInputElement).value)}
+                        >
+                          City
+                        </button>
+                      )}
+                    </Menu.Item>
+                    <Menu.Item as={Fragment}>
+                      {({ active }) => (
+                        <button
+                          className={`${(active) ? "bg-primaryTwo-600 text-white" : "bg-primaryTwo-50 text-black"} rounded-md pt-2 pb-2 pl-4 pr-4 transition-colors duration-150`}
                           value="firstName"
-                          onClick={(e) => setOrderBy((e.target as HTMLInputElement).value)}>
+                          onClick={(e) => setOrderBy((e.target as HTMLInputElement).value)}
+                        >
                           Firstname
                         </button>
                       )}
@@ -144,7 +191,8 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
                         <button
                           className={`${(active) ? "bg-primaryTwo-600 text-white" : "bg-primaryTwo-50 text-black"} rounded-md pt-2 pb-2 pl-4 pr-4 transition-colors duration-150`}
                           value="lastName"
-                          onClick={(e) => setOrderBy((e.target as HTMLInputElement).value)}>
+                          onClick={(e) => setOrderBy((e.target as HTMLInputElement).value)}
+                        >
                           Lastname
                         </button>
                       )}
@@ -153,7 +201,37 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
                 </Menu>
               </div>
               <div className="flex flex-col justify-center items-center">
-                {alumni.hits.map((obj: UserDTO, idx: number) => <UserCard key={`${obj.uid}_${idx}`} profileImageUrl={profileImages?.[idx]} user={obj} /> )}
+                {alumni.hits.map((obj: UserDTO, idx: number) => (
+                  <>
+                    <UserCard 
+                      onClick={() => setOpenModal(modals => {
+                        const newModals = [...modals]
+                        newModals[idx] = true
+                        return newModals
+                      })} 
+                      key={`${obj.uid}_${idx}`} 
+                      profileImageUrl={profileImages?.[idx]} 
+                      user={obj} 
+                    />
+                    <UserModal
+                      key={`${obj.uid}_${idx}_modal`}
+                      open={openModal[idx]}
+                      user={obj}
+                      profileImage={profileImages?.[idx]}
+                      handleClose={() => setOpenModal(modals => {
+                        const newModals = [...modals]
+                        newModals[idx] = false
+                        return newModals
+                      })} 
+                      handleConnect={() => { 
+                        const connectObj: any = { currentUser: uid, connectUser: obj.uid || "" }
+                        connectUser(connectObj)
+                      }}
+                      disableConnect={uid === obj.uid || !!user.connections?.[obj.uid || ""]}
+                    />
+                  </>
+                ))
+                }
               </div>
             </div>
           </div>

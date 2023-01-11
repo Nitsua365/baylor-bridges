@@ -25,6 +25,7 @@ export async function getPaginatedUsers(start: number, limit: number, orderBy?: 
     users.filter(({ role }: UserDTO) => role === roleFilter)
 }
 
+// service layer function to get Full Text Search
 export async function getFullTextSearchUsers({ start, limit, orderBy, roleFilter, filters, q } : UsersServiceParams) {
 
   const userIndex: Index = MeiliClient.index("users")

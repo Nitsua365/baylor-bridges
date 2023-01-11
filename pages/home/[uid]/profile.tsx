@@ -237,6 +237,8 @@ export const getServerSideProps: GetServerSideProps<ProfilePageProps> = async (c
 
   const user: FirebaseFirestore.DocumentData | undefined = await getUserById(uid)
 
+  delete user?.connections
+
   return {
     props: {
       user: user || null,

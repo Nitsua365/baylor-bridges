@@ -9,7 +9,14 @@ import { Menu } from "@headlessui/react"
 import Image from "next/image"
 import BULogo from "assets/BU.png"
 
-const NavBar: React.FC<NavBarProps> = ({ user, uid, handleLogout, enableSearchBar=false, handleSearch, queryRef }) => {
+const NavBar: React.FC<NavBarProps> = ({ 
+  user, 
+  uid, 
+  handleLogout, 
+  enableSearchBar=false, 
+  handleSearch, 
+  queryRef 
+}) => {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const MyLink: any = forwardRef((props: any, ref) => {
@@ -45,7 +52,7 @@ const NavBar: React.FC<NavBarProps> = ({ user, uid, handleLogout, enableSearchBa
           <div className="grow w-max"></div>
           <div className="flex">
             <Menu as={Fragment}>
-              <Menu.Button className="p-2 border-2 border-white rounded-md hover:bg-white hover:text-black transition-colors duration-75">
+              <Menu.Button className="p-2 mr-4 border-2 border-white rounded-md hover:bg-white hover:text-black transition-colors duration-75">
                 {user?.firstName}
                 <ChevronDownIcon className="w-4 h-4 inline" />
               </Menu.Button>
@@ -54,8 +61,19 @@ const NavBar: React.FC<NavBarProps> = ({ user, uid, handleLogout, enableSearchBa
                   {({ active }) => (
                     <MyLink
                       href={`/home/${uid}/profile`}
-                      className={`${(active) ? "bg-primaryTwo-600 text-white" : "bg-primaryTwo-50 text-black"} rounded-md pt-2 pb-2 pl-4 pr-4 transition-colors duration-150`}>
+                      className={`${(active) ? "bg-primaryTwo-600 text-white" : "bg-primaryTwo-50 text-black"} rounded-md pt-2 pb-2 pl-4 pr-4 transition-colors duration-150`}
+                    >
                       Profile
+                    </MyLink>
+                  )}
+                </Menu.Item>
+                <Menu.Item as={Fragment}>
+                  {({ active }) => (
+                    <MyLink
+                      className={`${(active) ? "bg-primaryTwo-600 text-white" : "bg-primaryTwo-50 text-black"} rounded-md pt-2 pb-2 pl-4 pr-4 transition-colors duration-150`}
+                      href={`/home/${uid}/connections`}
+                    >
+                      Connections
                     </MyLink>
                   )}
                 </Menu.Item>

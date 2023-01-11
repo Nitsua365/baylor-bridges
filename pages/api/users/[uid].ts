@@ -5,7 +5,7 @@ import { firestore } from "config/firebaseAdmin"
 
 export async function getUserById(uid: string): Promise<FirebaseFirestore.DocumentData | undefined> { 
   const doc: FirebaseFirestore.DocumentSnapshot<FirebaseFirestore.DocumentData> = await firestore.collection("users").doc(uid).get()
-  return doc.data()
+  return { ...doc.data(), uid }
 }
 
 export async function updateUserById(uid: string, body: EditUserDTO): Promise<FirebaseFirestore.DocumentData | undefined> {
