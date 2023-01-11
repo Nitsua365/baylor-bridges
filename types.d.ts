@@ -50,6 +50,7 @@ declare interface UserDTO {
   city: string;
   state: string;
   biography: string;
+  connections: { [string]: string | FirebaseFirestore.DocumentReference };
 }
 
 // Sign-up Form 
@@ -119,6 +120,7 @@ declare type NavBarProps = {
 // UserCard Props
 declare type UserCardProps = {
   user: UserDTO,
+  onClick?: () => void,
   profileImageUrl: string | null
 }
 
@@ -147,3 +149,13 @@ declare type SearchQueryHomePage = {
 }
 
 declare type FilterableAttributes = "city" | "state" | "role"
+
+// User Modal type
+declare type UserModalProps = { 
+  user: UserDTO, 
+  profileImage: string, 
+  open: boolean, 
+  handleClose: () => void,
+  handleConnect: () => void,
+  disableConnect: boolean
+}

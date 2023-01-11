@@ -70,7 +70,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         lastName: lastName || "",
         city: city || "",
         state: state || "",
-        role: role || ""
+        role: role || "",
+        connections: {}
       }
 
 
