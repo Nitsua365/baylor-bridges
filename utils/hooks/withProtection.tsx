@@ -7,9 +7,11 @@ import React, { useEffect } from "react"
 export function withProtection(Component: any) {
   return function withProtect(props: any) {
     const router: NextRouter = useRouter()
-    const auth: AuthContextType = useAuth()
+    const { user }: AuthContextType = useAuth()
 
-    if (!auth.user || props.uid !== auth.user.uid) {
+    console.log(user, props.uid)
+
+    if (!user || props.uid !== user.uid) {
       router.replace("/")
       return <></>
     }

@@ -48,6 +48,7 @@ export const getServerSideProps: GetServerSideProps<{ user: FirebaseFirestore.Do
   return {
     props: {
       user: user || null,
+      uid: user?.uid || null,
       userConnections: userConnections
     }
   }
