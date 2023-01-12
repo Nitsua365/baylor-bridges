@@ -2,7 +2,6 @@
 import type { GetServerSideProps, NextPage } from "next"
 
 import { useAuth } from "context/AuthContext"
-import { useProtection } from "utils/hooks/useProtection"
 
 import { getUserById } from "pages/api/users/[uid]"
 import NavBar from "components/home/NavBar"
@@ -18,18 +17,19 @@ import ChevronDownIcon from "@heroicons/react/20/solid/ChevronDownIcon"
 import UserModal from "components/home/UserModal"
 import Alert from "@mui/material/Alert"
 import Snackbar from "@mui/material/Snackbar"
+import { withProtection } from "utils/hooks/withProtection"
 
 const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
-  const [isAuthed]: readonly[boolean] = useProtection(uid)
-  const { logOut }: AuthContextType = useAuth()
   const router: NextRouter = useRouter()
+  const { logOut }: AuthContextType = useAuth()
+  // const [isAuthed, isUser]: readonly[boolean, boolean] = useProtection(uid)
 
   const [snackBarMsg, setSnackBarMsg] = useState<SnackBarError>({ isError: false, isSuccess: false, msg: null })
   const [filters, setFilters] = useState<string>("")
   const [orderBy, setOrderBy] = useState<string>("")
   const queryRef: React.MutableRefObject<string> = useRef<string>("")
 
-  const [openModal, setOpenModal] = useState<Array<boolean>>(alumni.hits.map(() => false))
+  const [openModal, setOpenModal] = useState<boolean[]>(alumni.hits.map(() => false))
 
   const handleLogout = async (): Promise<void> => await logOut()
   const refreshData = () => router.replace(router.asPath)
@@ -77,7 +77,7 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
     }
   )
   
-  if (!isAuthed || !user) {
+  if (!user) {
     return <></>
   }
 
@@ -265,4 +265,4 @@ export const getServerSideProps: GetServerSideProps<HomePageProps> = async (cont
   }
 }
 
-export default Home
+export default withProtection(Home)

@@ -4,6 +4,7 @@ import { getDownloadURL, ref } from "firebase/storage"
 import { GetServerSideProps, NextPage } from "next"
 import { getUserById } from "pages/api/users/[uid]"
 import { useQuery } from "react-query"
+import { withProtection } from "utils/hooks/withProtection"
 
 const Connections: NextPage<{ user: FirebaseFirestore.DocumentData | UserDTO | null, userConnections: any }> = ({
   user,
@@ -42,14 +43,15 @@ export const getServerSideProps: GetServerSideProps<{ user: FirebaseFirestore.Do
   const { uid } = context.query
 
   const user: FirebaseFirestore.DocumentData | undefined = await getUserById(uid)
-  const userConnections: any = (user?.connections) ? await Promise.all(Object.entries(user?.connections).map(([k, ]) => getUserById(k))) : []
+  const userConnections: any = (user?.connections) ? await Promise.all(Object.entries(user.connections).map(([k, ]) => getUserById(k))) : []
 
   return {
     props: {
       user: user || null,
+      uid: user?.uid || null,
       userConnections: userConnections
     }
   }
 }
 
-export default Connections
+export default withProtection(Connections)

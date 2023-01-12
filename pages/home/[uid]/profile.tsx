@@ -1,33 +1,29 @@
+import { NextRouter, useRouter } from "next/router"
+import { GetServerSideProps, NextPage } from "next"
+
 import NavBar from "components/home/NavBar"
 import { useAuth } from "context/AuthContext"
-import { GetServerSideProps, NextPage } from "next"
 import { getUserById } from "pages/api/users/[uid]"
-import { useProtection } from "utils/hooks/useProtection"
 import { useForm } from "react-hook-form"
 import states from "data/states.json"
 import { useMutation } from "react-query"
-import { NextRouter, useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { useFilePicker } from "use-file-picker"
-
 import { Alert, Tooltip, Snackbar, Avatar } from "@mui/material"
 import { getDownloadURL, ref, StorageReference, uploadBytes } from "firebase/storage"
 import { storage } from "config/firebase"
 
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos"
+import { withProtection } from "utils/hooks/withProtection"
 
 const Profile: NextPage<ProfilePageProps> = ({ user, uid }) => {
+  const router: NextRouter = useRouter()
+  const { logOut }: AuthContextType = useAuth()
 
   const [snackBarMsg, setSnackBarMsg] = useState<SnackBarError>({ isError: false, isSuccess: false, msg: null })
-
   const [profileImage, setProfileImage] = useState<string | null>(null)
-
   const [biographyLength, setBiographyLength] = useState<number>(user?.biography.length)
-
-  const [isAuthed]: readonly [boolean] = useProtection(uid)
-  const { logOut }: AuthContextType = useAuth()
-  const router: NextRouter = useRouter()
-
+  
   const handleLogout = async (): Promise<void> => await logOut()
   const refreshData = () => router.replace(router.asPath)
   
@@ -93,18 +89,31 @@ const Profile: NextPage<ProfilePageProps> = ({ user, uid }) => {
 
   // DON'T Move this code
   // prevents a rendering error for the hook form above and validates user below
-  if (!isAuthed || !user) {
+  if (!user) {
     return <></>
   }
 
   const validation: EditUserValidation = {
-    phoneNumber: { ...register("phoneNumber", { value: user.phoneNumber || "", required: true  }) },
-    city: { ...register("city", { value: user.city || "", required: true }) },
-    state: { ...register("state", { value: user.state || "", required: true }) },
+    phoneNumber: { ...register("phoneNumber", { 
+      value: user.phoneNumber || "",
+      required: true,
+      // disabled: !isUser
+    }) },
+    city: { ...register("city", { 
+      value: user.city || "",
+      required: true,
+      // disabled: !isUser
+    }) },
+    state: { ...register("state", { 
+      value: user.state || "",
+      required: true,
+      // disabled: !isUser
+    }) },
     biography: { ...register("biography", {
       value: user.biography || "",
       required: false, 
-      maxLength: 500
+      maxLength: 500,
+      // disabled: !isUser
     }) 
     }
   }
@@ -234,4 +243,4 @@ export const getServerSideProps: GetServerSideProps<ProfilePageProps> = async (c
   }
 }
 
-export default Profile
+export default withProtection(Profile)
