@@ -18,7 +18,7 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos"
 
 const Profile: NextPage<ProfilePageProps> = ({ user, uid }) => {
   const router: NextRouter = useRouter()
-  const [isAuthed]: readonly[boolean, boolean] = useProtection(uid)
+  const [isAuthed, isUser]: readonly[boolean, boolean] = useProtection(uid)
   const { logOut }: AuthContextType = useAuth()
 
   const [snackBarMsg, setSnackBarMsg] = useState<SnackBarError>({ isError: false, isSuccess: false, msg: null })
@@ -90,7 +90,7 @@ const Profile: NextPage<ProfilePageProps> = ({ user, uid }) => {
 
   // DON'T Move this code
   // prevents a rendering error for the hook form above and validates user below
-  if (!isAuthed || !user) {
+  if (!isAuthed || !isUser || !user) {
     return <></>
   }
 

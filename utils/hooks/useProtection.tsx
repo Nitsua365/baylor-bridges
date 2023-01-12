@@ -11,20 +11,20 @@ export const useProtection = (uid: string) => {
   const [isUser, setIsUser] = useState<boolean>(false)
 
   useEffect(() => {
-    if (!user || uid !== user.uid) {
-      router.replace("/")
+    if (!user) {
+      // router.replace("/")
       setIsAuthenticated(false)
     }
     else setIsAuthenticated(true)
   }, [user])
 
-  // useEffect(() => {
-  //   if (user && uid !== user.uid) {
-  //     // router.replace("/")
-  //     setIsUser(false)
-  //   }
-  //   else setIsUser(true)
-  // }, [user, uid])
+  useEffect(() => {
+    if (user && uid !== user.uid) {
+      // router.replace("/")
+      setIsUser(false)
+    }
+    else setIsUser(true)
+  }, [uid])
   
-  return [ isAuthenticated ] as const
+  return [ isAuthenticated, isUser ] as const
 }
