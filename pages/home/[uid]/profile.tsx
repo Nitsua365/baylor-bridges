@@ -90,7 +90,7 @@ const Profile: NextPage<ProfilePageProps> = ({ user, uid }) => {
 
   // DON'T Move this code
   // prevents a rendering error for the hook form above and validates user below
-  if (!isAuthed || !isUser) {
+  if (!isAuthed || !isUser || !user) {
     return <></>
   }
 
