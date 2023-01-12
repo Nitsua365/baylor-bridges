@@ -1,27 +1,30 @@
 import { useEffect, useState } from "react"
 import { useAuth } from "context/AuthContext"
+import { NextRouter, useRouter } from "next/router"
 
-export const useProtection = ({ uid, notAuthed, notUser } : UseProtectionProps) => {
+export const useProtection = (uid: string) => {
 
   const { user }: AuthContextType = useAuth()
+  const router: NextRouter = useRouter()
 
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
   const [isUser, setIsUser] = useState<boolean>(false)
 
   useEffect(() => {
     if (!user) {
-      if (notAuthed) notAuthed()
+      router.replace("/")
       setIsAuthenticated(false)
     }
     else setIsAuthenticated(true)
+  }, [user])
 
-    if (uid !== user?.uid) {
-      if (notUser) notUser()
+  useEffect(() => {
+    if (user && uid !== user.uid) {
+      // router.replace("/")
       setIsUser(false)
     }
     else setIsUser(true)
-    
-  }, [user])
+  }, [user, uid])
   
   return [ isAuthenticated, isUser ] as const
 }

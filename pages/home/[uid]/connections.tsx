@@ -42,7 +42,7 @@ export const getServerSideProps: GetServerSideProps<{ user: FirebaseFirestore.Do
   const { uid } = context.query
 
   const user: FirebaseFirestore.DocumentData | undefined = await getUserById(uid)
-  const userConnections: any = (user?.connections) ? await Promise.all(Object.entries(user?.connections).map(([k, ]) => getUserById(k))) : []
+  const userConnections: any = (user?.connections) ? await Promise.all(Object.entries(user.connections).map(([k, ]) => getUserById(k))) : []
 
   return {
     props: {
