@@ -4,7 +4,6 @@ import { GetServerSideProps, NextPage } from "next"
 import NavBar from "components/home/NavBar"
 import { useAuth } from "context/AuthContext"
 import { getUserById } from "pages/api/users/[uid]"
-import { useProtection } from "utils/hooks/useProtection"
 import { useForm } from "react-hook-form"
 import states from "data/states.json"
 import { useMutation } from "react-query"
@@ -15,10 +14,10 @@ import { getDownloadURL, ref, StorageReference, uploadBytes } from "firebase/sto
 import { storage } from "config/firebase"
 
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos"
+import { withProtection } from "utils/hooks/withProtection"
 
 const Profile: NextPage<ProfilePageProps> = ({ user, uid }) => {
   const router: NextRouter = useRouter()
-  const [isAuthed, isUser]: readonly[boolean, boolean] = useProtection(uid)
   const { logOut }: AuthContextType = useAuth()
 
   const [snackBarMsg, setSnackBarMsg] = useState<SnackBarError>({ isError: false, isSuccess: false, msg: null })
@@ -90,7 +89,7 @@ const Profile: NextPage<ProfilePageProps> = ({ user, uid }) => {
 
   // DON'T Move this code
   // prevents a rendering error for the hook form above and validates user below
-  if (!isAuthed || !isUser || !user) {
+  if (!user) {
     return <></>
   }
 
@@ -244,4 +243,4 @@ export const getServerSideProps: GetServerSideProps<ProfilePageProps> = async (c
   }
 }
 
-export default Profile
+export default withProtection(Profile)
