@@ -1,23 +1,31 @@
 // eslint-disable no-alert, no-console
-import type { GetServerSideProps, NextPage } from "next"
 
+// next imports
+import type { GetServerSideProps, NextPage } from "next"
+import { NextRouter, useRouter } from "next/router"
+import dynamic from "next/dynamic"
+
+// custom hook imports
 import { useAuth } from "context/AuthContext"
 import { useProtection } from "utils/hooks/useProtection"
 
 import { getUserById } from "pages/api/users/[uid]"
-import NavBar from "components/home/NavBar"
+// import NavBar from "components/home/NavBar"
 import { getFullTextSearchUsers } from "pages/api/users"
 import { useMutation, useQuery } from "react-query"
 import { getDownloadURL, ref } from "firebase/storage"
 import { storage } from "config/firebase"
 import UserCard from "components/home/UserCard"
-import { NextRouter, useRouter } from "next/router"
 import { Fragment, useEffect, useRef, useState } from "react"
 import { Menu } from "@headlessui/react"
 import ChevronDownIcon from "@heroicons/react/20/solid/ChevronDownIcon"
 import UserModal from "components/home/UserModal"
-import Alert from "@mui/material/Alert"
-import Snackbar from "@mui/material/Snackbar"
+// import Alert from "@mui/material/Alert"
+// import Snackbar from "@mui/material/Snackbar"
+
+const DynamicNavBar = dynamic(() => import("components/home/NavBar"))
+const DynamicSnackBar = dynamic(() => import("@mui/material/Snackbar"))
+const DynamicAlertBar = dynamic(() => import("@mui/material/Alert"))
 
 const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
   const router: NextRouter = useRouter()
@@ -83,18 +91,18 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
 
   return (
     <>
-      <Snackbar
+      <DynamicSnackBar
         open={snackBarMsg.isError || snackBarMsg.isSuccess}
         autoHideDuration={2000}
         onClose={() => setSnackBarMsg({ isError: false, isSuccess: false, msg: null })}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
-        <Alert severity={(snackBarMsg.isError) ? "error" : "success"} onClose={() => setSnackBarMsg({ isError: false, isSuccess: false, msg: null })}>
+        <DynamicAlertBar severity={(snackBarMsg.isError) ? "error" : "success"} onClose={() => setSnackBarMsg({ isError: false, isSuccess: false, msg: null })}>
           {snackBarMsg.msg}
-        </Alert>
-      </Snackbar>
+        </DynamicAlertBar>
+      </DynamicSnackBar>
       <div className="min-h-screen bg-neutral-200">
-        <NavBar
+        <DynamicNavBar
           user={user}
           uid={uid}
           handleLogout={handleLogout}
