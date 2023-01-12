@@ -22,7 +22,7 @@ import Snackbar from "@mui/material/Snackbar"
 const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
   const router: NextRouter = useRouter()
   const { logOut }: AuthContextType = useAuth()
-  const [isAuthed, isUser]: readonly[boolean, boolean] = useProtection(uid)
+  const [isAuthed]: readonly[boolean, boolean] = useProtection(uid)
 
   const [snackBarMsg, setSnackBarMsg] = useState<SnackBarError>({ isError: false, isSuccess: false, msg: null })
   const [filters, setFilters] = useState<string>("")
@@ -77,7 +77,7 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
     }
   )
   
-  if (!isAuthed || !isUser || !user) {
+  if (!isAuthed || !user) {
     return <></>
   }
 
