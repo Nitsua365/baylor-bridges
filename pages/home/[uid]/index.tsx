@@ -13,18 +13,13 @@ import { getFullTextSearchUsers } from "pages/api/users"
 import { useMutation, useQuery } from "react-query"
 import { getDownloadURL, ref } from "firebase/storage"
 import { storage } from "config/firebase"
-// import UserCard from "components/home/UserCard"
 import { Fragment, useEffect, useRef, useState } from "react"
 import { Menu } from "@headlessui/react"
 import ChevronDownIcon from "@heroicons/react/20/solid/ChevronDownIcon"
-// import UserModal from "components/home/UserModal"
 import { withProtection } from "utils/hooks/withProtection"
 import { Alert, Snackbar } from "@mui/material"
-import NavBar from "components/home/NavBar"
 
 const DynamicNavBar = dynamic(() => import("components/home/NavBar"))
-const DynamicSnackBar = dynamic(() => import("@mui/material/Snackbar"))
-const DynamicAlertBar = dynamic(() => import("@mui/material/Alert"))
 const DynamicUserModal = dynamic(() => import("components/home/UserModal")) 
 const DynamicUserCard = dynamic(() => import("components/home/UserCard"))
 
