@@ -1,10 +1,17 @@
+import { NextRouter, useRouter } from "next/router"
+import { GetServerSideProps, NextPage } from "next"
+import dynamic from "next/dynamic"
+
 import UserCard from "components/home/UserCard"
 import { storage } from "config/firebase"
 import { getDownloadURL, ref } from "firebase/storage"
-import { GetServerSideProps, NextPage } from "next"
 import { getUserById } from "pages/api/users/[uid]"
 import { useQuery } from "react-query"
 import { withProtection } from "utils/hooks/withProtection"
+
+const DynamicNavBar = dynamic(() => import("components/home/NavBar"))
+const DynamicSnackBar = dynamic(() => import("@mui/material/Snackbar"))
+const DynamicAlertBar = dynamic(() => import("@mui/material/Alert"))
 
 const Connections: NextPage<{ user: FirebaseFirestore.DocumentData | UserDTO | null, userConnections: any }> = ({
   user,
@@ -27,7 +34,7 @@ const Connections: NextPage<{ user: FirebaseFirestore.DocumentData | UserDTO | n
   )
 
   return (
-    <div>
+    <div className="block content-center pb-2 pt-4 rounded-md shadow-xl bg-white max-w-full min-w-fit w-11/12">
       {userConnections.map((connection: UserDTO, idx: number) => 
         <UserCard 
           key={`${connection.firstName}_${connection.lastName}_connection`} 

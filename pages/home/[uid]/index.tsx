@@ -19,11 +19,11 @@ import { Menu } from "@headlessui/react"
 import ChevronDownIcon from "@heroicons/react/20/solid/ChevronDownIcon"
 import UserModal from "components/home/UserModal"
 import { withProtection } from "utils/hooks/withProtection"
+import { Alert, Snackbar } from "@mui/material"
 
 const DynamicNavBar = dynamic(() => import("components/home/NavBar"))
 const DynamicSnackBar = dynamic(() => import("@mui/material/Snackbar"))
 const DynamicAlertBar = dynamic(() => import("@mui/material/Alert"))
-
 
 const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
   const router: NextRouter = useRouter()
@@ -252,7 +252,7 @@ export const getServerSideProps: GetServerSideProps<HomePageProps> = async (cont
   const { uid, orderBy, q, filters } = context.query
 
   const user: FirebaseFirestore.DocumentData | undefined = await getUserById(uid)
-  
+
   const alumni = await getFullTextSearchUsers({
     start: 0,
     limit: 25,

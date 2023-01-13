@@ -1,7 +1,7 @@
 import { NextRouter, useRouter } from "next/router"
 import { GetServerSideProps, NextPage } from "next"
+import dynamic from "next/dynamic"
 
-import NavBar from "components/home/NavBar"
 import { useAuth } from "context/AuthContext"
 import { getUserById } from "pages/api/users/[uid]"
 import { useForm } from "react-hook-form"
@@ -9,12 +9,16 @@ import states from "data/states.json"
 import { useMutation } from "react-query"
 import { useEffect, useState } from "react"
 import { useFilePicker } from "use-file-picker"
-import { Alert, Tooltip, Snackbar, Avatar } from "@mui/material"
+import { Tooltip, Avatar, Alert, Snackbar } from "@mui/material"
 import { getDownloadURL, ref, StorageReference, uploadBytes } from "firebase/storage"
 import { storage } from "config/firebase"
 
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos"
 import { withProtection } from "utils/hooks/withProtection"
+
+const DynamicNavBar = dynamic(() => import("components/home/NavBar"))
+const DynamicSnackBar = dynamic(() => import("@mui/material/Snackbar"))
+const DynamicAlertBar = dynamic(() => import("@mui/material/Alert"))
 
 const Profile: NextPage<ProfilePageProps> = ({ user, uid }) => {
   const router: NextRouter = useRouter()
@@ -96,26 +100,21 @@ const Profile: NextPage<ProfilePageProps> = ({ user, uid }) => {
   const validation: EditUserValidation = {
     phoneNumber: { ...register("phoneNumber", { 
       value: user.phoneNumber || "",
-      required: true,
-      // disabled: !isUser
+      required: true
     }) },
     city: { ...register("city", { 
       value: user.city || "",
-      required: true,
-      // disabled: !isUser
+      required: true
     }) },
     state: { ...register("state", { 
       value: user.state || "",
-      required: true,
-      // disabled: !isUser
+      required: true
     }) },
     biography: { ...register("biography", {
       value: user.biography || "",
       required: false, 
-      maxLength: 500,
-      // disabled: !isUser
-    }) 
-    }
+      maxLength: 500
+    }) }
   }
 
   return (
@@ -131,7 +130,7 @@ const Profile: NextPage<ProfilePageProps> = ({ user, uid }) => {
         </Alert>
       </Snackbar>
       <div className="min-h-screen bg-neutral-200">
-        <NavBar
+        <DynamicNavBar
           user={user}
           uid={uid}
           handleLogout={handleLogout}
@@ -226,6 +225,7 @@ const Profile: NextPage<ProfilePageProps> = ({ user, uid }) => {
     </>
   )
 }
+
 
 export const getServerSideProps: GetServerSideProps<ProfilePageProps> = async (context: any) => {
 
