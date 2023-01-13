@@ -20,10 +20,11 @@ import ChevronDownIcon from "@heroicons/react/20/solid/ChevronDownIcon"
 import UserModal from "components/home/UserModal"
 import { withProtection } from "utils/hooks/withProtection"
 import { Alert, Snackbar } from "@mui/material"
+import NavBar from "components/home/NavBar"
 
-const DynamicNavBar = dynamic(() => import("components/home/NavBar"))
-const DynamicSnackBar = dynamic(() => import("@mui/material/Snackbar"))
-const DynamicAlertBar = dynamic(() => import("@mui/material/Alert"))
+// const DynamicNavBar = dynamic(() => import("components/home/NavBar"))
+// const DynamicSnackBar = dynamic(() => import("@mui/material/Snackbar"))
+// const DynamicAlertBar = dynamic(() => import("@mui/material/Alert"))
 
 const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
   const router: NextRouter = useRouter()
@@ -88,18 +89,18 @@ const Home: NextPage<HomePageProps> = ({ user, uid, alumni }) => {
 
   return (
     <>
-      <DynamicSnackBar
+      <Snackbar
         open={snackBarMsg.isError || snackBarMsg.isSuccess}
         autoHideDuration={2000}
         onClose={() => setSnackBarMsg({ isError: false, isSuccess: false, msg: null })}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
-        <DynamicAlertBar severity={(snackBarMsg.isError) ? "error" : "success"} onClose={() => setSnackBarMsg({ isError: false, isSuccess: false, msg: null })}>
+        <Alert severity={(snackBarMsg.isError) ? "error" : "success"} onClose={() => setSnackBarMsg({ isError: false, isSuccess: false, msg: null })}>
           {snackBarMsg.msg}
-        </DynamicAlertBar>
-      </DynamicSnackBar>
+        </Alert>
+      </Snackbar>
       <div className="min-h-screen bg-neutral-200">
-        <DynamicNavBar
+        <NavBar
           user={user}
           uid={uid}
           handleLogout={handleLogout}
